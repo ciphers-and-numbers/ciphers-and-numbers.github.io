@@ -10,7 +10,7 @@
 //   <input id="studentId">, <button id="submitBtn">, <p id="submitStatus">
 //   CN.init({ lesson: "폴더이름" })
 // =========================================================
-const WEB_APP_URL = ""; // 앱스크립트 웹앱 배포 후 "https://script.google.com/macros/s/.../exec" 를 넣습니다.
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycby8qyRpI9g4y6S4MqrMumLNqxovFefAq2peDS1pa3sEOzJbEnvRXZTMc19ny-BmIJZb/exec"; // 앱스크립트 웹앱 배포 후 "https://script.google.com/macros/s/.../exec" 를 넣습니다.
 
 const CN = (() => {
   const ID_RE = /^1(0[1-6])(0[1-9]|[12][0-9]|30)$/;
