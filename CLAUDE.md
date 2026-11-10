@@ -1,10 +1,13 @@
-# 내 수학 실험실 작업 지침
+# 암호와 수 작업 지침
 
 Claude(또는 Claude Code)가 이 저장소를 수정할 때 따르는 규칙입니다.
 
+## 먼저 읽을 것
+- 작업을 시작하기 전에 `docs/PROJECT-PLAN.md`(주제선택 "암호와 수" 작업 정리)를 먼저 읽는다.
+
 ## 기본 정보
 - 배포: GitHub Pages (main 브랜치 / root)
-- 배포 주소: https://<GitHub아이디>.github.io/<저장소이름>/
+- 배포 주소: https://ciphers-and-numbers.github.io/
 - 빌드 도구 없음. 순수 HTML·CSS·JavaScript만 사용한다.
 
 ## 파일 역할
