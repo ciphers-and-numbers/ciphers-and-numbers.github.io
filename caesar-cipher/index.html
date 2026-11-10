@@ -263,6 +263,20 @@
   .deck-nav .btn{min-width:84px}
   .page{font-weight:800;color:var(--muted)}
   .page b{color:var(--text)}
+  .slide input:not([type=range]),.slide textarea{
+    font:inherit;font-size:.95em;padding:6px 9px;border:1px solid #c9c4b8;border-radius:9px;background:#fff;color:var(--text);
+  }
+  .slide input:focus,.slide textarea:focus{outline:3px solid rgba(217,242,79,.5);border-color:#9aa64b}
+  .slide textarea{display:block;width:100%;resize:vertical;margin-top:4px}
+  .slide input.short{width:3.6em;text-align:center}
+  .slide input.mid{width:6em;text-align:center}
+  .ans.block{display:block;margin:.4em 0 .8em;font-weight:700}
+  .ans.block input{display:block;width:100%;margin-top:4px;font-family:ui-monospace,Consolas,monospace;letter-spacing:.08em}
+  .btn.mini{padding:6px 10px;font-size:12px;margin-left:6px;vertical-align:middle}
+  .check-mark{margin-left:6px;font-size:.8em;font-weight:800;color:var(--muted)}
+  .check-mark.ok{color:#32724f}
+  .check-mark.no{color:#b44634}
+  .slide .status{font-size:.85em;margin-top:10px}
   @media (max-width:900px){ .slide.active{grid-template-columns:1fr} }
 </style>
 </head>
@@ -327,22 +341,26 @@
   <!-- 3. 활동 1 -->
   <section class="slide workspace" data-title="활동 1">
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">암호 원판</div><div class="panel-desc">바깥 원 = 원래 글자, 안쪽 원 = 암호 글자</div></div>
+      <div class="panel-head"><div class="panel-title">암호 원판</div><div class="panel-desc">바깥 원 = 원래 글자, 안쪽 원 = 내가 쓴 암호 글자</div></div>
       <div class="panel-body">
         <div class="wheel-wrap"><svg id="wheel" viewBox="0 0 400 400" role="img" aria-label="시저 암호 원판"></svg></div>
-        <label class="key-row">열쇠 k <input id="keyRange" type="range" min="0" max="25" value="0"><output id="keyOut" class="num">?</output></label>
       </div>
     </div>
     <div class="panel">
       <div class="panel-head"><div class="panel-title">활동 1. 나만의 암호 원판 완성하기 <span class="time">10분</span></div></div>
       <div class="panel-body">
         <ol>
-          <li>나만의 열쇠 k를 정해 원 가운데에 써요. (1~25 중 하나)</li>
-          <li>바깥 A 바로 안쪽 칸에 A에서 k칸 뒤의 글자를 써요.<br>예) k = 3이면 A 안쪽에 D</li>
-          <li>시계 방향으로 한 칸씩 이어 써요. Z 다음은 다시 A!</li>
-          <li>다 쓰면 26칸이 모두 다른 글자인지 확인해요.</li>
+          <li>나만의 열쇠 k를 정해요. (1~25 중 하나)<br>
+            <label class="ans">k = <input data-q="활동1 열쇠" id="keyIn" class="short" inputmode="numeric" maxlength="2"></label></li>
+          <li>A 안쪽 칸에 A에서 k칸 뒤의 글자를 써요. 예) k = 3이면 A 안쪽에 D</li>
+          <li>시계 방향으로 한 칸씩 이어 써요. Z 다음은 다시 A!<br>
+            <label class="ans block">A부터 Z까지 안쪽 글자 26개를 차례대로
+              <input data-q="활동1 원판" id="wheelIn" maxlength="26" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="예) DEFG…"></label></li>
+          <li>26칸이 모두 다른 글자인지 원판에서 확인해요.</li>
         </ol>
-        <div class="note"><b>원판으로 확인하기</b><br>열쇠가 3일 때 Y의 암호 글자는?<br>식: 24 + 3 = 27 → 27 − 26 = <span class="blank"></span> → 암호 글자 <span class="blank"></span></div>
+        <div class="note"><b>원판으로 확인하기</b><br>열쇠가 3일 때 Y의 암호 글자는?<br>
+          24 + 3 = 27 → 27 − 26 = <input data-q="활동1 Y 번호" class="short" inputmode="numeric"><button class="btn mini" data-check="활동1 Y 번호" type="button">확인</button>
+          → 암호 글자 <input data-q="활동1 Y 글자" class="short" maxlength="1" autocapitalize="characters"><button class="btn mini" data-check="활동1 Y 글자" type="button">확인</button></div>
       </div>
     </div>
   </section>
@@ -354,14 +372,14 @@
       <div class="panel-body">
         <p>내 이니셜(예: KIM)을 <b>열쇠 +5</b>로 암호화해 봅시다.</p>
         <div class="formula">예) K: 10 + 5 = 15 → P</div>
-        <p style="margin-top:1em">결과 암호문: <span class="blank wide"></span></p>
+        <label class="ans block">내 이니셜 <input data-q="활동2 이니셜" maxlength="5" autocapitalize="characters"></label>
       </div>
     </div>
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">생각해 보기</div></div>
+      <div class="panel-head"><div class="panel-title">계산하기</div></div>
       <div class="panel-body">
-        <p>글자 번호에 k를 <b>더하면</b> 오른쪽으로 k칸 밀립니다.</p>
-        <p>더한 값이 25를 넘으면 한 바퀴(26)를 빼서 다시 0~25 안으로 돌아옵니다.</p>
+        <label class="ans block">글자마다 계산식 쓰기<textarea data-q="활동2 암호화 계산식" rows="4" placeholder="예) K: 10 + 5 = 15 → P"></textarea></label>
+        <label class="ans block">결과 암호문 <input data-q="활동2 암호문" maxlength="5" autocapitalize="characters"></label>
       </div>
     </div>
   </section>
@@ -372,8 +390,11 @@
       <div class="panel-head"><div class="panel-title">활동 2. ② 복호화</div><div class="panel-desc">정수의 뺄셈으로 복호화합니다.</div></div>
       <div class="panel-body">
         <p>친구의 암호문 <b class="num">ZLJYLA</b> (열쇠 +7)를 원래 메시지로 바꿔 봅시다.</p>
-        <div class="formula">예) Z: 25 − 7 = 18 → S<br>A: 0 − 7 = −7 → −7 + 26 = <span class="blank" style="border-color:#f6f2e9"></span> → <span class="blank" style="border-color:#f6f2e9"></span></div>
-        <p style="margin-top:1em">원래 메시지: <span class="blank wide"></span></p>
+        <div class="formula">예) Z: 25 − 7 = 18 → S</div>
+        <p style="margin-top:.8em">A: 0 − 7 = −7 → −7 + 26 = <input data-q="활동2 A 번호" class="short" inputmode="numeric"><button class="btn mini" data-check="활동2 A 번호" type="button">확인</button>
+          → <input data-q="활동2 A 글자" class="short" maxlength="1" autocapitalize="characters"><button class="btn mini" data-check="활동2 A 글자" type="button">확인</button></p>
+        <label class="ans block">원래 메시지 <input data-q="활동2 원래 메시지" maxlength="6" autocapitalize="characters"></label>
+        <button class="btn mini" data-check="활동2 원래 메시지" type="button">확인</button>
       </div>
     </div>
     <div class="panel">
@@ -381,7 +402,8 @@
       <div class="panel-body">
         <p>오른쪽으로 3칸 = <b>+3</b>, 왼쪽으로 3칸 = <b>−3</b></p>
         <p>오른쪽으로 23칸 미는 것은 왼쪽으로 몇 칸 미는 것과 같을까요?</p>
-        <p><span class="blank"></span>칸 → 이유: 23 + <span class="blank"></span> = 26 (한 바퀴)</p>
+        <p><input data-q="정수 왼쪽 칸 수" class="short" inputmode="numeric">칸<button class="btn mini" data-check="정수 왼쪽 칸 수" type="button">확인</button><br>
+          이유: 23 + <input data-q="정수 한 바퀴 빈칸" class="short" inputmode="numeric"> = 26 (한 바퀴)<button class="btn mini" data-check="정수 한 바퀴 빈칸" type="button">확인</button></p>
       </div>
     </div>
   </section>
@@ -391,13 +413,39 @@
     <div class="panel">
       <div class="panel-head"><div class="panel-title">활동 3. 오늘의 성찰 일지 <span class="time">8분</span></div></div>
       <div class="panel-body">
-        <p><b>1.</b> 시저 암호의 열쇠는 모두 몇 가지일까요?<br>그렇다면 시저 암호의 약점은 무엇일까요?</p>
+        <p><b>1.</b> 시저 암호의 열쇠는 모두 몇 가지일까요? 그렇다면 시저 암호의 약점은 무엇일까요?</p>
+        <textarea data-q="성찰1 열쇠 가짓수와 약점" rows="5"></textarea>
       </div>
     </div>
     <div class="panel">
       <div class="panel-head"><div class="panel-title">한 문장으로 정리하기</div></div>
       <div class="panel-body">
-        <p><b>2.</b> "시저 암호에서 암호화는 정수의 <span class="blank"></span>,<br>복호화는 정수의 <span class="blank"></span>이다.<br>26을 더하거나 빼는 이유는 <span class="blank wide"></span> 때문이다."</p>
+        <p><b>2.</b> "시저 암호에서 암호화는 정수의 <input data-q="성찰2 암호화" class="mid"><button class="btn mini" data-check="성찰2 암호화" type="button">확인</button>,
+          복호화는 정수의 <input data-q="성찰2 복호화" class="mid"><button class="btn mini" data-check="성찰2 복호화" type="button">확인</button>이다."</p>
+        <label class="ans block">26을 더하거나 빼는 이유는<textarea data-q="성찰2 26을 더하거나 빼는 이유" rows="3"></textarea></label>
+        <p>때문이다.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. 제출 -->
+  <section class="slide workspace" data-title="제출하기">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">제출하기</div><div class="panel-desc">학번 5자리: 학년 1자리 + 반 2자리 + 번호 2자리</div></div>
+      <div class="panel-body">
+        <label class="ans block">학번 <input id="studentId" inputmode="numeric" maxlength="5" placeholder="예) 1반 5번 → 10105" autocomplete="off"></label>
+        <button class="btn primary" id="submitBtn" type="button" style="margin-top:12px">제출하기</button>
+        <p class="status" id="submitStatus" aria-live="polite"></p>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">알아 두기</div></div>
+      <div class="panel-body">
+        <ul>
+          <li>여러 번 제출해도 됩니다. 제출할 때마다 모두 저장됩니다.</li>
+          <li>쓰던 답은 이 기기에 저장되어, 새로고침해도 남아 있습니다.</li>
+          <li>인터넷이 끊기면 이 기기에 보관했다가 다시 보냅니다.</li>
+        </ul>
       </div>
     </div>
   </section>
@@ -411,6 +459,7 @@
 
 <!-- 홈페이지 이름을 site-config.js에서 가져와 상단에 표시합니다 -->
 <script src="../site-config.js"></script>
+<script src="../common/submit.js"></script>
 <script>
   if (typeof SITE !== "undefined") {
     document.querySelectorAll("[data-site]").forEach(el => {
@@ -436,7 +485,7 @@
     if (text !== undefined) e.textContent = text;
     return e;
   }
-  function drawWheel(k) {
+  function drawWheel(k, inner) {
     svg.innerHTML = "";
     const c = 200;
     [190, 135, 85].forEach(r => svg.appendChild(el("circle", {cx:c, cy:c, r, fill: r === 85 ? "#f4f1e9" : "#fff", stroke:"#c9c4b8"})));
@@ -450,19 +499,20 @@
       }, t));
       p(172, l, 15, "#15171a", 800);
       p(152, i, 10, "#9a958a", 500);
-      if (k > 0) p(110, LETTERS[(i + k) % 26], 15, "#ff5a30", 800);
+      if (inner[i]) p(110, inner[i], 15, "#ff5a30", 800);
     });
     svg.appendChild(el("text", {x:c, y:c - 14, "text-anchor":"middle", "font-size":13, fill:"#6b6f74", "font-weight":700}, "내 열쇠"));
-    svg.appendChild(el("text", {x:c, y:c + 16, "text-anchor":"middle", "font-size":24, fill:"#15171a", "font-weight":800}, k > 0 ? "k = " + k : "k = ?"));
+    svg.appendChild(el("text", {x:c, y:c + 16, "text-anchor":"middle", "font-size":24, fill:"#15171a", "font-weight":800}, k ? "k = " + k : "k = ?"));
   }
-  const keyRange = document.getElementById("keyRange");
-  const keyOut = document.getElementById("keyOut");
-  keyRange.addEventListener("input", () => {
-    const k = +keyRange.value;
-    keyOut.textContent = k > 0 ? k : "?";
-    drawWheel(k);
-  });
-  drawWheel(0);
+  const keyIn = document.getElementById("keyIn");
+  const wheelIn = document.getElementById("wheelIn");
+  function redraw() {
+    wheelIn.value = wheelIn.value.toUpperCase().replace(/[^A-Z]/g, "");
+    keyIn.value = keyIn.value.replace(/\D/g, "");
+    drawWheel(keyIn.value, wheelIn.value);
+  }
+  keyIn.addEventListener("input", redraw);
+  wheelIn.addEventListener("input", redraw);
 
   // 슬라이드 넘기기
   const slides = [...document.querySelectorAll(".slide")];
@@ -480,11 +530,15 @@
   document.getElementById("prevBtn").onclick = () => show(now - 1);
   document.getElementById("nextBtn").onclick = () => show(now + 1);
   document.addEventListener("keydown", e => {
-    if (e.target.tagName === "INPUT") return;
+    if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
     if (e.key === "ArrowRight" || e.key === "PageDown") show(now + 1);
     if (e.key === "ArrowLeft" || e.key === "PageUp") show(now - 1);
   });
   show((parseInt(location.hash.slice(1), 10) || 1) - 1);
+
+  // 입력·채점·제출 (공통 파일)
+  CN.init({ lesson: "caesar-cipher" });
+  redraw();
 </script>
 </body>
 </html>
