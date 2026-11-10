@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="수학 수업용 인터랙티브 도구 모음">
+  <!-- 이 파일은 고치지 않아도 됩니다. 이름·문구는 site-config.js에서 바꿉니다. -->
+  <title>내 수학 실험실</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a class="brand" href="#top">
+        <strong data-site="name">내 수학 실험실</strong>
+        <small data-site="englishName">MATHEMATICS LABORATORY</small>
+      </a>
+
+      <nav class="site-nav" aria-label="주요 메뉴">
+        <a href="#tools">도구 찾기</a>
+        <a href="#how">수업 활용</a>
+        <button class="outline-pill" id="siteQrBtn" type="button">학생 접속 QR</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero-section">
+      <div class="hero-grid-bg" aria-hidden="true"></div>
+      <span class="hero-square lime-square" aria-hidden="true"></span>
+      <span class="hero-square peach-square" aria-hidden="true"></span>
+
+      <div class="hero-layout">
+        <div class="hero-copy">
+          <p class="eyebrow"><span></span><b data-site="eyebrow" style="font-weight:inherit">수학 수업용 인터랙티브 도구</b></p>
+
+          <h1 class="hero-title">
+            <span data-site="heroLine1">수학을</span><br>
+            <span class="highlight" data-site="heroHighlight">보이게</span> <span data-site="heroLine2">만들다</span>
+          </h1>
+
+          <p class="hero-desc" data-site="heroDesc">
+            수학 수업에서 바로 여는 도구 모음입니다.
+          </p>
+
+          <div class="hero-actions">
+            <a class="primary-pill" href="#tools">도구 둘러보기 <span>↘</span></a>
+            <a class="outline-pill link-pill" href="#how">수업에서 쓰는 법</a>
+          </div>
+
+          <div class="hero-stats">
+            <span><b id="toolCount">0</b>개 도구</span>
+            <i></i>
+            <span><b id="subjectCount">0</b>개 과목</span>
+            <i></i>
+            <span>로그인 · 설치 없음</span>
+          </div>
+        </div>
+
+        <div class="hero-art">
+          <canvas id="reelCanvas" role="img" aria-label="연필 선 하나가 곡선, 원·삼각형·사각형·육각형, 벌집, 곱셈 원으로 바뀌었다가 다시 선으로 돌아오는 12초 모션 그래픽"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <section class="tools-section" id="tools">
+      <div class="section-inner">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">EXPLORE TOOLS</p>
+            <h2>수학 도구 찾기</h2>
+            <p>과목을 고르거나 검색해서 필요한 도구를 바로 열어보세요.</p>
+          </div>
+          <div class="tool-number"><span id="filteredCount">0</span> TOOLS</div>
+        </div>
+
+        <div class="finder">
+          <label class="search-box">
+            <span aria-hidden="true">⌕</span>
+            <input id="searchInput" type="search" placeholder="검색">
+          </label>
+          <button class="reset-btn" id="resetBtn" type="button">초기화</button>
+        </div>
+
+        <div class="subject-groups" id="subjectGroups"></div>
+        <div class="tools-grid" id="toolsGrid"></div>
+
+        <p class="empty-message" id="emptyMessage" hidden>
+          조건에 맞는 도구가 없습니다.
+        </p>
+      </div>
+    </section>
+
+    <section class="how-section" id="how">
+      <div class="how-grid-bg" aria-hidden="true"></div>
+      <span class="how-square how-lime" aria-hidden="true"></span>
+      <span class="how-square how-orange" aria-hidden="true"></span>
+
+      <div class="how-layout">
+        <div>
+          <p class="how-eyebrow"><span></span>수업에서 쓰는 법</p>
+          <h2 class="how-title">설명 대신<br><em>경험을 먼저</em></h2>
+          <p class="how-desc">
+            학생이 값을 직접 바꾸고, 결과를 비교하고, 예상이 맞았는지 확인하는 순간<br>
+            수학은 외울 공식에서 탐구할 대상으로 바뀝니다.
+          </p>
+        </div>
+
+        <div class="steps">
+          <article>
+            <b>01</b>
+            <div>
+              <strong>교실 화면에 띄우기</strong>
+              <span>도구를 열어 값을 바꿔 보이고, 무엇이 달라질지 먼저 예상하게 합니다.</span>
+            </div>
+          </article>
+          <article>
+            <b>02</b>
+            <div>
+              <strong>QR로 학생에게 넘기기</strong>
+              <span>카드의 QR 버튼을 누르면 학생 기기로 바로 접속할 수 있는 코드가 나옵니다.</span>
+            </div>
+          </article>
+          <article>
+            <b>03</b>
+            <div>
+              <strong>발견한 규칙 말하기</strong>
+              <span>관찰한 내용을 문장으로 설명하게 하면 활동이 개념 정리로 이어집니다.</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>© <span data-site="name">내 수학 실험실</span>. All rights reserved.</div>
+  </footer>
+
+  <div class="modal" id="qrModal" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <section class="qr-dialog" role="dialog" aria-modal="true" aria-labelledby="qrTitle">
+      <p class="qr-kicker">STUDENT ACCESS</p>
+      <h3 id="qrTitle">학생 접속 QR</h3>
+      <div class="qr-box" id="qrCode"></div>
+      <p class="qr-url" id="qrUrl"></p>
+      <div class="qr-actions">
+        <button class="outline-pill" id="copyUrlBtn" type="button">주소 복사</button>
+        <button class="primary-pill button-reset" data-close-modal type="button">닫기</button>
+      </div>
+    </section>
+  </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="./site-config.js"></script>
+<script src="./script.js"></script>
+<script src="./hero-reel.js"></script>
+</body>
+</html>
