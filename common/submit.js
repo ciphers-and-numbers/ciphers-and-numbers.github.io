@@ -152,16 +152,30 @@ const CN = (() => {
       const subId = Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
       const body = { action: "submit", subId, lesson, studentId: id, answers, attempts: tries, drawings, clientTime: new Date().toISOString() };
       btn.disabled = true; say("제출하는 중…");
+      const done = count => say(`제출했습니다. (${count}번째 제출)` + (empty ? ` 빈칸 ${empty}개가 있어요. 채워서 다시 내도 됩니다.` : ""), "ok");
+      // 제출 응답을 못 받으면, 짧은 확인 요청으로 저장됐는지 다시 물어봅니다.
+      const confirmSaved = (left) => new Promise(r => setTimeout(r, 2500))
+        .then(() => post({ action: "status", lesson, subId }))
+        .then(res => (res.ok && res.found ? res.count : (left > 1 ? confirmSaved(left - 1) : 0)))
+        .catch(() => (left > 1 ? confirmSaved(left - 1) : 0));
       post(body)
         .then(res => {
           if (!res.ok) throw new Error(res.error || "fail");
-          say(`제출했습니다. (${res.count}번째 제출)` + (empty ? ` 빈칸 ${empty}개가 있어요. 채워서 다시 내도 됩니다.` : ""), "ok");
+          done(res.count);
         })
         .catch(err => {
           console.warn("제출 응답 오류:", err);
-          const q = store.get(QUEUE, []); q.push(body); store.set(QUEUE, q);
-          if (err.message === "no-url") say("아직 제출 주소가 준비되지 않아 이 기기에 보관했습니다.", "error");
-          else say("응답을 받지 못해 이 기기에 보관했습니다. 다음에 이 페이지를 열 때 자동으로 다시 보냅니다. (두 번 저장되지는 않습니다)", "error");
+          if (err.message === "no-url") {
+            const q = store.get(QUEUE, []); q.push(body); store.set(QUEUE, q);
+            say("아직 제출 주소가 준비되지 않아 이 기기에 보관했습니다.", "error");
+            return;
+          }
+          say("제출을 확인하는 중…");
+          return confirmSaved(4).then(count => {
+            if (count) { done(count); return; }
+            const q = store.get(QUEUE, []); q.push(body); store.set(QUEUE, q);
+            say("응답을 받지 못해 이 기기에 보관했습니다. 다음에 이 페이지를 열 때 자동으로 다시 보냅니다. (두 번 저장되지는 않습니다)", "error");
+          });
         })
         .finally(() => { btn.disabled = false; });
     });

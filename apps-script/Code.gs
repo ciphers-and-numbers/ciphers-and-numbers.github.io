@@ -3,7 +3,8 @@
  *
  * 받는 요청 (Content-Type: text/plain, 본문은 JSON 문자열)
  *   { action: "check",  lesson, item, answer }  → { ok, correct }
- *   { action: "submit", lesson, studentId, answers, attempts, drawings, clientTime } → { ok, count }
+ *   { action: "submit", subId, lesson, studentId, answers, attempts, drawings, clientTime } → { ok, count }
+ *   { action: "status", subId, lesson }        → { ok, found, count }  (제출이 저장됐는지 확인)
  *
  * 시트 구성
  *   <차시 폴더이름> 탭 : 제출시각 | 차시 | 학번 | 제출 횟수 | 문항들… | 점수
@@ -29,6 +30,7 @@ function doPost(e) {
     const d = JSON.parse(e.postData.contents);
     if (!LESSON_RE.test(String(d.lesson || ""))) return out_({ ok: false, error: "차시 이름 오류" });
     if (d.action === "check") return out_(check_(d));
+    if (d.action === "status") return out_(status_(d));
     if (d.action === "submit") return out_(submit_(d));
     return out_({ ok: false, error: "알 수 없는 요청" });
   } catch (err) {
@@ -88,6 +90,12 @@ function check_(d) {
   const list = answers_(d.lesson)[String(d.item || "").trim()];
   if (!list) return { ok: false, error: "정답이 등록되지 않은 문항" };
   return { ok: true, correct: list.indexOf(norm_(d.answer)) >= 0 };
+}
+
+/** 제출이 서버에 들어갔는지 확인합니다. (제출 응답을 못 받았을 때 화면이 다시 물어봄) */
+function status_(d) {
+  const c = d.subId ? CacheService.getScriptCache().get("sub_" + String(d.subId).slice(0, 80)) : null;
+  return { ok: true, found: !!c, count: c ? Number(c) : 0 };
 }
 
 function submit_(d) {
