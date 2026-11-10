@@ -122,7 +122,8 @@ const CN = (() => {
 
   // 보내지 못한 제출을 다시 보냄
   function flushQueue() {
-    const q = store.get(QUEUE, []);
+    const q = store.get(QUEUE, []).filter(item => item.subId); // 제출번호 없는 옛 보관본은 버림
+    store.set(QUEUE, q);
     if (!q.length || !WEB_APP_URL) return Promise.resolve(0);
     return q.reduce((p, item) => p.then(left =>
       post(item).then(res => (res.ok ? left : left.concat([item]))).catch(() => left.concat([item]))
@@ -148,7 +149,8 @@ const CN = (() => {
       const empty = Object.keys(answers).filter(k => !answers[k]).length;
       const tries = {};
       Object.keys(attempts).forEach(k => { tries[k] = attempts[k].solved ? attempts[k].tries : "미해결(" + attempts[k].tries + ")"; });
-      const body = { action: "submit", lesson, studentId: id, answers, attempts: tries, drawings, clientTime: new Date().toISOString() };
+      const subId = Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
+      const body = { action: "submit", subId, lesson, studentId: id, answers, attempts: tries, drawings, clientTime: new Date().toISOString() };
       btn.disabled = true; say("제출하는 중…");
       post(body)
         .then(res => {
@@ -156,9 +158,10 @@ const CN = (() => {
           say(`제출했습니다. (${res.count}번째 제출)` + (empty ? ` 빈칸 ${empty}개가 있어요. 채워서 다시 내도 됩니다.` : ""), "ok");
         })
         .catch(err => {
+          console.warn("제출 응답 오류:", err);
           const q = store.get(QUEUE, []); q.push(body); store.set(QUEUE, q);
           if (err.message === "no-url") say("아직 제출 주소가 준비되지 않아 이 기기에 보관했습니다.", "error");
-          else say("인터넷 연결이 불안정해 이 기기에 보관했습니다. 연결되면 자동으로 다시 보냅니다.", "error");
+          else say("응답을 받지 못해 이 기기에 보관했습니다. 다음에 이 페이지를 열 때 자동으로 다시 보냅니다. (두 번 저장되지는 않습니다)", "error");
         })
         .finally(() => { btn.disabled = false; });
     });

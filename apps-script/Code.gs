@@ -107,24 +107,30 @@ function submit_(d) {
     drawLinks[name] = drawFolder_().createFile(blob).getUrl();
   });
 
+  // 같은 제출이 다시 오면(기기에 보관했다가 재전송한 경우) 두 번 저장하지 않습니다.
+  const cache = CacheService.getScriptCache();
+  const subKey = d.subId ? "sub_" + String(d.subId).slice(0, 80) : "";
+  if (subKey && cache.get(subKey)) return { ok: true, count: Number(cache.get(subKey)), duplicate: true };
+
   const lock = LockService.getScriptLock();
   lock.waitLock(20000);
   try {
     const ss = ss_();
-    const sh = sheet_(ss, d.lesson, FIXED.concat([SCORE]));
-    let header = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0].map(String);
-
-    // 새 문항 열은 점수 열 바로 앞에 끼워 넣습니다.
     const cols = Object.keys(answers)
       .concat(Object.keys(drawLinks).map(n => n + " (그림)"))
       .concat(Object.keys(attempts).map(n => n + " (시도)"));
-    cols.forEach(c => {
-      if (header.indexOf(c) >= 0) return;
+    // 처음 제출이면 모든 열 제목을 한 번에 만듭니다.
+    const sh = sheet_(ss, d.lesson, FIXED.concat(cols, [SCORE]));
+    let header = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0].map(String);
+
+    // 나중에 문항이 늘어나면 새 열을 점수 열 바로 앞에 한 번에 끼워 넣습니다.
+    const missing = cols.filter(c => header.indexOf(c) < 0);
+    if (missing.length) {
       const at = header.indexOf(SCORE) + 1; // 1부터 세는 열 번호
-      sh.insertColumnBefore(at);
-      sh.getRange(1, at).setValue(c);
-      header.splice(at - 1, 0, c);
-    });
+      sh.insertColumnsBefore(at, missing.length);
+      sh.getRange(1, at, 1, missing.length).setValues([missing]);
+      header.splice(at - 1, 0, ...missing);
+    }
 
     // 제출 횟수
     const last = sh.getLastRow();
@@ -150,6 +156,7 @@ function submit_(d) {
       return answers[h] != null ? String(answers[h]) : "";
     });
     sh.appendRow(row);
+    if (subKey) cache.put(subKey, String(count), 21600); // 6시간 동안 같은 제출 무시
     updateSummary_(ss, d.lesson, sh);
     return { ok: true, count: count };
   } finally {
