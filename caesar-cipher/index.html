@@ -267,6 +267,8 @@
     font:inherit;font-size:.95em;padding:6px 9px;border:1px solid #c9c4b8;border-radius:9px;background:#fff;color:var(--text);
   }
   .slide input:focus,.slide textarea:focus{outline:3px solid rgba(217,242,79,.5);border-color:#9aa64b}
+  .slide select{font:inherit;font-size:.95em;padding:6px 9px;border:1px solid #c9c4b8;border-radius:9px;background:#fff;color:var(--text);display:block;margin-top:4px}
+  .extra{margin-top:.8em;color:var(--muted);font-size:.9em}
   .slide textarea{display:block;width:100%;resize:vertical;margin-top:4px}
   .slide input.short{width:3.6em;text-align:center}
   .slide input.mid{width:6em;text-align:center}
@@ -317,6 +319,25 @@
           <li>정수의 덧셈으로 암호화, 뺄셈으로 복호화 <span class="time">12분</span></li>
           <li>오늘의 성찰 일지 <span class="time">8분</span></li>
         </ol>
+        <p class="extra">시간이 되면: 시저 암호의 역사 알아보기 <span class="time">5분</span> · 짝과 해독 대결 <span class="time">15분</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1-1. 역사 (선택) -->
+  <section class="slide workspace" data-title="시저 암호의 역사 (선택)">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">더 해보기. AI와 함께 알아보는 시저 암호의 역사 <span class="time">5분</span></div><div class="panel-desc">시간이 부족하면 건너뛰어도 됩니다.</div></div>
+      <div class="panel-body">
+        <p>AI에게 이렇게 물어보세요.</p>
+        <div class="question" style="font-size:clamp(16px,1.6vw,20px);font-weight:700">"고대 로마의 율리우스 카이사르는 시저 암호를 누구에게, 왜 보냈어? 근거가 되는 기록도 알려 줘."</div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">정리하기</div></div>
+      <div class="panel-body">
+        <label class="ans block">시저 암호가 쓰인 상황을 한두 문장으로 정리해 보세요.<textarea data-q="역사 정리" rows="5"></textarea></label>
+        <div class="note">AI의 답이 항상 맞는 것은 아니에요. 근거가 된 기록이 무엇인지도 함께 적어 두면 좋아요.</div>
       </div>
     </div>
   </section>
@@ -334,6 +355,7 @@
       <div class="panel-body">
         <p>원래 글자 번호 = <b>P</b><br>암호 글자 번호 = <b>C</b><br>미는 칸 수(열쇠) = <b>k</b></p>
         <div class="formula">암호화: C = P + k<br>&nbsp;&nbsp;(25를 넘으면 26 빼기)<br><br>복호화: P = C − k<br>&nbsp;&nbsp;(0보다 작으면 26 더하기)</div>
+        <div class="note" style="margin-top:12px"><b>알파벳은 원처럼 돌아요.</b><br>Z(25)에서 오른쪽으로 3칸 → 25 + 3 = 28 → 28 − 26 = 2 → C<br>26을 빼는 것은 26으로 나눈 나머지를 구하는 것과 같아요. (28 ÷ 26 = 1 … 나머지 2)</div>
       </div>
     </div>
   </section>
@@ -395,6 +417,9 @@
           → <input data-q="활동2 A 글자" class="short" maxlength="1" autocapitalize="characters"><button class="btn mini" data-check="활동2 A 글자" type="button">확인</button></p>
         <label class="ans block">원래 메시지 <input data-q="활동2 원래 메시지" maxlength="6" autocapitalize="characters"></label>
         <button class="btn mini" data-check="활동2 원래 메시지" type="button">확인</button>
+        <label class="ans block" style="margin-top:1em">계산 결과를 알파벳 표로 다시 확인해 보세요. 같나요?
+          <select data-q="활동2 표로 확인"><option value="">고르기</option><option>O</option><option>X</option></select></label>
+        <label class="ans block">다르다면 어디서 틀렸나요?<textarea data-q="활동2 틀린 곳" rows="2"></textarea></label>
       </div>
     </div>
     <div class="panel">
@@ -404,6 +429,28 @@
         <p>오른쪽으로 23칸 미는 것은 왼쪽으로 몇 칸 미는 것과 같을까요?</p>
         <p><input data-q="정수 왼쪽 칸 수" class="short" inputmode="numeric">칸<button class="btn mini" data-check="정수 왼쪽 칸 수" type="button">확인</button><br>
           이유: 23 + <input data-q="정수 한 바퀴 빈칸" class="short" inputmode="numeric"> = 26 (한 바퀴)<button class="btn mini" data-check="정수 한 바퀴 빈칸" type="button">확인</button></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5-1. 짝 활동 (선택) -->
+  <section class="slide workspace" data-title="짝과 해독 대결 (선택)">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">더 해보기. 짝과 해독 대결 — 내가 낸 문제 <span class="time">15분</span></div><div class="panel-desc">열쇠는 비밀! 암호문만 짝에게 보여 주세요.</div></div>
+      <div class="panel-body">
+        <label class="ans block">원래 메시지 (영어 한 단어)<input data-q="대결 내 메시지" maxlength="12" autocapitalize="characters"></label>
+        <label class="ans">비밀 열쇠 k = <input data-q="대결 내 열쇠" class="short" inputmode="numeric" maxlength="2"></label>
+        <label class="ans block" style="margin-top:.6em">암호문<input data-q="대결 내 암호문" maxlength="12" autocapitalize="characters"></label>
+        <label class="ans">짝이 푸는 데 걸린 시간: 약 <input data-q="대결 짝이 걸린 시간(분)" class="short" inputmode="numeric">분</label>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">짝의 문제 해독하기</div></div>
+      <div class="panel-body">
+        <label class="ans block">받은 암호문<input data-q="대결 받은 암호문" maxlength="12" autocapitalize="characters"></label>
+        <label class="ans">찾은 열쇠 k = <input data-q="대결 찾은 열쇠" class="short" inputmode="numeric" maxlength="2"></label>
+        <label class="ans block" style="margin-top:.6em">해독한 메시지<input data-q="대결 해독" maxlength="12" autocapitalize="characters"></label>
+        <label class="ans block">열쇠를 찾은 방법<textarea data-q="대결 열쇠 찾은 방법" rows="3"></textarea></label>
       </div>
     </div>
   </section>
