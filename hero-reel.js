@@ -1,13 +1,13 @@
 /* ---------- 히어로 모션: "암호와 수"에서 다루는 소재를 차례로 보여 주는 루프 ----------
    01 스키테일 → 02 시저 원판 → 03 모스 부호와 이진법 → 04 바코드 체크숫자 → 05 소수와 RSA
-   장면마다 3.6초, 전체 18초. 흑연색 + 오렌지 포인트만 쓰고 장면은 부드럽게 겹쳐 바뀐다.
+   장면마다 5초, 전체 25초. 흑연색 + 오렌지 포인트만 쓰고 장면은 부드럽게 겹쳐 바뀐다.
    예전 모션(연필 선 → 수학 도형)은 git 기록에 남아 있다. */
 (() => {
   const canvas = document.querySelector("#reelCanvas");
   if (!canvas) return;
   const ctx = canvas.getContext("2d");
 
-  const W = 500, H = 588, CX = 250, SCENE = 3.6;
+  const W = 500, H = 588, CX = 250, SCENE = 5;
   const MONO = '"IBM Plex Mono", ui-monospace, Consolas, monospace';
   const SANS = 'Pretendard, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif';
   const INK = "#15171a", ACC = "#ff5a30", MUTED = "#6b6f74", FAINT = "#b9b3a7";
