@@ -276,8 +276,12 @@
   .slide select{font:inherit;font-size:.95em;padding:6px 9px;border:1px solid #c9c4b8;border-radius:9px;background:#fff;color:var(--text);display:block;margin-top:4px}
   .video{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#15171a}
   .video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .video-note{margin:.5em 0 0;font-size:.85em;font-weight:700;color:#b2391b;min-height:1.2em}
   .video-link{margin:.5em 0 0;font-size:.8em}
   .video-link a{color:var(--muted)}
+  .id-box{margin-top:16px;padding:14px 16px;border:1px dashed #c9c4b8;border-radius:12px;background:#fff}
+  .id-box small{font-weight:500;color:var(--muted)}
+  .id-box .status{margin-top:4px}
   .extra{margin-top:.8em;color:var(--muted);font-size:.9em}
   .slide textarea{display:block;width:100%;resize:vertical;margin-top:4px}
   .slide input.short{width:3.6em;text-align:center}
@@ -319,6 +323,11 @@
       <div class="panel-head"><div class="panel-title">탐구 질문</div></div>
       <div class="panel-body">
         <div class="question">글자를 몇 칸씩 밀기만 하는 시저 암호에<br><em>정수의 덧셈과 뺄셈</em>이 어떻게 숨어 있을까?</div>
+        <div class="id-box">
+          <label class="ans block">먼저 학번을 써 주세요. <small>(학년 1자리 + 반 2자리 + 번호 2자리)</small>
+            <input id="studentId" inputmode="numeric" maxlength="5" placeholder="예) 1반 5번 → 10105" autocomplete="off"></label>
+          <p class="status" id="studentIdStatus" aria-live="polite"></p>
+        </div>
       </div>
     </div>
     <div class="panel">
@@ -341,6 +350,7 @@
       <div class="panel-head"><div class="panel-title">영상 보기. 카이사르의 암호 <span class="time">약 1분</span></div><div class="panel-desc">0:00 ~ 1:15 구간만 재생됩니다.</div></div>
       <div class="panel-body">
         <div class="video"><iframe data-src="https://www.youtube-nocookie.com/embed/tLfooEMrJ2c?start=0&amp;end=75&amp;rel=0&amp;playsinline=1&amp;enablejsapi=1" title="카이사르 암호 소개 영상" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div>
+        <p class="video-note" aria-live="polite"></p>
         <p class="video-link"><a href="https://youtu.be/tLfooEMrJ2c?t=0" target="_blank" rel="noopener">영상이 안 나오면 유튜브에서 보기 ↗</a></p>
       </div>
     </div>
@@ -475,6 +485,7 @@
       <div class="panel-head"><div class="panel-title">더 해보기. 에니그마와 앨런 튜링 <span class="time">약 2분</span></div><div class="panel-desc">1:16 ~ 3:14 구간만 재생됩니다. 시간이 부족하면 건너뛰어도 됩니다.</div></div>
       <div class="panel-body">
         <div class="video"><iframe data-src="https://www.youtube-nocookie.com/embed/tLfooEMrJ2c?start=76&amp;end=194&amp;rel=0&amp;playsinline=1&amp;enablejsapi=1" title="에니그마와 앨런 튜링 영상" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div>
+        <p class="video-note" aria-live="polite"></p>
         <p class="video-link"><a href="https://youtu.be/tLfooEMrJ2c?t=76" target="_blank" rel="noopener">영상이 안 나오면 유튜브에서 보기 ↗</a></p>
       </div>
     </div>
@@ -511,9 +522,9 @@
   <!-- 7. 제출 -->
   <section class="slide workspace" data-title="제출하기">
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">제출하기</div><div class="panel-desc">학번 5자리: 학년 1자리 + 반 2자리 + 번호 2자리</div></div>
+      <div class="panel-head"><div class="panel-title">제출하기</div><div class="panel-desc">학번은 첫 화면에서 쓴 것이 그대로 쓰입니다.</div></div>
       <div class="panel-body">
-        <label class="ans block">학번 <input id="studentId" inputmode="numeric" maxlength="5" placeholder="예) 1반 5번 → 10105" autocomplete="off"></label>
+        <p class="ans">학번: <b id="studentIdView" class="num"></b> <button class="btn mini" type="button" id="changeIdBtn">학번 바꾸기</button></p>
         <button class="btn primary" id="submitBtn" type="button" style="margin-top:12px">제출하기</button>
         <p class="status" id="submitStatus" aria-live="polite"></p>
       </div>
@@ -539,7 +550,7 @@
 
 <!-- 홈페이지 이름을 site-config.js에서 가져와 상단에 표시합니다 -->
 <script src="../site-config.js"></script>
-<script src="../common/submit.js?v=3"></script>
+<script src="../common/submit.js?v=4"></script>
 <script>
   if (typeof SITE !== "undefined") {
     document.querySelectorAll("[data-site]").forEach(el => {
@@ -594,6 +605,28 @@
   keyIn.addEventListener("input", redraw);
   wheelIn.addEventListener("input", redraw);
 
+  // 영상 구간 지키기: 정해 둔 구간(start~end) 밖으로 넘기면 구간 안으로 되돌립니다.
+  const ytReady = new Promise(res => { window.onYouTubeIframeAPIReady = res; });
+  (function () { const t = document.createElement("script"); t.src = "https://www.youtube.com/iframe_api"; document.head.appendChild(t); })();
+  function attachPlayer(f) {
+    const q = new URLSearchParams(f.dataset.src.split("?")[1]);
+    const start = +q.get("start") || 0, end = +q.get("end") || Infinity;
+    const note = f.closest(".panel-body").querySelector(".video-note");
+    ytReady.then(() => {
+      let timer = null;
+      f._player = new YT.Player(f, { events: { onStateChange: e => {
+        clearInterval(timer);
+        if (e.data !== YT.PlayerState.PLAYING) return;
+        timer = setInterval(() => {
+          const t = f._player.getCurrentTime();
+          if (t >= end) { f._player.pauseVideo(); f._player.seekTo(end - 0.5, true); if (note) note.textContent = "오늘 볼 구간은 여기까지예요."; }
+          else if (t < start - 1) { f._player.seekTo(start, true); if (note) note.textContent = "오늘 볼 구간의 처음으로 돌아왔어요."; }
+          else if (note) note.textContent = "";
+        }, 300);
+      } } });
+    });
+  }
+
   // 슬라이드 넘기기
   const slides = [...document.querySelectorAll(".slide")];
   let now = 0;
@@ -602,8 +635,8 @@
     slides.forEach((s, i) => {
       s.classList.toggle("active", i === now);
       s.querySelectorAll("iframe[data-src]").forEach(f => {
-        if (i === now && !f.src) f.src = f.dataset.src; // 처음 볼 때 불러오기
-        if (i !== now && f.src) f.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', "*"); // 넘기면 멈춤
+        if (i === now && !f.src) { f.src = f.dataset.src + "&origin=" + encodeURIComponent(location.origin); attachPlayer(f); } // 처음 볼 때 불러오기
+        if (i !== now && f._player && f._player.pauseVideo) f._player.pauseVideo(); // 넘기면 멈춤
       });
     });
     document.getElementById("pageNow").textContent = now + 1;
@@ -624,7 +657,8 @@
   show((parseInt(location.hash.slice(1), 10) || 1) - 1);
 
   // 입력·채점·제출 (공통 파일)
-  CN.init({ lesson: "caesar-cipher" });
+  CN.init({ lesson: "caesar-cipher", onBadId: () => show(0) });
+  document.getElementById("changeIdBtn").onclick = () => { show(0); document.getElementById("studentId").focus(); };
   redraw();
 </script>
 </body>

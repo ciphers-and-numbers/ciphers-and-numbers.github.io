@@ -15,6 +15,7 @@ const WEB_APP_URL = "https://script.google.com/macros/s/AKfycby8qyRpI9g4y6S4MqrM
 const CN = (() => {
   const ID_RE = /^1(0[1-6])(0[1-9]|[12][0-9]|30)$/;
   let lesson = "";
+  let onBadId = null;
   const attempts = {};
   const store = {
     get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch (e) { return d; } },
@@ -50,13 +51,13 @@ const CN = (() => {
     store.set("cn-draft-" + lesson, { draft, attempts });
   }
   function loadDraft() {
+    const id = store.get("cn-student-id", "");
+    const idEl = document.getElementById("studentId");
+    if (idEl && id) idEl.value = id;
     const saved = store.get("cn-draft-" + lesson, null);
     if (!saved) return;
     fields().forEach(el => { if (saved.draft[el.dataset.q] != null) el.value = saved.draft[el.dataset.q]; });
     Object.assign(attempts, saved.attempts || {});
-    const id = store.get("cn-student-id", "");
-    const idEl = document.getElementById("studentId");
-    if (idEl && id) idEl.value = id;
   }
 
   // 바로 채점
@@ -136,14 +137,31 @@ const CN = (() => {
     const status = document.getElementById("submitStatus");
     if (!btn || !idEl) return;
     const say = (t, cls) => { status.textContent = t; status.className = "status " + (cls || ""); };
+    // 학번 칸은 첫 슬라이드에 두고, 확인 문구는 학번 칸 옆(#studentIdStatus)과 제출 화면(#studentIdView)에 보여 줍니다.
+    const idStatus = document.getElementById("studentIdStatus");
+    const idView = document.getElementById("studentIdView");
+    const sayId = (t, cls) => { if (idStatus) { idStatus.textContent = t; idStatus.className = "status " + (cls || ""); } };
+    const showId = () => {
+      const v = idEl.value;
+      if (idView) idView.textContent = ID_RE.test(v) ? `${v} (${+v.slice(1, 3)}반 ${+v.slice(3)}번)` : "아직 입력하지 않았어요";
+      if (!v) sayId("");
+      else if (v.length < 5) sayId("5자리를 모두 써 주세요.");
+      else if (!ID_RE.test(v)) sayId("학번을 다시 확인하세요. 예) 1반 5번 → 10105", "error");
+      else sayId(`${+v.slice(1, 3)}반 ${+v.slice(3)}번 학생, 반가워요!`, "ok");
+    };
     idEl.addEventListener("input", () => {
       idEl.value = idEl.value.replace(/\D/g, "").slice(0, 5);
-      if (idEl.value.length === 5 && !ID_RE.test(idEl.value)) say("학번을 다시 확인하세요. 예) 1반 5번 → 10105", "error");
-      else say("");
+      if (ID_RE.test(idEl.value)) store.set("cn-student-id", idEl.value);
+      showId();
     });
+    showId();
     btn.addEventListener("click", () => {
       const id = idEl.value.trim();
-      if (!ID_RE.test(id)) { say("학번 5자리를 바르게 쓰세요. 예) 1반 5번 → 10105", "error"); idEl.focus(); return; }
+      if (!ID_RE.test(id)) {
+        say("첫 화면에서 학번 5자리를 바르게 써 주세요. 예) 1반 5번 → 10105", "error");
+        if (typeof onBadId === "function") onBadId();
+        idEl.focus(); return;
+      }
       store.set("cn-student-id", id);
       const { answers, drawings } = collect();
       const empty = Object.keys(answers).filter(k => !answers[k]).length;
@@ -183,6 +201,7 @@ const CN = (() => {
 
   function init(opts) {
     lesson = opts.lesson;
+    onBadId = opts.onBadId || null;
     loadDraft();
     fields().forEach(el => el.addEventListener("input", saveDraft));
     setupChecks();
