@@ -256,10 +256,16 @@
   .key-row output{min-width:2.5em;text-align:right}
   .slide .note{font-size:.9em;line-height:1.7}
   .time{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:999px;background:var(--accent-weak);color:#b2391b;font-size:11px;font-weight:800}
+  /* 이전·다음 바는 화면 맨 아래에 고정 */
   .deck-nav{
+    position:fixed;left:50%;bottom:10px;transform:translateX(-50%);z-index:20;
+    width:calc(100% - 24px);max-width:1156px;
     display:flex;align-items:center;justify-content:space-between;gap:10px;
-    padding:8px 10px;background:rgba(251,249,243,.96);border:1px solid var(--line);border-radius:14px;
+    padding:8px 10px;background:rgba(251,249,243,.97);border:1px solid var(--line);border-radius:14px;
+    box-shadow:0 6px 20px rgba(21,23,26,.10);backdrop-filter:blur(10px);
   }
+  .app{padding-bottom:84px}
+  @media (max-width:520px){ .deck-nav{width:calc(100% - 14px);bottom:7px} .app{padding-bottom:80px} }
   .deck-nav .btn{min-width:84px}
   .page{font-weight:800;color:var(--muted)}
   .page b{color:var(--text)}
@@ -575,6 +581,7 @@
     document.getElementById("prevBtn").disabled = now === 0;
     document.getElementById("nextBtn").disabled = now === slides.length - 1;
     history.replaceState(null, "", "#" + (now + 1));
+    window.scrollTo(0, 0);
   }
   document.getElementById("prevBtn").onclick = () => show(now - 1);
   document.getElementById("nextBtn").onclick = () => show(now + 1);
