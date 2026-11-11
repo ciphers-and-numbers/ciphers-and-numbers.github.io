@@ -6,9 +6,13 @@
 //  페이지에서 쓰는 법
 //   <input data-q="문항 이름">            → 답 입력칸 (textarea, select도 가능)
 //   <button data-check="문항 이름">확인</button> → 바로 채점 (정답 탭과 비교)
+//   <textarea data-q="문항 이름" data-free>  → 빈칸 안내에서 세지 않는 칸 (상황에 따라 비워도 되는 칸)
 //   <canvas data-draw="문항 이름"></canvas>  → 손그림 칸 (지우기 버튼 자동 추가)
 //   <input id="studentId">, <button id="submitBtn">, <p id="submitStatus">
-//   CN.init({ lesson: "폴더이름" })
+//   CN.init({ lesson: "폴더이름", goto: n => show(n) })
+//   슬라이드 진행 점: <div id="deckDots"></div>  (슬라이드 = .slide, 선택 활동은 data-optional)
+//   빈칸 안내:       <div id="emptyList"></div>  (제출 화면에 둠)
+//   슬라이드를 넘길 때 CN.refresh(현재번호) 를 부르면 현재 점이 표시됩니다.
 // =========================================================
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycby8qyRpI9g4y6S4MqrMumLNqxovFefAq2peDS1pa3sEOzJbEnvRXZTMc19ny-BmIJZb/exec"; // 앱스크립트 웹앱 배포 후 "https://script.google.com/macros/s/.../exec" 를 넣습니다.
 
@@ -16,6 +20,8 @@ const CN = (() => {
   const ID_RE = /^1(0[1-6])(0[1-9]|[12][0-9]|30)$/;
   let lesson = "";
   let onBadId = null;
+  let goto = null;
+  let current = 0;
   const attempts = {};
   const store = {
     get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch (e) { return d; } },
@@ -121,6 +127,65 @@ const CN = (() => {
     });
   }
 
+  // 슬라이드별 진행 상황
+  function slideList() { return [...document.querySelectorAll(".slide")]; }
+  function progress() {
+    return slideList().map((sl, i) => {
+      // data-free 칸(상황에 따라 비워 둘 수 있는 칸)은 세지 않고, 학번 칸은 바른 학번이면 채운 것으로 셉니다.
+      const f = [...sl.querySelectorAll("[data-q]:not([data-free])")];
+      let filled = f.filter(el => el.value.trim()).length;
+      const idEl = sl.querySelector("#studentId");
+      if (idEl) { f.push(idEl); if (ID_RE.test(idEl.value)) filled++; }
+      return { i, total: f.length, filled, optional: sl.hasAttribute("data-optional"), title: sl.dataset.title || "" };
+    });
+  }
+  function renderProgress() {
+    const pr = progress();
+    const dots = document.getElementById("deckDots");
+    if (dots) {
+      if (dots.children.length !== pr.length) {
+        dots.innerHTML = "";
+        pr.forEach(p => {
+          const b = document.createElement("button");
+          b.type = "button"; b.className = "dot-btn";
+          b.addEventListener("click", () => goto && goto(p.i));
+          dots.appendChild(b);
+        });
+      }
+      pr.forEach((p, k) => {
+        const b = dots.children[k];
+        const state = !p.total ? "none" : p.filled === p.total ? "done" : p.filled ? "part" : "empty";
+        b.className = "dot-btn " + state + (p.optional ? " optional" : "") + (k === current ? " now" : "");
+        b.title = `${k + 1}. ${p.title}` + (p.total ? ` (${p.filled}/${p.total}칸)` : "");
+        b.setAttribute("aria-label", b.title);
+      });
+    }
+    const box = document.getElementById("emptyList");
+    if (box) {
+      const need = pr.filter(p => p.total && p.filled < p.total && !p.optional);
+      const opt = pr.filter(p => p.total && p.filled < p.total && p.optional);
+      box.innerHTML = "";
+      const line = (label, list) => {
+        if (!list.length) return;
+        const row = document.createElement("p"); row.className = "empty-row"; row.textContent = label;
+        list.forEach(p => {
+          const b = document.createElement("button");
+          b.type = "button"; b.className = "btn mini";
+          b.textContent = `${p.i + 1}번 · ${p.total - p.filled}칸`;
+          b.title = p.title;
+          b.addEventListener("click", () => goto && goto(p.i));
+          row.appendChild(b);
+        });
+        box.appendChild(row);
+      };
+      if (!need.length && !opt.length) { box.innerHTML = '<p class="empty-row ok">모든 칸을 채웠어요. 제출해 보세요!</p>'; return; }
+      if (!need.length) box.innerHTML = '<p class="empty-row ok">꼭 할 활동은 모두 채웠어요.</p>';
+      line("아직 빈칸이 있는 슬라이드:", need);
+      line("선택 활동의 빈칸:", opt);
+    }
+  }
+  function refresh(n) { if (typeof n === "number") current = n; renderProgress(); }
+
   // 보내지 못한 제출을 다시 보냄
   function flushQueue() {
     const q = store.get(QUEUE, []).filter(item => item.subId); // 제출번호 없는 옛 보관본은 버림
@@ -153,6 +218,7 @@ const CN = (() => {
       idEl.value = idEl.value.replace(/\D/g, "").slice(0, 5);
       if (ID_RE.test(idEl.value)) store.set("cn-student-id", idEl.value);
       showId();
+      renderProgress();
     });
     showId();
     btn.addEventListener("click", () => {
@@ -164,13 +230,13 @@ const CN = (() => {
       }
       store.set("cn-student-id", id);
       const { answers, drawings } = collect();
-      const empty = Object.keys(answers).filter(k => !answers[k]).length;
+      const empty = progress().filter(p => !p.optional).reduce((a, p) => a + (p.total - p.filled), 0);
       const tries = {};
       Object.keys(attempts).forEach(k => { tries[k] = attempts[k].solved ? attempts[k].tries : "미해결(" + attempts[k].tries + ")"; });
       const subId = Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
       const body = { action: "submit", subId, lesson, studentId: id, answers, attempts: tries, drawings, clientTime: new Date().toISOString() };
       btn.disabled = true; say("제출하는 중…");
-      const done = count => say(`제출했습니다. (${count}번째 제출)` + (empty ? ` 빈칸 ${empty}개가 있어요. 채워서 다시 내도 됩니다.` : ""), "ok");
+      const done = count => say(`제출했습니다. (${count}번째 제출)` + (empty ? ` 빈칸 ${empty}개가 있어요. 아래 버튼으로 찾아가 채운 뒤 다시 내도 됩니다.` : ""), "ok");
       // 제출 응답을 못 받으면, 짧은 확인 요청으로 저장됐는지 다시 물어봅니다.
       const confirmSaved = (left) => new Promise(r => setTimeout(r, 2500))
         .then(() => post({ action: "status", lesson, subId }))
@@ -202,14 +268,19 @@ const CN = (() => {
   function init(opts) {
     lesson = opts.lesson;
     onBadId = opts.onBadId || null;
+    goto = opts.goto || null;
     loadDraft();
-    fields().forEach(el => el.addEventListener("input", saveDraft));
+    fields().forEach(el => {
+      el.addEventListener("input", () => { saveDraft(); renderProgress(); });
+      el.addEventListener("change", () => { saveDraft(); renderProgress(); });
+    });
     setupChecks();
     setupDrawings();
     setupSubmit();
+    renderProgress();
     flushQueue();
     window.addEventListener("online", flushQueue);
   }
 
-  return { init };
+  return { init, refresh };
 })();
