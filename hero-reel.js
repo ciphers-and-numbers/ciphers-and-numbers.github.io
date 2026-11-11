@@ -32,59 +32,93 @@
     label(g, caption, CX, 540, { size: 15, font: SANS, weight: 600, color: MUTED });
   }
 
-  /* ---------- 01 스키테일: 띠를 막대에 감으면 가로줄에 문장이 나타난다 ----------
-     막대에 두 줄로 HELLO / WORLD 를 쓰고 띠를 풀면, 띠에는 위아래 글자가 번갈아 남는다(HWEOLRLLOD).
-     ① 풀린 띠 → ② 한 바퀴(2글자)씩 막대에 감김 → ③ 가로로 읽기 */
+  /* ---------- 01 스키테일: 옆으로 누운 원기둥 막대에 띠가 나선으로 감긴다 ----------
+     막대 앞면에 두 줄로 HELLO / WORLD 가 보이도록 감으면, 풀린 띠에는 HW EO LR LL OD 가 남는다.
+     ① 풀린 띠(뒤죽박죽) → ② 막대가 돌며 띠가 오른쪽에서 끌려와 감김 → ③ 가로로 읽기
+     띠 위의 한 점을 '띠 좌표 θ'(라디안)로 나타낸다. 한 바퀴 = 2π, 바퀴마다 앞면에 두 글자(θ = π/4, 3π/4). */
   const SROWS = ["HELLO", "WORLD"];
-  const SSTRIP = [0, 1, 2, 3, 4].flatMap(c => SROWS.map(r => r[c])); // HWEOLRLLOD
+  const SLET = [0, 1, 2, 3, 4].flatMap(i => [
+    { ch: SROWS[0][i], th: Math.PI * 2 * i + Math.PI / 4 },
+    { ch: SROWS[1][i], th: Math.PI * 2 * i + Math.PI * 3 / 4 }
+  ]);
+  const TURNS = 5, TMAX = Math.PI * 2 * TURNS;
   function scytale(g, u) {
     header(g, "01", "스키테일 암호", "띠를 같은 굵기의 막대에 감아야 읽혀요");
-    const RX = 100, RY = 214, RW = 300, RH = 172;           // 막대
-    const colX = i => 150 + i * 50, rowY = j => 262 + j * 76; // 감긴 글자 자리
-    const turn = i => span(u, 0.2 + i * 0.085, 0.34 + i * 0.085); // i번째 바퀴가 감기는 정도
-    // 막대 (원기둥 느낌: 위아래 둥근 면)
-    g.save(); g.globalAlpha *= span(u, 0.08, 0.22);
-    g.fillStyle = "#e9e4d9"; g.strokeStyle = INK; g.lineWidth = 2;
-    g.beginPath(); g.roundRect(RX, RY, RW, RH, 18); g.fill(); g.stroke();
-    g.fillStyle = "rgba(21,23,26,.06)"; g.fillRect(RX + 2, RY + RH * 0.62, RW - 4, RH * 0.34);
+    const X0 = 92, P = 62, CYR = 300, R = 64, BW = 46;   // 막대 시작, 한 바퀴 간격, 막대 중심 높이, 반지름, 띠 너비
+    const XL = 70, XR = 420, EX = 16;                    // 막대 양 끝, 끝면 타원 가로 반지름
+    const phi = TMAX * span(u, 0.16, 0.7);               // 지금까지 감긴 양
+    const contactX = X0 + P * phi / (Math.PI * 2);       // 띠가 막대에 닿는 곳(막대 위쪽)
+    const FREE = 13.2;                                     // 풀린 띠에서 1라디안의 길이(화면)
+    const topY = CYR - R, liftY = topY - 56;
+    const onRod = th => { const a = -Math.PI / 2 - (phi - th); return { x: X0 + P * th / (Math.PI * 2), y: CYR + R * Math.sin(a), z: Math.cos(a) }; };
+    const free = th => { const x = contactX + (th - phi) * FREE; const k = clamp((x - contactX) / 34); return { x, y: lerp(topY, liftY, ease(k)) }; };
+    const appear = span(u, 0, 0.1);
+
+    // 막대 몸통 (원기둥)
+    g.save(); g.globalAlpha *= appear;
+    const grad = g.createLinearGradient(0, CYR - R, 0, CYR + R);
+    grad.addColorStop(0, "#d9d2c3"); grad.addColorStop(0.35, "#f1ece2"); grad.addColorStop(1, "#bfb6a5");
+    g.fillStyle = grad; g.fillRect(XL, CYR - R, XR - XL, 2 * R);
+    g.strokeStyle = INK; g.lineWidth = 2;
+    g.beginPath(); g.moveTo(XL, CYR - R); g.lineTo(XR, CYR - R); g.moveTo(XL, CYR + R); g.lineTo(XR, CYR + R); g.stroke();
+    g.beginPath(); g.ellipse(XL, CYR, EX, R, 0, Math.PI / 2, Math.PI * 1.5); g.stroke(); // 왼쪽 끝(보이는 반쪽)
+    g.fillStyle = "#e4ddcf"; g.beginPath(); g.ellipse(XR, CYR, EX, R, 0, 0, Math.PI * 2); g.fill(); g.stroke(); // 오른쪽 끝면
     g.restore();
-    // 감긴 띠 조각(비스듬한 띠)
-    for (let i = 0; i < 5; i++) {
-      const a = turn(i); if (!a) continue;
-      const x = colX(i);
-      g.save(); g.globalAlpha *= a;
-      g.fillStyle = "#fbf9f3"; g.strokeStyle = INK; g.lineWidth = 1.6;
-      g.beginPath(); g.moveTo(x - 20, RY + 2); g.lineTo(x + 20, RY + 2); g.lineTo(x + 34, RY + RH - 2); g.lineTo(x - 6, RY + RH - 2); g.closePath();
-      g.fill(); g.stroke(); g.restore();
+
+    // 막대에 감긴 띠: 앞면(z>0)만 그린다. 뒤로 돌아간 부분은 막대에 가려진다.
+    if (phi > 0.01) {
+      const step = 0.06;
+      for (let th = 0; th < phi; th += step) {
+        const t2 = Math.min(phi, th + step), A = onRod(th), B = onRod(t2), z = (A.z + B.z) / 2;
+        if (z <= 0) continue;
+        g.save(); g.globalAlpha *= appear;
+        g.fillStyle = `rgba(251,249,243,${0.75 + 0.25 * z})`;
+        g.beginPath(); g.moveTo(A.x - BW / 2, A.y); g.lineTo(B.x - BW / 2, B.y); g.lineTo(B.x + BW / 2, B.y); g.lineTo(A.x + BW / 2, A.y); g.closePath(); g.fill();
+        g.strokeStyle = `rgba(21,23,26,${0.35 + 0.5 * z})`; g.lineWidth = 1.4;
+        g.beginPath(); g.moveTo(A.x - BW / 2, A.y); g.lineTo(B.x - BW / 2, B.y); g.moveTo(A.x + BW / 2, A.y); g.lineTo(B.x + BW / 2, B.y); g.stroke();
+        g.restore();
+      }
     }
-    // 풀린 띠 (위쪽 긴 종이)
-    const stripA = 1 - span(u, 0.6, 0.7);
-    g.save(); g.globalAlpha *= stripA * span(u, 0, 0.08);
-    g.fillStyle = "#fbf9f3"; g.strokeStyle = INK; g.lineWidth = 1.6;
-    g.beginPath(); g.roundRect(42, 108, 416, 44, 8); g.fill(); g.stroke(); g.restore();
+    // 풀린 띠: 오른쪽에서 막대 위로 끌려온다 (띠의 남은 길이만큼 리본으로 그림)
+    const endTh = TMAX + 0.9;
+    if (phi < endTh - 0.05) {
+      const pts = [];
+      for (let th = phi; th <= endTh; th += 0.12) pts.push(free(th));
+      pts.push(free(endTh));
+      const rib = (w, color) => {
+        g.save(); g.globalAlpha *= appear; g.strokeStyle = color; g.lineWidth = w; g.lineJoin = "round"; g.lineCap = "butt";
+        g.beginPath(); pts.forEach((p, i) => (i ? g.lineTo(p.x, p.y) : g.moveTo(p.x, p.y))); g.stroke(); g.restore();
+      };
+      rib(36, INK); rib(32.4, "#fbf9f3");
+    }
     // 글자
-    SSTRIP.forEach((ch, k) => {
-      const i = Math.floor(k / 2), j = k % 2, t = turn(i);
-      const x0 = 63 + k * 41.5, y0 = 130;
-      const x1 = colX(i) + 7 + j * 6, y1 = rowY(j);
-      const x = lerp(x0, x1, t), y = lerp(y0, y1, t) - Math.sin(t * Math.PI) * 26;
-      const lit = span(u, 0.72 + j * 0.1, 0.8 + j * 0.1);
-      label(g, ch, x, y, { size: 22, weight: 700, color: lit > 0.5 ? ACC : INK, alpha: span(u, 0, 0.08) });
+    const lit = j => span(u, 0.74 + j * 0.1, 0.82 + j * 0.1);
+    SLET.forEach((L, k) => {
+      const j = k % 2;
+      if (L.th < phi) {
+        const p = onRod(L.th);
+        if (p.z < 0.2) return; // 뒤쪽에 있으면 안 보임
+        label(g, L.ch, p.x, p.y, { size: 21, weight: 800, color: lit(j) > 0.5 ? ACC : INK, alpha: appear * clamp((p.z - 0.2) / 0.4) });
+      } else {
+        const p = free(L.th);
+        if (p.x > 480) return;
+        label(g, L.ch, p.x, p.y, { size: 19, weight: 700, alpha: appear });
+      }
     });
     // ③ 가로로 읽는 화살표
     [0, 1].forEach(j => {
-      const a = span(u, 0.72 + j * 0.1, 0.8 + j * 0.1); if (!a) return;
-      const y = rowY(j) + 22;
-      g.save(); g.strokeStyle = ACC; g.lineWidth = 3; g.lineCap = "round"; g.globalAlpha *= 0.9;
-      g.beginPath(); g.moveTo(130, y); g.lineTo(lerp(130, 372, a), y); g.stroke();
+      const a = lit(j); if (!a) return;
+      const y = CYR + (j ? 1 : -1) * R * Math.SQRT1_2 + 20;
+      g.save(); g.strokeStyle = ACC; g.lineWidth = 3; g.lineCap = "round";
+      g.beginPath(); g.moveTo(96, y); g.lineTo(lerp(96, 372, a), y); g.stroke();
       if (a > 0.95) { g.beginPath(); g.moveTo(364, y - 7); g.lineTo(374, y); g.lineTo(364, y + 7); g.stroke(); }
       g.restore();
     });
     // 단계 설명
-    const step1 = 1 - span(u, 0.18, 0.24), step2 = span(u, 0.22, 0.28) * (1 - span(u, 0.66, 0.72)), step3 = span(u, 0.7, 0.76);
-    label(g, "① 띠의 글자만 보면 뒤죽박죽", CX, 184, { size: 16, font: SANS, weight: 700, color: MUTED, alpha: step1 });
-    label(g, "② 한 바퀴에 두 글자씩, 막대에 비스듬히 감아요", CX, 470, { size: 16, font: SANS, weight: 700, color: MUTED, alpha: step2 });
-    label(g, "③ 가로로 읽으면 HELLO WORLD!", CX, 470, { size: 17, font: SANS, weight: 800, color: ACC, alpha: step3 });
+    const s1 = 1 - span(u, 0.14, 0.2), s2 = span(u, 0.18, 0.24) * (1 - span(u, 0.7, 0.75)), s3 = span(u, 0.74, 0.8);
+    label(g, "① 띠의 글자만 보면 뒤죽박죽", CX, 446, { size: 16, font: SANS, weight: 700, color: MUTED, alpha: s1 });
+    label(g, "② 막대를 돌리며 띠를 감아요", CX, 446, { size: 16, font: SANS, weight: 700, color: MUTED, alpha: s2 });
+    label(g, "③ 가로로 읽으면 HELLO WORLD!", CX, 446, { size: 17, font: SANS, weight: 800, color: ACC, alpha: s3 });
   }
 
   /* ---------- 02 시저 원판: 안쪽 원이 k칸 돌아간다 ---------- */
