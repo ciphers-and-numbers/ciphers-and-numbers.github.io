@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>나만의 암호 설계와 AI 비밀 대화 | 암호와 수</title>
+<style>
+  /* ===== 공통 테마 =====
+     이 :root 블록과 아래 "공통 셸" 영역은 모든 도구가 동일하게 유지합니다.
+     도구별 CSS는 파일 아래쪽 "도구 전용" 영역에만 추가하세요. */
+  :root{
+    --bg:#f2f0e9;
+    --panel:#fbf9f3;
+    --panel-2:#f4f1e9;
+    --line:#d8d2c7;
+    --border-soft:#eee9df;
+    --text:#15171a;
+    --muted:#6b6f74;
+    --faint:#9a958a;
+    --accent:#ff5a30;
+    --accent-weak:rgba(255,90,48,.14);
+    --lime:#d9f24f;
+    --shadow:0 10px 28px rgba(21,23,26,.055);
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:
+      linear-gradient(rgba(21,23,26,.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(21,23,26,.035) 1px, transparent 1px),
+      var(--bg);
+    background-size:34px 34px;
+    color:var(--text);
+    font-family:Pretendard,"Apple SD Gothic Neo","Noto Sans KR",-apple-system,BlinkMacSystemFont,sans-serif;
+    letter-spacing:-.015em;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  button,input,select{font:inherit;color:inherit}
+  .num{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+
+  .app{width:100%;max-width:1180px;margin:0 auto;padding:12px;display:flex;flex-direction:column;gap:10px}
+
+  /* ---- 공통 셸: 상단바 ---- */
+  .topbar{
+    min-height:72px;
+    display:flex;
+    gap:14px;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 14px;
+    background:rgba(242,240,233,.90);
+    border:1px solid var(--line);
+    border-radius:18px;
+    backdrop-filter:blur(14px);
+  }
+  .brand-area{display:flex;align-items:center;gap:18px;min-width:0}
+  .home-link{
+    display:flex;align-items:center;gap:10px;flex:none;
+    color:var(--text);text-decoration:none;
+    padding:7px 10px 7px 8px;border-radius:12px;
+    transition:background .18s ease;
+  }
+  .home-link:hover{background:#e7e3d9}
+  .home-arrow{
+    width:31px;height:31px;border:1px solid #c9c4b8;border-radius:50%;
+    display:grid;place-items:center;font-size:16px;line-height:1;background:#fbf9f3;
+  }
+  .brand-copy{display:block;line-height:1.15}
+  .brand-copy strong{display:block;font-size:14px;font-weight:800;letter-spacing:-.035em}
+  .brand-copy small{
+    display:block;margin-top:4px;color:#8a8d90;
+    font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+    font-size:7.5px;letter-spacing:.13em;white-space:nowrap;
+  }
+  .top-divider{width:1px;height:34px;background:#d3cec3;flex:none}
+  .title-row{display:block;min-width:0}
+  .eyebrow{
+    display:flex;align-items:center;gap:7px;margin-bottom:4px;
+    color:#7b7770;font-size:10px;font-weight:750;white-space:nowrap;
+  }
+  .eyebrow span{display:block;width:18px;height:2px;background:var(--accent)}
+  h1{
+    font-size:clamp(18px,1.25vw,24px);
+    margin:0;
+    font-weight:800;letter-spacing:-.04em;white-space:nowrap;
+  }
+  h1 em{
+    font-style:normal;font-weight:500;
+    background:linear-gradient(transparent 60%,var(--lime) 0);
+    padding:0 .04em;
+  }
+  .subtitle{margin:4px 0 0;color:#666b6f;font-size:11.5px}
+  .badge{
+    display:inline-flex;align-items:center;gap:7px;flex:none;
+    background:#15171a;color:#fff;border:0;
+    border-radius:999px;padding:8px 12px;font-weight:700;font-size:12px;white-space:nowrap;
+  }
+  .dot{width:9px;height:9px;border-radius:50%;background:#73c48f}
+
+  /* ---- 공통 셸: 패널 ----
+     기본은 "넓은 그림 영역 + 좁은 설정 영역" 2단입니다.
+     패널 수가 다르면 grid-template-columns만 바꾸고, 좁은 화면에서 1단으로
+     떨어지는 @media (max-width:900px) 규칙은 남겨 두세요. */
+  .workspace{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(300px,1fr);gap:10px}
+  .panel{
+    min-width:0;
+    display:flex;flex-direction:column;
+    background:rgba(251,249,243,.96);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+  .panel-head{
+    flex:0 0 auto;
+    padding:12px 14px;
+    border-bottom:1px solid var(--line);
+    background:rgba(247,244,236,.92);
+  }
+  .panel-title{
+    font-size:15px;font-weight:800;letter-spacing:-.025em;
+    position:relative;padding-left:10px;
+  }
+  .panel-title::before{
+    content:"";position:absolute;left:0;top:.15em;bottom:.15em;
+    width:3px;border-radius:3px;background:var(--accent);
+  }
+  .panel-desc{color:#74716b;font-size:11.5px;margin-top:5px;line-height:1.45}
+  .panel-body{flex:1;min-height:0;padding:14px}
+
+  /* ---- 공통 셸: 버튼 ---- */
+  .btn{
+    border:1px solid #c9c4b8;background:#fbf9f3;color:#15171a;
+    border-radius:999px;font-weight:700;font-size:12.5px;
+    padding:9px 14px;cursor:pointer;line-height:1;
+    transition:background .15s ease,border-color .15s ease,transform .15s ease;
+  }
+  .btn:hover:not(:disabled){transform:translateY(-1px);border-color:#15171a;background:#f2efe6}
+  .btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+  .btn.primary{background:#15171a;color:#fff;border-color:#15171a}
+  .btn.primary:hover:not(:disabled){background:#2b2e31}
+  .btn.danger{color:#a73b2c}
+  .btn.icon-btn{width:38px;height:38px;padding:0;border-radius:10px;font-size:18px;display:grid;place-items:center}
+
+  /* ---- 공통 셸: 그림 영역 (캔버스·SVG) ---- */
+  .chart-wrap{background:#fff;border:1px solid #e3ded4;border-radius:12px;overflow:hidden;position:relative}
+  .chart-wrap canvas,.chart-wrap svg{display:block;width:100%;height:100%}
+
+  /* ---- 공통 셸: 입력·지표·안내 (쓰지 않는 것은 지우세요) ---- */
+  .controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .control{display:flex;flex-direction:column;gap:5px}
+  .control label{font-size:11px;color:var(--muted);font-weight:800}
+  .control input{
+    width:100%;padding:9px 10px;font-weight:700;
+    border:1px solid #d3cec3;background:#fff;color:var(--text);border-radius:10px;
+  }
+  .control input:focus{outline:3px solid rgba(217,242,79,.42);border-color:#9aa64b}
+  .control input[type="range"]{
+    padding:0;height:22px;border:0;border-radius:0;background:transparent;
+    accent-color:#15171a;cursor:pointer;
+  }
+  .checkbox-control{
+    justify-content:center;min-height:58px;padding:8px 10px;
+    border:1px solid var(--line);background:var(--panel-2);border-radius:12px;
+  }
+  .checkbox-control label{display:flex;align-items:center;gap:8px;color:var(--text);cursor:pointer;font-size:11px}
+  .checkbox-control input{width:17px;height:17px;padding:0;accent-color:#15171a;cursor:pointer}
+
+  .metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+  .metric{background:var(--panel-2);border:1px solid #ddd7cc;border-radius:11px;padding:8px 9px;min-width:0}
+  .metric .label{color:#77736d;font-size:10px;font-weight:800;margin-bottom:3px}
+  .metric .value{
+    font-size:15px;font-weight:850;color:var(--text);
+    font-variant-numeric:tabular-nums;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+
+  .formula{
+    background:#15171a;color:#f6f2e9;border:1px solid #15171a;border-radius:12px;
+    padding:9px 10px;line-height:1.55;font-size:12px;
+    font-family:ui-monospace,SFMono-Regular,Consolas,monospace;overflow:auto;
+  }
+  .note{
+    padding:10px 12px;border-radius:10px;
+    background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;
+    font-size:11px;line-height:1.5;
+  }
+  .note b{color:#7c2d12;font-weight:800}
+  .status{min-height:19px;font-size:11px;line-height:1.4;font-weight:750;color:var(--muted)}
+  .status.ok{color:#32724f}
+  .status.error{color:#b44634}
+
+  .legend{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
+  .legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
+  .legend-item i{width:11px;height:11px;border-radius:3px;flex:none}
+
+  /* ---- 공통 셸: 반응형 (이 3개 블록은 그대로 유지) ----
+     주의: .topbar에 align-items:stretch를 쓰면 알약 모양 .badge가
+     줄바꿈된 제목 높이만큼 세로로 늘어나 거대한 원처럼 깨집니다. */
+  @media (max-width:1080px){
+    .brand-copy small{display:none}
+    .brand-copy strong{font-size:13px}
+    .top-divider{height:28px}
+  }
+  @media (max-width:900px){
+    .workspace{grid-template-columns:1fr}
+  }
+  @media (max-width:820px){
+    .topbar{align-items:flex-start}
+    .brand-area{align-items:flex-start}
+    .home-link{padding-left:2px}
+    .top-divider{display:none}
+    .brand-copy{display:none}
+    .title-row{display:block}
+    h1{white-space:normal}
+    .eyebrow{white-space:normal}
+    .badge{display:none}
+  }
+  @media (max-width:520px){
+    .app{padding:7px}
+    .topbar{border-radius:14px;padding:9px 10px}
+    .home-arrow{width:34px;height:34px}
+    h1{font-size:20px;line-height:1.25}
+    .subtitle{font-size:11px;white-space:normal}
+    .panel{border-radius:14px}
+    .panel-head{padding:12px}
+    .btn{min-height:40px}
+    .controls{grid-template-columns:1fr}
+  }
+
+
+  /* ===== 도구 전용 CSS는 여기부터 (공통 슬라이드 디자인은 ../common/deck.css) ===== */
+  .recap{display:flex;flex-wrap:wrap;gap:6px;list-style:none;padding:0}
+  .recap li{background:#fff;border:1px solid #e3ded4;border-radius:999px;padding:4px 12px;font-size:.9em}
+  .recap b{margin-right:4px}
+  .kinds{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .kinds div{background:#fff;border:1px solid #e3ded4;border-radius:12px;padding:10px 12px;font-size:.88em;line-height:1.55;color:var(--muted)}
+  .kinds b{display:block;color:var(--text);font-size:1.02em}
+  @media (max-width:520px){ .kinds{grid-template-columns:1fr} }
+  .copy-box{background:#fff;border:1px solid #e3ded4;border-radius:12px;padding:12px 14px;margin:.4em 0 .8em}
+  .copy-box p{margin:0 0 .5em;font-weight:700;line-height:1.6}
+  .copy-box .btn{margin-top:2px}
+  .tester{background:#fff;border:1px solid #e3ded4;border-radius:12px;padding:12px}
+  .tester .row{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-weight:800;margin-bottom:8px}
+  .tester .row input{width:3.4em;text-align:center}
+  .map{display:grid;grid-template-columns:repeat(13,minmax(0,1fr));gap:2px;font-family:ui-monospace,Consolas,monospace;font-size:.8em}
+  .map div{border:1px solid #eee9df;border-radius:4px;text-align:center;padding:2px 0;line-height:1.3}
+  .map div b{display:block}.map div span{color:#b2391b;font-weight:800}
+  .map div.dup{background:#fde2d8;border-color:#f3b49c}
+  .tester .msg{margin:.6em 0 0;font-size:.85em;font-weight:700}
+</style>
+<link rel="stylesheet" href="../common/deck.css?v=1">
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="brand-area">
+      <!-- 홈으로 돌아가는 링크: ../#tools 를 바꾸지 마세요 -->
+      <a class="home-link" href="../#tools" aria-label="메인으로">
+        <span class="home-arrow">←</span>
+        <span class="brand-copy">
+          <strong data-site="name">암호와 수</strong>
+          <small data-site="englishName">CIPHERS AND NUMBERS</small>
+        </span>
+      </a>
+      <span class="top-divider" aria-hidden="true"></span>
+      <div class="title-row">
+        <div class="eyebrow"><span></span>주제선택 · 암호와 수</div>
+        <h1>나만의 암호 설계와 <em>AI 비밀 대화</em></h1>
+        <p class="subtitle">나만의 수학 규칙으로 암호를 설계하고, AI와 암호문을 주고받으며 식으로 정확하게 전하는 법을 익힙니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <section class="slide workspace" data-title="탐구 질문">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">탐구 질문</div></div>
+      <div class="panel-body">
+        <div class="question">나만의 수학적 규칙으로 암호를 만들어 <em>비밀은 지키면서,</em><br>받는 사람에게는 정확하게 전하려면 무엇이 필요할까?</div>
+        <div class="id-box">
+          <label class="ans block">먼저 학번을 써 주세요. <small>(학년 1자리 + 반 2자리 + 번호 2자리)</small>
+            <input id="studentId" inputmode="numeric" maxlength="5" placeholder="예) 1반 5번 → 10105" autocomplete="off"></label>
+          <p class="status" id="studentIdStatus" aria-live="polite"></p>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">오늘 할 일</div></div>
+      <div class="panel-body">
+        <ol>
+          <li>지금까지 만난 암호 돌아보기 <span class="time">3분</span></li>
+          <li>나만의 암호 설계하기 <span class="time">20분</span></li>
+          <li>비밀 메시지 암호화하기 <span class="time">10분</span></li>
+          <li>AI와 암호문 주고받기 (3라운드) <span class="time">25분</span></li>
+          <li>오늘의 성찰 일지 <span class="time">5분</span></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+  <section class="slide workspace" data-title="지금까지 만난 암호">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">지금까지 만난 암호 속 수학</div></div>
+      <div class="panel-body">
+        <ul class="recap">
+          <li><b>스키테일</b> 배수</li><li><b>시저</b> 정수의 덧셈·뺄셈</li><li><b>모스</b> 이진법</li>
+          <li><b>바코드</b> 가중치 합</li><li><b>RSA</b> 소수</li>
+        </ul>
+        <p>오늘은 내가 <b>암호 설계자</b>! 글자를 숫자로 바꾸고, 그 숫자를 문자와 식으로 바꾸는 나만의 규칙을 만들어 봅시다.</p>
+        <div class="table-scroll"><table class="alpha alpha0"></table></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">영상 보기. 자리를 바꾸는 여러 아이디어 <span class="time">약 1분</span></div><div class="panel-desc">0:00 ~ 0:53 구간만 재생됩니다.</div></div>
+      <div class="panel-body">
+        <div class="video"><iframe data-src="https://www.youtube-nocookie.com/embed/VOKflMKqDzM?start=0&amp;end=53&amp;rel=0&amp;playsinline=1&amp;enablejsapi=1" title="애너그램과 전치 암호" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div>
+        <p class="video-note" aria-live="polite"></p>
+        <p class="video-link"><a href="https://youtu.be/VOKflMKqDzM?t=0" target="_blank" rel="noopener">영상이 안 나오면 유튜브에서 보기 ↗</a></p>
+        <label class="ans block">영상에서 내 암호에 쓰고 싶은 아이디어가 있었나요?<textarea data-q="영상 떠오른 아이디어" rows="2"></textarea></label>
+      </div>
+    </div>
+  </section>
+  <section class="slide workspace" data-title="활동 1 ① 암호 고르기">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">활동 1. 나만의 암호 설계하기 (종류는 자유, 규칙은 식으로!) <span class="time">20분</span></div></div>
+      <div class="panel-body">
+        <div class="kinds">
+          <div><b>① 자리 바꾸기 (스키테일)</b>몇 칸씩 줄지어 쓰고 다른 방향으로 읽기</div>
+          <div><b>② 글자 바꾸기 (시저)</b>예) C = P + 5 (5칸 밀기)</div>
+          <div><b>③ 신호·기호로 바꾸기 (모스)</b>점·선, 0·1, 나만의 그림 기호</div>
+          <div><b>④ 확인 숫자 붙이기 (바코드)</b>암호문 끝에 오류를 잡는 체크숫자</div>
+          <div><b>⑤ 소수 이용하기 (RSA)</b>예) A=2, B=3, C=5 … 소수로 번호 붙이기</div>
+          <div><b>⑥ 완전히 새로운 암호</b>격자, 달력, 좌표, 여러 방법 섞기 …</div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">내 암호의 뼈대</div></div>
+      <div class="panel-body">
+        <label class="ans block">내 암호의 이름<input data-q="활동1 내 암호의 이름" maxlength="30" autocomplete="off"></label>
+        <label class="ans block">주로 쓴 방법
+          <select data-q="활동1 주로 쓴 방법"><option value="">고르기</option><option>① 자리 바꾸기</option><option>② 글자 바꾸기</option><option>③ 신호·기호로 바꾸기</option><option>④ 확인 숫자 붙이기</option><option>⑤ 소수 이용하기</option><option>⑥ 새로운 암호·섞기</option></select></label>
+        <label class="ans block">암호화 규칙 (말, 그림, 표 모두 좋아요)<textarea data-q="활동1 암호화 규칙" rows="4"></textarea></label>
+      </div>
+    </div>
+  </section>
+  <section class="slide workspace" data-title="활동 1 ② 규칙을 식으로">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">규칙을 식으로 (P: 원래 글자 번호, C: 암호 번호)</div></div>
+      <div class="panel-body">
+        <label class="ans block">C =<input data-q="활동1 규칙 식" maxlength="40" placeholder="예) P + 5 (26 이상이면 26 빼기)" autocomplete="off"></label>
+        <p>식에 대입해 보기: P = 0 (A) → C = <input data-q="활동1 A 대입 결과" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> &nbsp; P = 23 (X) → C = <input data-q="활동1 X 대입 결과" class="short" maxlength="3" inputmode="numeric" autocomplete="off"></p>
+        <label class="ans block">열쇠 (받는 사람만 알 것)<input data-q="활동1 열쇠" maxlength="30" autocomplete="off"></label>
+        <label class="ans block">복호화 방법 (거꾸로 푸는 방법)<textarea data-q="활동1 복호화 방법" rows="2" placeholder="예) P = C − 5 (0보다 작으면 26 더하기)"></textarea></label>
+        <label class="ans block">숨어 있는 수학<input data-q="활동1 숨어 있는 수학" maxlength="40" placeholder="예) 문자와 식, 정수의 덧셈·뺄셈, 배수, 이진법, 소수 …" autocomplete="off"></label>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">도전 (선택). 곱셈을 써 볼까요? — 식 시험기</div></div>
+      <div class="panel-body">
+        <p>a와 b를 바꿔 보며 26글자가 모두 다른 암호가 되는지 확인해요. 빨간 칸은 서로 다른 글자가 같은 암호가 된 곳이에요.</p>
+        <div class="tester">
+          <div class="row">C = <input class="ta" inputmode="numeric" value="3" aria-label="a"> × P + <input class="tb" inputmode="numeric" value="2" aria-label="b"> <small style="font-weight:500;color:var(--muted)">(26 이상이면 26씩 빼기)</small></div>
+          <div class="map"></div>
+          <p class="msg"></p>
+        </div>
+        <div class="note">C = 2 × P처럼 2를 곱하면 A(0)와 N(13)이 둘 다 0이 돼요! 복호화가 어려우면 선생님께 힌트를 받으세요.</div>
+      </div>
+    </div>
+  </section>
+  <section class="slide workspace" data-title="활동 1 ③ 설계 점검">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">설계 점검</div></div>
+      <div class="panel-body">
+        <label class="ans block">서로 다른 글자가 같은 암호가 되지 않나요? (O = 같은 암호가 되는 글자가 없음)<select data-q="점검 같은 암호가 되는 글자 없음"><option value="">고르기</option><option>O</option><option>X</option></select></label>
+        <label class="ans block">열쇠를 아는 사람은 반드시 원래 메시지로 되돌릴 수 있나요?<select data-q="점검 열쇠로 되돌릴 수 있음"><option value="">고르기</option><option>O</option><option>X</option></select></label>
+        <label class="ans block">숫자 암호라면 글자 사이를 구분했나요? (14가 N인지 1, 4인지?)<select data-q="점검 글자 사이 구분"><option value="">고르기</option><option>O</option><option>X</option><option>숫자 암호가 아님</option></select></label>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">고친 점</div></div>
+      <div class="panel-body">
+        <label class="ans block">점검하면서 고친 점이 있다면 써 보세요.<textarea data-q="점검 고친 점" rows="5" data-free></textarea></label>
+      </div>
+    </div>
+  </section>
+  <section class="slide workspace" data-title="활동 2">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">활동 2. 비밀 메시지 암호화하기 (짧은 영어 단어·문장 또는 한글) <span class="time">10분</span></div></div>
+      <div class="panel-body">
+        <label class="ans block">원래 메시지<input data-q="활동2 원래 메시지" maxlength="40" autocomplete="off"></label>
+        <label class="ans block">암호화 과정 (식에 대입한 과정)<textarea data-q="활동2 암호화 과정" rows="4"></textarea></label>
+        <label class="ans block">최종 암호문<input data-q="활동2 최종 암호문" maxlength="60" autocomplete="off"></label>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">검산</div></div>
+      <div class="panel-body">
+        <label class="ans block">내 복호화 방법으로 암호문을 되돌리면 원래 메시지가 나오나요?<select data-q="활동2 검산"><option value="">고르기</option><option>O</option><option>X</option></select></label>
+        <label class="ans block">아니라면 어디를 고쳤나요?<textarea data-q="활동2 검산이 틀린 곳" rows="3" data-free></textarea></label>
+      </div>
+    </div>
+  </section>
+  <section class="slide workspace" data-title="활동 3 Round 1">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">활동 3. AI와 암호문 주고받기 — Round 1 해독 도전 <span class="time">25분</span></div></div>
+      <div class="panel-body">
+        <p>AI는 내 머릿속 규칙을 몰라요. 먼저 <b>규칙은 숨기고 암호문만</b> 보내 봐요.</p>
+        <div class="copy-box" data-template="내가 직접 만든 암호야. 암호문은 {활동2 최종 암호문}이야. 어떤 규칙으로 만들었는지, 원래 메시지가 무엇인지 추리해 줄래? 어떻게 추리했는지도 알려 줘."><p></p><button class="btn mini" type="button">질문 복사하기</button></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">AI의 답</div></div>
+      <div class="panel-body">
+        <label class="ans block">AI가 추리한 규칙과 메시지<textarea data-q="Round1 AI가 추리한 규칙과 메시지" rows="5"></textarea></label>
+        <label class="ans block">AI가 해독에 성공했나요?<select data-q="Round1 성공"><option value="">고르기</option><option>O</option><option>X</option></select></label>
+      </div>
+    </div>
+  </section>
+  <section class="slide workspace" data-title="활동 3 Round 2">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">Round 2 정확하게 설명하기 — 규칙(식)을 알려 주고 해독 부탁하기</div></div>
+      <div class="panel-body">
+        <label class="ans block">내가 AI에게 쓴 규칙 설명 (식 포함)<textarea data-q="Round2 AI에게 쓴 규칙 설명" rows="4"></textarea></label>
+        <div class="copy-box" data-template="내 암호 규칙을 알려 줄게. {Round2 AI에게 쓴 규칙 설명} 이 규칙대로 암호문 {활동2 최종 암호문}을 풀어서 원래 메시지를 찾아 줘. 푸는 과정도 보여 줘."><p></p><button class="btn mini" type="button">질문 복사하기</button></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">AI의 해독 결과</div></div>
+      <div class="panel-body">
+        <label class="ans block">AI의 해독 결과<textarea data-q="Round2 AI의 해독 결과" rows="3"></textarea></label>
+        <label class="ans block">맞았나요?<select data-q="Round2 맞았나"><option value="">고르기</option><option>O</option><option>X</option></select></label>
+        <label class="ans block">틀렸다면, AI가 잘못 이해했거나 실수한 부분은? 내 설명을 어떻게 고쳤나요?<textarea data-q="Round2 잘못 이해한 부분과 고친 설명" rows="3" data-free></textarea></label>
+      </div>
+    </div>
+  </section>
+  <section class="slide workspace" data-title="활동 3 Round 3">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">Round 3 AI의 답장 — 내 규칙으로 암호화된 답장을 받아 풀기</div></div>
+      <div class="panel-body">
+        <div class="copy-box" data-template="이제 네 차례야. 내 암호 규칙으로 암호화한 짧은 답장을 보내 줘. 원래 메시지는 말하지 마!"><p></p><button class="btn mini" type="button">질문 복사하기</button></div>
+        <label class="ans block">AI가 보낸 암호문<input data-q="Round3 AI가 보낸 암호문" maxlength="80" autocomplete="off"></label>
+        <label class="ans block">복호화 과정 (식에 대입)<textarea data-q="Round3 복호화 과정" rows="3"></textarea></label>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">답장 풀기</div></div>
+      <div class="panel-body">
+        <label class="ans block">내가 해독한 답장<input data-q="Round3 내가 해독한 답장" maxlength="80" autocomplete="off"></label>
+        <label class="ans block">AI는 내 규칙을 정확히 지켰나요?<select data-q="Round3 규칙을 지켰나"><option value="">고르기</option><option>O</option><option>X</option></select></label>
+        <label class="ans block">틀린 부분이 있다면 어디인지, 올바르게 고치면?<textarea data-q="Round3 틀린 부분과 고친 것" rows="3" data-free></textarea></label>
+      </div>
+    </div>
+  </section>
+  <section class="slide workspace" data-title="활동 4">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">활동 4. 오늘의 성찰 일지 <span class="time">5분</span></div></div>
+      <div class="panel-body">
+        <p>1. "내 규칙을 다른 사람에게 정확하게 전하려면 <input data-q="성찰1 정확하게 전하려면" class="mid" maxlength="14" autocomplete="off">이/가 필요하다."</p>
+        <label class="ans block">2. 내 암호의 강점과 약점은? AI가 쉽게 풀었다면, 다음 시간에 어떻게 업그레이드할까요? (다음 시간 친구와 해독 대결!)<textarea data-q="성찰2 강점과 약점" rows="5"></textarea></label>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">러닝페어 연계 기록</div></div>
+      <div class="panel-body">
+        <label class="ans block">3. 러닝페어 수학 탐구 주제 아이디어 (예: 피그펜 암호, 비즈네르 암호, 에니그마와 앨런 튜링, AI는 암호를 풀 수 있을까?)<textarea data-q="성찰3 러닝페어 주제 아이디어" rows="5"></textarea></label>
+      </div>
+    </div>
+  </section>
+  <section class="slide workspace" data-title="제출하기">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">제출하기</div><div class="panel-desc">학번은 첫 화면에서 쓴 것이 그대로 쓰입니다.</div></div>
+      <div class="panel-body">
+        <p class="ans">학번: <b id="studentIdView" class="num"></b> <button class="btn mini" type="button" id="changeIdBtn">학번 바꾸기</button></p>
+        <button class="btn primary" id="submitBtn" type="button" style="margin-top:12px">제출하기</button>
+        <p class="status" id="submitStatus" aria-live="polite"></p>
+        <div id="emptyList" class="empty-list"></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">알아 두기</div></div>
+      <div class="panel-body">
+        <ul>
+          <li>아래쪽 점은 슬라이드마다의 진행 상황이에요. 꽉 찬 점은 다 쓴 슬라이드, 테두리만 있는 점은 아직 빈칸이 있는 슬라이드예요. 점을 누르면 그 슬라이드로 가요.</li>
+          <li>여러 번 제출해도 됩니다. 제출할 때마다 모두 저장됩니다.</li>
+          <li>쓰던 답은 이 기기에 저장되어, 새로고침해도 남아 있습니다.</li>
+          <li>인터넷이 끊기면 이 기기에 보관했다가 다시 보냅니다.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <nav class="deck-nav" aria-label="슬라이드 이동">
+    <button class="btn" id="prevBtn" type="button">← 이전</button>
+    <div class="nav-mid">
+      <div id="deckDots" class="deck-dots" aria-label="슬라이드 진행 상황"></div>
+      <span class="page"><b id="pageNow">1</b> / <span id="pageAll">1</span><span class="page-title"> · <span id="pageTitle"></span></span></span>
+    </div>
+    <button class="btn primary" id="nextBtn" type="button">다음 →</button>
+  </nav>
+</div>
+
+<!-- 홈페이지 이름을 site-config.js에서 가져와 상단에 표시합니다 -->
+<script src="../site-config.js"></script>
+<script src="../common/submit.js?v=6"></script>
+<script src="../common/deck.js?v=1"></script>
+<script>
+  if (typeof SITE !== "undefined") {
+    document.querySelectorAll("[data-site]").forEach(el => {
+      if (SITE[el.dataset.site]) el.textContent = SITE[el.dataset.site];
+    });
+  }
+</script>
+<script>
+  // ===== 도구 전용 JavaScript는 여기부터 =====
+  // 알파벳 번호표 (A=0 … Z=25)
+  document.querySelectorAll(".alpha0").forEach(t => {
+    const L = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+    t.innerHTML = "<tr>" + L.map(l => `<td>${l}</td>`).join("") + "</tr><tr>" + L.map((_, i) => `<td>${i}</td>`).join("") + "</tr>";
+  });
+  // AI 질문 만들기: {문항 이름} 자리에 학생이 쓴 내용을 넣어 보여 주고, 버튼으로 복사
+  document.querySelectorAll(".copy-box").forEach(box => {
+    const tpl = box.dataset.template, out = box.querySelector("p"), btn = box.querySelector("button");
+    const fill = () => { out.textContent = tpl.replace(/\{([^}]+)\}/g, (_, q) => { const el = document.querySelector(`[data-q="${q}"]`); return el && el.value.trim() ? el.value.trim() : "( )"; }); };
+    document.addEventListener("input", fill); fill();
+    btn.addEventListener("click", () => {
+      fill();
+      const done = () => { btn.textContent = "복사했어요!"; setTimeout(() => (btn.textContent = "질문 복사하기"), 1500); };
+      if (navigator.clipboard) navigator.clipboard.writeText(out.textContent).then(done, () => {});
+      else { const r = document.createRange(); r.selectNodeContents(out); const s = getSelection(); s.removeAllRanges(); s.addRange(r); document.execCommand("copy"); done(); }
+    });
+  });
+  // 식 시험기: C = a × P + b (26 이상이면 26씩 빼기)
+  document.querySelectorAll(".tester").forEach(t => {
+    const A = t.querySelector(".ta"), B = t.querySelector(".tb"), map = t.querySelector(".map"), msg = t.querySelector(".msg");
+    const L = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const run = () => {
+      const a = parseInt(A.value, 10), b = parseInt(B.value, 10);
+      if (isNaN(a) || isNaN(b)) { map.innerHTML = ""; msg.textContent = "a와 b에 수를 넣어 보세요."; return; }
+      const out = [...L].map((_, p) => (((a * p + b) % 26) + 26) % 26), seen = {};
+      out.forEach((c, p) => (seen[c] = (seen[c] || []).concat(L[p])));
+      map.innerHTML = out.map((c, p) => `<div class="${seen[c].length > 1 ? "dup" : ""}"><b>${L[p]}</b><span>${L[c]}</span></div>`).join("");
+      const dups = Object.values(seen).filter(v => v.length > 1);
+      msg.textContent = dups.length ? `서로 다른 글자가 같은 암호가 돼요: ${dups.slice(0, 3).map(v => v.join("·")).join(", ")}${dups.length > 3 ? " …" : ""} → 되돌릴 수 없어요!` : "26글자가 모두 다른 암호가 돼요. 되돌릴 수 있는 식이에요.";
+      msg.style.color = dups.length ? "#b44634" : "#32724f";
+    };
+    A.addEventListener("input", run); B.addEventListener("input", run); run();
+  });
+
+  // 슬라이드 넘기기·영상·입력·제출 (공통 파일)
+  Deck.init({ lesson: "my-cipher" });
+  document.dispatchEvent(new Event("input")); // 저장된 답으로 AI 질문 다시 채우기
+</script>
+</body>
+</html>
