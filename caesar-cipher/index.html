@@ -274,6 +274,10 @@
   }
   .slide input:focus,.slide textarea:focus{outline:3px solid rgba(217,242,79,.5);border-color:#9aa64b}
   .slide select{font:inherit;font-size:.95em;padding:6px 9px;border:1px solid #c9c4b8;border-radius:9px;background:#fff;color:var(--text);display:block;margin-top:4px}
+  .video{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#15171a}
+  .video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .video-link{margin:.5em 0 0;font-size:.8em}
+  .video-link a{color:var(--muted)}
   .extra{margin-top:.8em;color:var(--muted);font-size:.9em}
   .slide textarea{display:block;width:100%;resize:vertical;margin-top:4px}
   .slide input.short{width:3.6em;text-align:center}
@@ -321,29 +325,31 @@
       <div class="panel-head"><div class="panel-title">오늘 할 일</div></div>
       <div class="panel-body">
         <ol>
+          <li>영상으로 카이사르의 암호 만나기 <span class="time">3분</span></li>
           <li>나만의 암호 원판 완성하기 <span class="time">10분</span></li>
           <li>정수의 덧셈으로 암호화, 뺄셈으로 복호화 <span class="time">12분</span></li>
           <li>오늘의 성찰 일지 <span class="time">8분</span></li>
         </ol>
-        <p class="extra">시간이 되면: 시저 암호의 역사 알아보기 <span class="time">5분</span> · 짝과 해독 대결 <span class="time">15분</span></p>
+        <p class="extra">시간이 되면: 짝과 해독 대결 <span class="time">15분</span> · 영상으로 보는 에니그마와 튜링 <span class="time">5분</span></p>
       </div>
     </div>
   </section>
 
-  <!-- 1-1. 역사 (선택) -->
-  <section class="slide workspace" data-title="시저 암호의 역사 (선택)">
+  <!-- 1-1. 도입 영상 -->
+  <section class="slide workspace" data-title="영상: 카이사르의 암호">
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">더 해보기. AI와 함께 알아보는 시저 암호의 역사 <span class="time">5분</span></div><div class="panel-desc">시간이 부족하면 건너뛰어도 됩니다.</div></div>
+      <div class="panel-head"><div class="panel-title">영상 보기. 카이사르의 암호 <span class="time">약 1분</span></div><div class="panel-desc">0:00 ~ 1:15 구간만 재생됩니다.</div></div>
       <div class="panel-body">
-        <p>AI에게 이렇게 물어보세요.</p>
-        <div class="question" style="font-size:clamp(16px,1.6vw,20px);font-weight:700">"고대 로마의 율리우스 카이사르는 시저 암호를 누구에게, 왜 보냈어? 근거가 되는 기록도 알려 줘."</div>
+        <div class="video"><iframe data-src="https://www.youtube-nocookie.com/embed/tLfooEMrJ2c?start=0&amp;end=75&amp;rel=0&amp;playsinline=1&amp;enablejsapi=1" title="카이사르 암호 소개 영상" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div>
+        <p class="video-link"><a href="https://youtu.be/tLfooEMrJ2c?t=0" target="_blank" rel="noopener">영상이 안 나오면 유튜브에서 보기 ↗</a></p>
       </div>
     </div>
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">정리하기</div></div>
+      <div class="panel-head"><div class="panel-title">영상을 보고 답하기</div></div>
       <div class="panel-body">
-        <label class="ans block">시저 암호가 쓰인 상황을 한두 문장으로 정리해 보세요.<textarea data-q="역사 정리" rows="5"></textarea></label>
-        <div class="note">AI의 답이 항상 맞는 것은 아니에요. 근거가 된 기록이 무엇인지도 함께 적어 두면 좋아요.</div>
+        <label class="ans block">1. 카이사르는 누구에게, 왜 암호를 보냈을까요?<textarea data-q="영상1 카이사르가 암호를 보낸 까닭" rows="3"></textarea></label>
+        <label class="ans block">2. 영상 속 암호는 글자를 어떻게 바꾸었나요?<textarea data-q="영상1 글자를 바꾼 방법" rows="3"></textarea></label>
+        <div class="note"><b>더 궁금하면 AI에게 물어보기</b><br>"고대 로마의 율리우스 카이사르는 시저 암호를 누구에게, 왜 보냈어? 근거가 되는 기록도 알려 줘."<br>AI의 답이 항상 맞지는 않으니, 근거가 된 기록도 함께 확인해요.</div>
       </div>
     </div>
   </section>
@@ -463,6 +469,25 @@
     </div>
   </section>
 
+  <!-- 5-2. 마무리 영상 (선택) -->
+  <section class="slide workspace" data-title="영상: 에니그마와 튜링 (선택)">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">더 해보기. 에니그마와 앨런 튜링 <span class="time">약 2분</span></div><div class="panel-desc">1:16 ~ 3:14 구간만 재생됩니다. 시간이 부족하면 건너뛰어도 됩니다.</div></div>
+      <div class="panel-body">
+        <div class="video"><iframe data-src="https://www.youtube-nocookie.com/embed/tLfooEMrJ2c?start=76&amp;end=194&amp;rel=0&amp;playsinline=1&amp;enablejsapi=1" title="에니그마와 앨런 튜링 영상" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div>
+        <p class="video-link"><a href="https://youtu.be/tLfooEMrJ2c?t=76" target="_blank" rel="noopener">영상이 안 나오면 유튜브에서 보기 ↗</a></p>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">영상을 보고 답하기</div></div>
+      <div class="panel-body">
+        <label class="ans block">1. 에니그마는 시저 암호보다 왜 풀기 어려웠을까요? 시저 암호의 열쇠 k와 비교해 보세요.<textarea data-q="영상2 에니그마가 어려운 까닭" rows="3"></textarea></label>
+        <label class="ans block">2. 튜링은 일기예보를 단서로 썼어요. 짝 대결에서 내가 열쇠를 찾은 단서는 무엇이었나요?<textarea data-q="영상2 내가 찾은 단서" rows="3"></textarea></label>
+        <label class="ans block">3. 암호를 푼 일이 전쟁의 결과를 바꿀 수 있었던 까닭은 무엇일까요?<textarea data-q="영상2 암호 해독의 영향" rows="3"></textarea></label>
+      </div>
+    </div>
+  </section>
+
   <!-- 6. 활동 3 -->
   <section class="slide workspace" data-title="활동 3">
     <div class="panel">
@@ -574,7 +599,13 @@
   let now = 0;
   function show(n) {
     now = Math.max(0, Math.min(slides.length - 1, n));
-    slides.forEach((s, i) => s.classList.toggle("active", i === now));
+    slides.forEach((s, i) => {
+      s.classList.toggle("active", i === now);
+      s.querySelectorAll("iframe[data-src]").forEach(f => {
+        if (i === now && !f.src) f.src = f.dataset.src; // 처음 볼 때 불러오기
+        if (i !== now && f.src) f.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', "*"); // 넘기면 멈춤
+      });
+    });
     document.getElementById("pageNow").textContent = now + 1;
     document.getElementById("pageAll").textContent = slides.length;
     document.getElementById("pageTitle").textContent = slides[now].dataset.title;
