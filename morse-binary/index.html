@@ -242,8 +242,21 @@
   .pow th,.pow td,.bin th,.bin td{border:1px solid #e3ded4;padding:6px 8px;text-align:center}
   .pow th,.bin th{background:var(--panel-2)}
   .bin td{font-family:ui-monospace,Consolas,monospace;font-weight:700}
+  .pow th,.bin th{word-break:keep-all}
+  .keys{display:flex;flex-wrap:wrap;gap:6px;margin:-.4em 0 .8em}
+  .keys .btn{min-width:44px;font-size:16px;font-family:ui-monospace,Consolas,monospace;margin:0}
+  .player{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+  .player input{flex:1;min-width:8em;text-transform:uppercase;font-family:ui-monospace,Consolas,monospace}
+  .lamp{width:22px;height:22px;border-radius:50%;background:#e3ded4;border:1px solid #c9c4b8;flex:none}
+  .lamp.on{background:#ffcf3a;box-shadow:0 0 12px #ffcf3a}
+  .player-out{font-family:ui-monospace,Consolas,monospace;letter-spacing:.1em;min-height:1.4em;margin-top:6px;word-break:break-all}
+  .cards{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:12px}
+  .card{border:1px solid #c9c4b8;border-radius:10px;background:#fff;padding:10px 4px;text-align:center;cursor:pointer;font:inherit;color:inherit}
+  .card .v{font-size:1.3em;font-weight:800}.card .bit{font-family:ui-monospace,Consolas,monospace;font-size:1.4em;font-weight:800;margin-top:4px}
+  .card.on{background:#15171a;color:#fff;border-color:#15171a}
+  .card-sum{margin-top:10px;font-weight:800}
 </style>
-<link rel="stylesheet" href="../common/deck.css?v=1">
+<link rel="stylesheet" href="../common/deck.css?v=2">
 </head>
 <body>
 <div class="app">
@@ -282,12 +295,13 @@
       <div class="panel-head"><div class="panel-title">오늘 할 일</div></div>
       <div class="panel-body">
         <ol>
-          <li>AI와 함께하는 모스 부호의 탄생 <span class="time">5분</span></li>
+          <li>모스 부호 들어 보고, AI와 함께 모스 부호의 탄생 알아보기 <span class="time">5분</span></li>
           <li>신호 몇 개면 알파벳 26개를 다 만들까? <span class="time">10분</span></li>
-          <li>컴퓨터의 언어, 이진법 <span class="time">15분</span></li>
-          <li>짝 활동: 모스-이진 비밀 대화 <span class="time">20분</span></li>
+          <li>컴퓨터의 언어, 이진법 (이진 카드) <span class="time">12분</span></li>
+          <li>짝 활동: 모스-이진 비밀 대화 <span class="time">13분</span></li>
           <li>오늘의 성찰 일지 <span class="time">5분</span></li>
         </ol>
+        <p class="extra">시간이 되면: 컴퓨터 속 글자(아스키코드) · 신호가 3가지라면?</p>
       </div>
     </div>
   </section>
@@ -297,6 +311,12 @@
       <div class="panel-body">
         <div class="morse"><div><b>A</b><span>•−</span></div><div><b>B</b><span>−•••</span></div><div><b>C</b><span>−•−•</span></div><div><b>D</b><span>−••</span></div><div><b>E</b><span>•</span></div><div><b>F</b><span>••−•</span></div><div><b>G</b><span>−−•</span></div><div><b>H</b><span>••••</span></div><div><b>I</b><span>••</span></div><div><b>J</b><span>•−−−</span></div><div><b>K</b><span>−•−</span></div><div><b>L</b><span>•−••</span></div><div><b>M</b><span>−−</span></div><div><b>N</b><span>−•</span></div><div><b>O</b><span>−−−</span></div><div><b>P</b><span>•−−•</span></div><div><b>Q</b><span>−−•−</span></div><div><b>R</b><span>•−•</span></div><div><b>S</b><span>•••</span></div><div><b>T</b><span>−</span></div><div><b>U</b><span>••−</span></div><div><b>V</b><span>•••−</span></div><div><b>W</b><span>•−−</span></div><div><b>X</b><span>−••−</span></div><div><b>Y</b><span>−•−−</span></div><div><b>Z</b><span>−−••</span></div></div>
         <p class="hint">• 짧은 신호, − 긴 신호, 글자 사이는 / 로 구분해요.</p>
+        <div class="player">
+          <span class="lamp" id="lamp" aria-hidden="true"></span>
+          <input id="playIn" maxlength="10" placeholder="영어 단어 예) SOS" autocomplete="off" aria-label="소리로 들을 영어 단어">
+          <button class="btn mini" id="playBtn" type="button">소리로 듣기</button>
+        </div>
+        <p class="player-out" id="playOut" aria-live="polite"></p>
       </div>
     </div>
     <div class="panel">
@@ -351,13 +371,16 @@
   </section>
   <section class="slide workspace" data-title="활동 3 ① 이진법">
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">활동 3. 컴퓨터의 언어, 이진법 <span class="time">15분</span></div></div>
+      <div class="panel-head"><div class="panel-title">활동 3. 컴퓨터의 언어, 이진법 <span class="time">12분</span></div></div>
       <div class="panel-body">
         <p>이진법의 자리값 — 한 자리 올라갈 때마다 <b>2배!</b></p>
         <table class="bin">
           <tr><th>16</th><th>8</th><th>4</th><th>2</th><th>1</th><th>십진수</th></tr>
           <tr><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>4 + 1 = 5</td></tr>
         </table>
+        <p style="margin-top:1em"><b>이진 카드</b> — 카드를 눌러 뒤집어 보세요. 앞면(검정)이면 1, 뒷면이면 0이에요.</p>
+        <div class="cards" id="cards"></div>
+        <p class="card-sum" id="cardSum" aria-live="polite"></p>
       </div>
     </div>
     <div class="panel">
@@ -374,8 +397,8 @@
     <div class="panel">
       <div class="panel-head"><div class="panel-title">이진 비밀 메시지</div></div>
       <div class="panel-body">
-        <p>A=1, B=2, …, Z=26을 다섯 자리 이진수로 바꿨어요.</p>
-        <div class="question cipher-big">00011 / 00001 / 10100</div>
+        <p><b>시저 암호 때처럼 A=0, B=1, …, Z=25</b>로 번호를 붙이고, 그 번호를 다섯 자리 이진수로 바꿨어요.</p>
+        <div class="question cipher-big">00010 / 00000 / 10011</div>
       </div>
     </div>
     <div class="panel">
@@ -384,26 +407,26 @@
         <p>십진수: <input data-q="활동3 비밀 십진수" class="mid" maxlength="10" autocomplete="off"> <button class="btn mini" data-check="활동3 비밀 십진수" type="button">확인</button><br><small class='hint'>쉼표로 나눠 쓰세요. 예) 1, 2, 3</small></p>
         <label class="ans block">→ 메시지<input data-q="활동3 비밀 메시지" maxlength="6" autocapitalize="characters" autocomplete="off"></label>
         <button class="btn mini" data-check="활동3 비밀 메시지" type="button">확인</button>
-        <p>AI에게 "컴퓨터는 글자 A를 어떤 이진수로 저장해? 아스키코드로 알려 줘."라고 물어보세요.</p>
-        <p>A의 아스키코드: 십진수 <input data-q="활동3 A 아스키 십진수" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="활동3 A 아스키 십진수" type="button">확인</button> = 이진수 <input data-q="활동3 A 아스키 이진수" class="mid" maxlength="9" inputmode="numeric" autocomplete="off">₂ <button class="btn mini" data-check="활동3 A 아스키 이진수" type="button">확인</button></p>
       </div>
     </div>
   </section>
   <section class="slide workspace" data-title="활동 4 ① 내가 보낸 신호">
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">활동 4. 짝 활동: 모스-이진 비밀 대화 <span class="time">20분</span></div></div>
+      <div class="panel-head"><div class="panel-title">활동 4. 짝 활동: 모스-이진 비밀 대화 <span class="time">13분</span></div></div>
       <div class="panel-body">
-        <p>내 영어 이니셜 3글자를 모스 부호로 바꾸고, <b>• = 0, − = 1</b>로 바꿔 짝에게 보내요. (글자 사이는 / )</p>
+        <p>짧은 영어 단어(3~5글자)를 하나 정해 모스 부호로 바꾸고, <b>• = 0, − = 1</b>로 바꿔 짝에게 보내요. (글자 사이는 / )</p>
         <p>짝의 신호를 거꾸로 풀어 맞혀 봐요.</p>
-        <div class="note">예) K → −•− → 101</div>
+        <div class="note">예) SUN → ••• / ••− / −• → 000 / 001 / 10<br>• 와 − 는 칸 아래 버튼으로 넣어요. 자판의 마침표(.)와 빼기(-)로 써도 저절로 바뀌어요.</div>
       </div>
     </div>
     <div class="panel">
       <div class="panel-head"><div class="panel-title">내가 보낸 신호</div></div>
       <div class="panel-body">
-        <label class="ans block">이니셜 (3글자)<input data-q="활동4 내 이니셜" maxlength="3" autocapitalize="characters" autocomplete="off"></label>
-        <label class="ans block">모스 부호<input data-q="활동4 내 모스 부호" maxlength="30" placeholder="예) −•− / •• / −−" autocomplete="off"></label>
-        <label class="ans block">이진 신호 (0, 1)<input data-q="활동4 내 이진 신호" maxlength="30" inputmode="numeric" placeholder="예) 101 / 00 / 11" autocomplete="off"></label>
+        <label class="ans block">내 영어 단어 (3~5글자)<input data-q="활동4 내 단어" maxlength="5" autocapitalize="characters" autocomplete="off"></label>
+        <label class="ans block">모스 부호<input data-q="활동4 내 모스 부호" class="morse-in" maxlength="40" placeholder="예) ••• / ••− / −•" autocomplete="off" inputmode="none"></label>
+        <div class="keys" data-for="활동4 내 모스 부호"><button class="btn" type="button" data-k="•">•</button><button class="btn" type="button" data-k="−">−</button><button class="btn" type="button" data-k=" / ">/</button><button class="btn" type="button" data-k="BS" aria-label="한 글자 지우기">⌫</button></div>
+        <label class="ans block">이진 신호 (0, 1)<input data-q="활동4 내 이진 신호" class="bin-in" maxlength="40" inputmode="numeric" placeholder="예) 000 / 001 / 10" autocomplete="off"></label>
+        <div class="keys" data-for="활동4 내 이진 신호"><button class="btn" type="button" data-k="0">0</button><button class="btn" type="button" data-k="1">1</button><button class="btn" type="button" data-k=" / ">/</button><button class="btn" type="button" data-k="BS" aria-label="한 글자 지우기">⌫</button></div>
       </div>
     </div>
   </section>
@@ -411,9 +434,11 @@
     <div class="panel">
       <div class="panel-head"><div class="panel-title">짝의 신호 해독</div></div>
       <div class="panel-body">
-        <label class="ans block">받은 이진 신호<input data-q="활동4 받은 이진 신호" maxlength="30" inputmode="numeric" autocomplete="off"></label>
-        <label class="ans block">모스 부호로 되돌리기<input data-q="활동4 모스로 되돌리기" maxlength="30" autocomplete="off"></label>
-        <label class="ans block">해독한 이니셜<input data-q="활동4 해독한 이니셜" maxlength="3" autocapitalize="characters" autocomplete="off"></label>
+        <label class="ans block">받은 이진 신호<input data-q="활동4 받은 이진 신호" class="bin-in" maxlength="40" inputmode="numeric" autocomplete="off"></label>
+        <div class="keys" data-for="활동4 받은 이진 신호"><button class="btn" type="button" data-k="0">0</button><button class="btn" type="button" data-k="1">1</button><button class="btn" type="button" data-k=" / ">/</button><button class="btn" type="button" data-k="BS" aria-label="한 글자 지우기">⌫</button></div>
+        <label class="ans block">모스 부호로 되돌리기<input data-q="활동4 모스로 되돌리기" class="morse-in" maxlength="40" autocomplete="off" inputmode="none"></label>
+        <div class="keys" data-for="활동4 모스로 되돌리기"><button class="btn" type="button" data-k="•">•</button><button class="btn" type="button" data-k="−">−</button><button class="btn" type="button" data-k=" / ">/</button><button class="btn" type="button" data-k="BS" aria-label="한 글자 지우기">⌫</button></div>
+        <label class="ans block">해독한 단어<input data-q="활동4 해독한 단어" maxlength="5" autocapitalize="characters" autocomplete="off"></label>
         <label class="ans block">맞았나요?<select data-q="활동4 맞았나"><option value="">고르기</option><option>O</option><option>X</option></select></label>
       </div>
     </div>
@@ -433,7 +458,24 @@
       </div>
     </div>
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">더 생각해 보기</div></div>
+      <div class="panel-head"><div class="panel-title">다시 생각해 보기</div></div>
+      <div class="panel-body">
+        <p>오늘 처음 질문은 "<b>단 두 가지 신호</b>로 어떻게 모든 글자를 보낼까?"였어요.</p>
+        <label class="ans block">그런데 모스 부호는 정말 두 가지 신호만 쓸까요? 활동 4에서 글자 사이의 / (쉼)가 없으면 어떻게 되었는지 떠올리며 써 보세요.<textarea data-q="성찰 정말 두 가지 신호일까" rows="5"></textarea></label>
+      </div>
+    </div>
+  </section>
+  <section class="slide workspace" data-title="더 해보기 (선택)" data-optional>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">더 해보기 1. 컴퓨터 속 글자, 아스키코드</div></div>
+      <div class="panel-body">
+        <p>AI에게 "컴퓨터는 글자 A를 어떤 이진수로 저장해? 아스키코드로 알려 줘."라고 물어보세요.</p>
+        <p>A의 아스키코드: 십진수 <input data-q="활동3 A 아스키 십진수" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="활동3 A 아스키 십진수" type="button">확인</button> = 이진수 <input data-q="활동3 A 아스키 이진수" class="mid" maxlength="9" inputmode="numeric" autocomplete="off">₂ <button class="btn mini" data-check="활동3 A 아스키 이진수" type="button">확인</button></p>
+        <p class="hint">위의 이진 카드에 32, 64 카드가 더 있다고 생각하고 맞춰 보세요.</p>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">더 해보기 2. 신호가 3가지라면?</div></div>
       <div class="panel-body">
         <label class="ans block">신호가 점, 선, 긴 선 3가지라면 신호 2개로 몇 가지를 만들 수 있을까요? 그렇게 생각한 까닭도 써 보세요.<textarea data-q="성찰 신호가 3가지라면" rows="4"></textarea></label>
       </div>
@@ -485,6 +527,66 @@
 </script>
 <script>
   // ===== 도구 전용 JavaScript는 여기부터 =====
+  const MORSE = {A:"•−",B:"−•••",C:"−•−•",D:"−••",E:"•",F:"••−•",G:"−−•",H:"••••",I:"••",J:"•−−−",K:"−•−",L:"•−••",M:"−−",
+    N:"−•",O:"−−−",P:"•−−•",Q:"−−•−",R:"•−•",S:"•••",T:"−",U:"••−",V:"•••−",W:"•−−",X:"−••−",Y:"−•−−",Z:"−−••"};
+
+  // • − 입력: 마침표·빼기를 바꾸고, 버튼으로 넣기 (휴대폰 자판에 없는 기호)
+  function fire(el) { el.dispatchEvent(new Event("input", {bubbles: true})); }
+  function tidyMorse(v) { return v.replace(/[.·∙]/g, "•").replace(/[-_–—]/g, "−").replace(/[^•− /]/g, ""); }
+  function tidyBin(v) { return v.replace(/[^01 /]/g, ""); }
+  document.querySelectorAll(".morse-in, .bin-in").forEach(el => {
+    const tidy = el.classList.contains("morse-in") ? tidyMorse : tidyBin;
+    el.addEventListener("input", () => { const t = tidy(el.value); if (t !== el.value) el.value = t; });
+  });
+  document.querySelectorAll(".keys").forEach(box => {
+    const el = document.querySelector(`[data-q="${box.dataset.for}"]`);
+    box.addEventListener("click", e => {
+      const b = e.target.closest("[data-k]"); if (!b) return;
+      const k = b.dataset.k;
+      if (k === "BS") el.value = el.value.endsWith(" / ") ? el.value.slice(0, -3) : el.value.slice(0, -1);
+      else if (el.value.length + k.length <= el.maxLength) el.value += k;
+      fire(el);
+    });
+  });
+
+  // 모스 부호 소리로 듣기
+  let actx = null, playing = false;
+  document.getElementById("playIn").addEventListener("input", e => { e.target.value = e.target.value.toUpperCase().replace(/[^A-Z ]/g, ""); });
+  document.getElementById("playBtn").addEventListener("click", async () => {
+    if (playing) return;
+    const word = document.getElementById("playIn").value.replace(/[^A-Z]/g, "") || "SOS";
+    const out = document.getElementById("playOut"), lamp = document.getElementById("lamp");
+    out.textContent = [...word].map(c => MORSE[c]).join(" / ");
+    try { actx = actx || new (window.AudioContext || window.webkitAudioContext)(); await actx.resume(); } catch (e) { actx = null; }
+    playing = true;
+    const U = 110, wait = ms => new Promise(r => setTimeout(r, ms));
+    for (const c of word) {
+      for (const sym of MORSE[c]) {
+        const len = sym === "•" ? U : U * 3;
+        lamp.classList.add("on");
+        if (actx) { const o = actx.createOscillator(), g = actx.createGain(); o.frequency.value = 650; g.gain.value = .15; o.connect(g).connect(actx.destination); o.start(); o.stop(actx.currentTime + len / 1000); }
+        await wait(len); lamp.classList.remove("on"); await wait(U);
+      }
+      await wait(U * 2);
+    }
+    playing = false;
+  });
+
+  // 이진 카드
+  const VALS = [16, 8, 4, 2, 1], cardsEl = document.getElementById("cards");
+  cardsEl.innerHTML = VALS.map(v => `<button class="card" type="button" data-v="${v}" aria-pressed="false"><div class="v">${v}</div><div class="bit">0</div></button>`).join("");
+  function showCards() {
+    const on = [...cardsEl.children].filter(c => c.classList.contains("on"));
+    const bits = [...cardsEl.children].map(c => c.classList.contains("on") ? 1 : 0).join("");
+    const sum = on.reduce((a, c) => a + +c.dataset.v, 0);
+    document.getElementById("cardSum").textContent = `${bits}₂ = ${on.length ? on.map(c => c.dataset.v).join(" + ") + " = " : ""}${sum}`;
+  }
+  cardsEl.addEventListener("click", e => {
+    const c = e.target.closest(".card"); if (!c) return;
+    c.classList.toggle("on"); c.setAttribute("aria-pressed", c.classList.contains("on"));
+    c.querySelector(".bit").textContent = c.classList.contains("on") ? 1 : 0; showCards();
+  });
+  showCards();
 
   // 슬라이드 넘기기·영상·입력·제출 (공통 파일)
   Deck.init({ lesson: "morse-binary" });

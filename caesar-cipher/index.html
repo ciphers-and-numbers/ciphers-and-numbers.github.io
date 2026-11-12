@@ -237,6 +237,9 @@
   .key-row{display:flex;align-items:center;gap:12px;margin-top:12px;font-weight:800}
   .key-row input{flex:1;accent-color:#15171a}
   .key-row output{min-width:2.5em;text-align:right}
+  .live{font-size:.85em;font-weight:800;margin:.2em 0 .6em;min-height:1.2em}
+  .live.ok{color:#32724f}.live.no{color:#b44634}.live.wait{color:var(--muted)}
+  .hangul td{min-width:2.2em}
 </style>
 <link rel="stylesheet" href="../common/deck.css?v=2">
 </head>
@@ -278,12 +281,13 @@
       <div class="panel-head"><div class="panel-title">오늘 할 일</div></div>
       <div class="panel-body">
         <ol>
-          <li>영상으로 카이사르의 암호 만나기 <span class="time">5분</span></li>
-          <li>나만의 암호 원판 완성하기 <span class="time">10분</span></li>
-          <li>정수의 덧셈으로 암호화, 뺄셈으로 복호화 <span class="time">12분</span></li>
-          <li>오늘의 성찰 일지 <span class="time">8분</span></li>
+          <li>영상 두 편: 카이사르의 암호, 자리 바꾸기와 글자 바꾸기 <span class="time">5분</span></li>
+          <li>나만의 암호 원판 완성하기 <span class="time">8분</span></li>
+          <li>내 열쇠로 암호화(덧셈), 친구의 암호 복호화(뺄셈) <span class="time">10분</span></li>
+          <li>짝과 해독 대결 <span class="time">12분</span></li>
+          <li>오늘의 성찰 일지 <span class="time">5분</span></li>
         </ol>
-        <p class="extra">시간이 되면: 짝과 해독 대결 <span class="time">15분</span> · 영상으로 보는 에니그마와 튜링 <span class="time">5분</span></p>
+        <p class="extra">시간이 되면: 한글 자음으로 시저 암호 만들기 <span class="time">10분</span> · 영상으로 보는 에니그마와 튜링 <span class="time">5분</span></p>
       </div>
     </div>
   </section>
@@ -322,8 +326,8 @@
       <div class="panel-head"><div class="panel-title">지난 시간과 비교하기</div></div>
       <div class="panel-body">
         <p>지난 시간의 <b>스키테일 암호</b>는 글자의 <b>자리</b>를 바꾸었어요. (전치 암호)<br>오늘의 <b>시저 암호</b>는 무엇을 바꿀까요? (치환 암호)</p>
-        <label class="ans block">1. 시저 암호는 글자를 어떻게 바꾸나요? 스키테일과 다른 점을 써 보세요.<textarea data-q="영상3 전치와 치환의 차이" rows="3"></textarea></label>
-        <label class="ans block">2. 글자의 자리도 바꾸고 글자도 바꾸면 어떤 점이 좋을까요?<textarea data-q="영상3 두 방법을 섞으면" rows="3"></textarea></label>
+        <label class="ans block">1. 시저 암호는 글자를 어떻게 바꾸나요? 스키테일과 다른 점을 써 보세요.<textarea data-q="영상2 전치와 치환의 차이" rows="3"></textarea></label>
+        <label class="ans block">2. 글자의 자리도 바꾸고 글자도 바꾸면 어떤 점이 좋을까요?<textarea data-q="영상2 두 방법을 섞으면" rows="3"></textarea></label>
       </div>
     </div>
   </section>
@@ -357,7 +361,7 @@
       </div>
     </div>
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">활동 1. 나만의 암호 원판 완성하기 <span class="time">10분</span></div></div>
+      <div class="panel-head"><div class="panel-title">활동 1. 나만의 암호 원판 완성하기 <span class="time">8분</span></div></div>
       <div class="panel-body">
         <ol>
           <li>나만의 열쇠 k를 정해요. (1~25 중 하나)<br>
@@ -365,8 +369,9 @@
           <li>A 안쪽 칸에 A에서 k칸 뒤의 글자를 써요. 예) k = 3이면 A 안쪽에 D</li>
           <li>시계 방향으로 한 칸씩 이어 써요. Z 다음은 다시 A!<br>
             <label class="ans block">A부터 Z까지 안쪽 글자 26개를 차례대로
-              <input data-q="활동1 원판" id="wheelIn" maxlength="26" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="예) DEFG…"></label></li>
-          <li>26칸이 모두 다른 글자인지 원판에서 확인해요.</li>
+              <input data-q="활동1 원판" id="wheelIn" maxlength="26" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="예) DEFG…"></label>
+            <p class="live" id="wheelLive" aria-live="polite"></p></li>
+          <li>26칸이 모두 다른 글자인지 원판에서 확인해요. 열쇠와 맞지 않는 칸은 원판에 빨간색으로 보여요.</li>
         </ol>
         <div class="note"><b>원판으로 확인하기</b><br>열쇠가 3일 때 Y의 암호 글자는?<br>
           24 + 3 = 27 → 27 − 26 = <input data-q="활동1 Y 번호" class="short" inputmode="numeric"><button class="btn mini" data-check="활동1 Y 번호" type="button">확인</button>
@@ -378,18 +383,20 @@
   <!-- 4. 활동 2-① -->
   <section class="slide workspace" data-title="활동 2 ① 암호화">
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">활동 2. ① 암호화 <span class="time">12분</span></div><div class="panel-desc">정수의 덧셈으로 암호화합니다.</div></div>
+      <div class="panel-head"><div class="panel-title">활동 2. ① 암호화 <span class="time">10분</span></div><div class="panel-desc">정수의 덧셈으로 암호화합니다.</div></div>
       <div class="panel-body">
-        <p>내 이니셜(예: KIM)을 <b>열쇠 +5</b>로 암호화해 봅시다.</p>
-        <div class="formula">예) K: 10 + 5 = 15 → P</div>
-        <label class="ans block">내 이니셜 <input data-q="활동2 이니셜" maxlength="5" autocapitalize="characters"></label>
+        <p>내 이니셜(예: KIM)을 <b>활동 1에서 정한 내 열쇠</b>로 암호화해 봅시다.</p>
+        <p>내 열쇠: <b class="num" id="myKeyView">k = ?</b> <small class="hint">(바꾸려면 활동 1로 돌아가요)</small></p>
+        <div class="formula">예) 열쇠가 5일 때 K: 10 + 5 = 15 → P</div>
+        <label class="ans block">내 이니셜 <input data-q="활동2 이니셜" id="initIn" maxlength="5" autocapitalize="characters"></label>
       </div>
     </div>
     <div class="panel">
       <div class="panel-head"><div class="panel-title">계산하기</div></div>
       <div class="panel-body">
         <label class="ans block">글자마다 계산식 쓰기<textarea data-q="활동2 암호화 계산식" rows="4" placeholder="예) K: 10 + 5 = 15 → P"></textarea></label>
-        <label class="ans block">결과 암호문 <input data-q="활동2 암호문" maxlength="5" autocapitalize="characters"></label>
+        <label class="ans block">결과 암호문 <input data-q="활동2 암호문" id="encOut" maxlength="5" autocapitalize="characters"></label>
+        <p class="live" id="encLive" aria-live="polite"></p>
       </div>
     </div>
   </section>
@@ -421,10 +428,10 @@
     </div>
   </section>
 
-  <!-- 5-1. 짝 활동 (선택) -->
-  <section class="slide workspace" data-title="짝과 해독 대결 (선택)" data-optional>
+  <!-- 5-1. 짝 활동 -->
+  <section class="slide workspace" data-title="활동 3 짝과 해독 대결">
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">더 해보기. 짝과 해독 대결 — 내가 낸 문제 <span class="time">15분</span></div><div class="panel-desc">열쇠는 비밀! 암호문만 짝에게 보여 주세요.</div></div>
+      <div class="panel-head"><div class="panel-title">활동 3. 짝과 해독 대결 — 내가 낸 문제 <span class="time">12분</span></div><div class="panel-desc">열쇠는 비밀! 암호문만 짝에게 보여 주세요.</div></div>
       <div class="panel-body">
         <label class="ans block">원래 메시지 (영어 한 단어)<input data-q="대결 내 메시지" maxlength="12" autocapitalize="characters"></label>
         <label class="ans">비밀 열쇠 k = <input data-q="대결 내 열쇠" class="short" inputmode="numeric" maxlength="2"></label>
@@ -439,11 +446,35 @@
         <label class="ans">찾은 열쇠 k = <input data-q="대결 찾은 열쇠" class="short" inputmode="numeric" maxlength="2"></label>
         <label class="ans block" style="margin-top:.6em">해독한 메시지<input data-q="대결 해독" maxlength="12" autocapitalize="characters"></label>
         <label class="ans block">열쇠를 찾은 방법<textarea data-q="대결 열쇠 찾은 방법" rows="3"></textarea></label>
+        <div class="note"><b>막히면</b> 암호문의 첫 글자를 A, B, C…라고 가정하고 열쇠를 하나씩 바꿔 보세요. 열쇠는 25가지뿐이에요.</div>
       </div>
     </div>
   </section>
 
-  <!-- 5-2. 마무리 영상 (선택) -->
+  <!-- 5-2. 한글 시저 암호 (선택) -->
+  <section class="slide workspace" data-title="한글 자음으로 시저 암호 (선택)" data-optional>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">더 해보기. 한글 자음으로 시저 암호 <span class="time">10분</span></div><div class="panel-desc">첫소리 자음만 밀고, 모음과 받침은 그대로 둡니다.</div></div>
+      <div class="panel-body">
+        <div class="table-scroll"><table class="alpha hangul" id="hangulTable"></table></div>
+        <p style="margin-top:.8em">한글 자음은 모두 <input data-q="한글 한 바퀴" class="short" inputmode="numeric" maxlength="2">개<button class="btn mini" data-check="한글 한 바퀴" type="button">확인</button>예요. 그래서 한 바퀴를 돌면 그만큼 빼거나 더해요.</p>
+        <div class="formula">예) 열쇠 +2: 수학 → ㅅ(6) + 2 = 8 → ㅈ, ㅎ(13) + 2 = 15 → 15 − 14 = 1 → ㄴ<br>&nbsp;&nbsp;→ 암호문 <b>주낙</b></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">풀어 보기</div></div>
+      <div class="panel-body">
+        <p>열쇠 +3으로 ㅎ을 밀면: 13 + 3 = 16 → 16 − 14 = <input data-q="한글 ㅎ 번호" class="short" inputmode="numeric"><button class="btn mini" data-check="한글 ㅎ 번호" type="button">확인</button>
+          → <input data-q="한글 ㅎ 글자" class="short" maxlength="1"><button class="btn mini" data-check="한글 ㅎ 글자" type="button">확인</button></p>
+        <p>친구가 열쇠 +4로 보낸 암호문 <b class="num">라블</b>을 풀어 보세요.<br><small class="hint">ㄹ(3) − 4 = −1 → 0보다 작으니 14를 더해요. ㅂ(5) − 4 = 1</small></p>
+        <label class="ans block">원래 낱말<input data-q="한글 해독" maxlength="6" autocomplete="off"></label>
+        <button class="btn mini" data-check="한글 해독" type="button">확인</button>
+        <label class="ans block" style="margin-top:1em">알파벳은 26, 한글 자음은 14로 한 바퀴를 돌아요. 무엇이 같고 무엇이 다른가요?<textarea data-q="한글 알파벳과 비교" rows="3"></textarea></label>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5-3. 마무리 영상 (선택) -->
   <section class="slide workspace" data-title="영상: 에니그마와 튜링 (선택)" data-optional>
     <div class="panel">
       <div class="panel-head"><div class="panel-title">더 해보기. 에니그마와 앨런 튜링 <span class="time">약 2분</span></div><div class="panel-desc">1:16 ~ 3:14 구간만 재생됩니다. 시간이 부족하면 건너뛰어도 됩니다.</div></div>
@@ -456,17 +487,17 @@
     <div class="panel">
       <div class="panel-head"><div class="panel-title">영상을 보고 답하기</div></div>
       <div class="panel-body">
-        <label class="ans block">1. 에니그마는 시저 암호보다 왜 풀기 어려웠을까요? 시저 암호의 열쇠 k와 비교해 보세요.<textarea data-q="영상2 에니그마가 어려운 까닭" rows="3"></textarea></label>
-        <label class="ans block">2. 튜링은 일기예보를 단서로 썼어요. 짝 대결에서 내가 열쇠를 찾은 단서는 무엇이었나요?<textarea data-q="영상2 내가 찾은 단서" rows="3"></textarea></label>
-        <label class="ans block">3. 암호를 푼 일이 전쟁의 결과를 바꿀 수 있었던 까닭은 무엇일까요?<textarea data-q="영상2 암호 해독의 영향" rows="3"></textarea></label>
+        <label class="ans block">1. 에니그마는 시저 암호보다 왜 풀기 어려웠을까요? 시저 암호의 열쇠 k와 비교해 보세요.<textarea data-q="영상3 에니그마가 어려운 까닭" rows="3"></textarea></label>
+        <label class="ans block">2. 튜링은 일기예보를 단서로 썼어요. 짝 대결에서 내가 열쇠를 찾은 단서는 무엇이었나요?<textarea data-q="영상3 내가 찾은 단서" rows="3"></textarea></label>
+        <label class="ans block">3. 암호를 푼 일이 전쟁의 결과를 바꿀 수 있었던 까닭은 무엇일까요?<textarea data-q="영상3 암호 해독의 영향" rows="3"></textarea></label>
       </div>
     </div>
   </section>
 
   <!-- 6. 활동 3 -->
-  <section class="slide workspace" data-title="활동 3">
+  <section class="slide workspace" data-title="활동 4 성찰">
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">활동 3. 오늘의 성찰 일지 <span class="time">8분</span></div></div>
+      <div class="panel-head"><div class="panel-title">활동 4. 오늘의 성찰 일지 <span class="time">5분</span></div></div>
       <div class="panel-body">
         <p><b>1.</b> 시저 암호의 열쇠는 모두 몇 가지일까요? 그렇다면 시저 암호의 약점은 무엇일까요?</p>
         <textarea data-q="성찰1 열쇠 가짓수와 약점" rows="5"></textarea>
@@ -560,7 +591,11 @@
       }, t));
       p(172, l, 15, "#15171a", 800);
       p(152, i, 10, "#9a958a", 500);
-      if (inner[i]) p(110, inner[i], 15, "#ff5a30", 800);
+      if (inner[i]) {
+        const kk = parseInt(k, 10), ok = !(kk >= 1 && kk <= 25) || inner[i] === LETTERS[(i + kk) % 26];
+        p(110, inner[i], 15, ok ? "#15171a" : "#d0342c", 800);
+        if (!ok) svg.appendChild(el("circle", {cx:c + 110*Math.cos(a), cy:c + 110*Math.sin(a), r:11, fill:"none", stroke:"#d0342c", "stroke-width":1.5}));
+      }
     });
     svg.appendChild(el("text", {x:c, y:c - 14, "text-anchor":"middle", "font-size":13, fill:"#6b6f74", "font-weight":700}, "내 열쇠"));
     svg.appendChild(el("text", {x:c, y:c + 16, "text-anchor":"middle", "font-size":24, fill:"#15171a", "font-weight":800}, k ? "k = " + k : "k = ?"));
@@ -575,9 +610,40 @@
   keyIn.addEventListener("input", redraw);
   wheelIn.addEventListener("input", redraw);
 
+  // 원판·암호화 바로 확인 (학생마다 열쇠가 달라 화면에서 직접 확인)
+  const getK = () => { const k = parseInt(keyIn.value, 10); return k >= 1 && k <= 25 ? k : null; };
+  const shift = (t, k) => t.replace(/[A-Z]/g, ch => LETTERS[(LETTERS.indexOf(ch) + k) % 26]);
+  function live(id, cls, msg) { const e = document.getElementById(id); e.className = "live " + cls; e.textContent = msg; }
+  function checkWheel() {
+    const k = getK(), w = wheelIn.value;
+    if (!k) return live("wheelLive", "wait", "먼저 열쇠 k(1~25)를 써 주세요.");
+    if (!w) return live("wheelLive", "wait", "");
+    const want = shift(LETTERS.join(""), k);
+    const bad = [...w].map((c, i) => c === want[i] ? "" : LETTERS[i]).filter(Boolean);
+    if (bad.length) live("wheelLive", "no", `${bad.join(", ")} 안쪽 칸을 다시 확인해 보세요.`);
+    else if (w.length < 26) live("wheelLive", "wait", `지금까지 ${w.length}칸 모두 맞아요. 계속 써 보세요.`);
+    else live("wheelLive", "ok", "26칸 모두 맞아요!");
+  }
+  const initIn = document.getElementById("initIn"), encOut = document.getElementById("encOut");
+  function checkEnc() {
+    const k = getK();
+    document.getElementById("myKeyView").textContent = k ? "k = " + k : "k = ? (활동 1에서 먼저 정해요)";
+    const ini = initIn.value.toUpperCase().replace(/[^A-Z]/g, ""), out = encOut.value.toUpperCase().replace(/[^A-Z]/g, "");
+    if (!k || !ini || !out) return live("encLive", "wait", "");
+    if (out.length < ini.length) return live("encLive", "wait", "이니셜 글자 수만큼 써 주세요.");
+    live("encLive", out === shift(ini, k) ? "ok" : "no", out === shift(ini, k) ? "내 열쇠로 바르게 암호화했어요!" : "계산식을 다시 확인해 보세요.");
+  }
+  [keyIn, wheelIn].forEach(e => e.addEventListener("input", () => { checkWheel(); checkEnc(); }));
+  [initIn, encOut].forEach(e => e.addEventListener("input", checkEnc));
+
+  // 한글 자음 번호표
+  const JA = "ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎ".split("");
+  document.getElementById("hangulTable").innerHTML =
+    "<tr>" + JA.map(l => `<td>${l}</td>`).join("") + "</tr><tr>" + JA.map((_, i) => `<td>${i}</td>`).join("") + "</tr>";
+
   // 슬라이드 넘기기·영상·입력·제출 (공통 파일)
   Deck.init({ lesson: "caesar-cipher" });
-  redraw();
+  redraw(); checkWheel(); checkEnc();
 </script>
 </body>
 </html>
