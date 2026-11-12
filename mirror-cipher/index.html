@@ -307,6 +307,7 @@
   .mirror button.hi small{color:#fff}
   .mirror-line{height:2px;background:var(--line);margin:2px 0;position:relative}
   .mirror-line span{position:absolute;left:50%;top:-9px;transform:translateX(-50%);background:var(--panel);padding:0 6px;font-size:11px;color:var(--muted);font-weight:800}
+  @media (max-width:520px){ .mirror{gap:2px} .mirror button{font-size:12px;padding:4px 0} .mirror button small{font-size:9px} }
   .pairshow{font-family:ui-monospace,Consolas,monospace;font-weight:800;text-align:center;min-height:1.6em;font-size:1.1em}
 </style>
 </head>
@@ -431,8 +432,14 @@
     <div class="panel">
       <div class="panel-head"><div class="panel-title">더 생각해 보기</div></div>
       <div class="panel-body">
-        <p>만약 알파벳이 <b>27글자</b>였다면 거울 규칙은 y = 28 − x가 돼요.</p>
-        <label class="ans">그때는 자기 자신이 되는 글자가 생길까요? 몇 번째 글자일까요?<textarea data-q="도전3 27글자라면" rows="3"></textarea></label>
+        <p>만약 글자가 <b>n개</b>라면 거울 규칙은 y = (n + 1) − x가 돼요. 글자 수를 바꿔 보세요.</p>
+        <p class="hint" id="nLock">왼쪽 "몇 개" 문제를 맞히면 실험 도구가 열려요.</p>
+        <div id="nBox" hidden>
+          <div class="tryer"><span>글자 수 n =</span><input id="nRange" type="range" min="20" max="30" value="27" style="flex:1"><output id="nOut" class="mono">27</output></div>
+          <p class="pairshow" id="nRule"></p>
+          <p class="hint" id="nNote"></p>
+        </div>
+        <label class="ans">글자 수가 어떤 수일 때 자기 자신이 되는 글자가 생기나요? 그 까닭은?<textarea data-q="도전3 27글자라면" rows="3"></textarea></label>
         <label class="ans">자기 자신이 되는 글자가 있으면 암호로서 어떤 점이 나쁠까요?<textarea data-q="도전3 그대로인 글자의 약점" rows="3"></textarea></label>
       </div>
     </div>
@@ -461,6 +468,11 @@
         </div>
         <label class="ans">거울 + 밀기를 두 번 하면 어떻게 되나요? 해독은 어떻게 하면 될까요?<textarea data-q="도전4 두 번 하면" rows="3"></textarea></label>
         <label class="ans">거울만 쓸 때보다 풀기 어려워졌나요? 열쇠는 몇 가지인가요?<textarea data-q="도전4 얼마나 강해졌나" rows="3"></textarea></label>
+        <div class="note" style="margin-top:6px"><b>보너스. k를 모르면 풀 수 있을까?</b><br>암호문 <b class="mono">SEYWC</b>는 거울 + 밀기로 만들었는데, k를 알려 주지 않았어요. k를 바꿔 가며 뜻이 통하는 단어를 찾아보세요.</div>
+        <div class="tryer" style="margin-top:8px"><span>k =</span><input id="bk" type="range" min="0" max="25" value="0" style="flex:1"><output id="bkOut" class="mono">0</output></div>
+        <p class="pairshow" id="bOut"></p>
+        <p>찾은 k = <input data-q="도전4 보너스 k" data-free class="short" inputmode="numeric" maxlength="2"><button class="btn mini" data-check="도전4 보너스 k" type="button">확인</button>
+           단어 <input data-q="도전4 보너스 단어" data-free class="mid" maxlength="8" autocapitalize="characters"><button class="btn mini" data-check="도전4 보너스 단어" type="button">확인</button></p>
       </div>
     </div>
   </section>
@@ -562,6 +574,7 @@
     stars[i] = on; $("star" + i).textContent = on ? " ★" : "";
     if (on && i === 2) { $("twiceBox").hidden = false; $("twiceLock").hidden = true; }
     if (on && i === 4) { $("upBox").hidden = false; $("upLock").hidden = true; }
+    if (on && i === 3) { $("nBox").hidden = false; $("nLock").hidden = true; }
     const n = Object.values(stars).filter(Boolean).length;
     $("starBadge").textContent = $("starNav").textContent = "★".repeat(n) + "☆".repeat(5 - n);
   }
@@ -604,6 +617,16 @@
   $("myK").addEventListener("change", checkMine);
   function tryUp() { const k = parseInt($("tk").value, 10), w = word($("tw").value); $("tOut").textContent = (k >= 0 && w) ? `${w} → ${enc(w, k)} → ${enc(enc(w, k), k)}` : ""; }
   ["tk", "tw"].forEach(id => $(id).addEventListener("input", tryUp));
+  // 도전 3: 글자 수 n 바꾸기 (n이 홀수면 가운데 글자가 자기 자신)
+  function nTry() {
+    const n = +$("nRange").value; $("nOut").textContent = n;
+    $("nRule").textContent = `y = ${n + 1} − x`;
+    $("nNote").textContent = n % 2 ? `x = ${n + 1} − x 를 풀면 x = ${(n + 1) / 2}. 자연수라서 ${(n + 1) / 2}번째 글자는 거울에 비춰도 그대로예요.` : `x = ${n + 1} − x 를 풀면 x = ${(n + 1) / 2}. 자연수가 아니라서 그대로인 글자가 없어요.`;
+  }
+  $("nRange").addEventListener("input", nTry);
+  // 도전 4 보너스: k 바꿔 보기
+  function bTry() { const k = +$("bk").value; $("bkOut").textContent = k; $("bOut").textContent = `SEYWC → ${enc("SEYWC", k)}`; }
+  $("bk").addEventListener("input", bTry);
 
   // 도전 5: 짝의 암호 + 푼 문제 수
   const solved = new Map();
@@ -639,7 +662,7 @@
   CN.init({ lesson: "mirror-cipher", goto: n => { show(n); window.scrollTo(0, 0); }, onBadId: () => show(0) });
   show(Math.max(0, (parseInt(location.hash.slice(1), 10) || 1) - 1));
   { const w = $("solvedW").value; if (w) w.split(", ").forEach((x, i) => solved.set("saved" + i, x)); }
-  twice(); checkMine(); tryUp(); checkFriend(); showSolved();
+  twice(); checkMine(); tryUp(); checkFriend(); showSolved(); nTry(); bTry();
 </script>
 </body>
 </html>
