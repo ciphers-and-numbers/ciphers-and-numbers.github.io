@@ -13,9 +13,9 @@ Claude(또는 Claude Code)가 이 저장소를 수정할 때 따르는 규칙입
 ## 파일 역할
 | 파일 | 역할 | 수정 여부 |
 |---|---|---|
-| `site-config.js` | 홈페이지 이름·문구(`SITE`), 앱 목록(`TOOLS`), 과목(`SUBJECT_GROUPS`) | 주로 여기만 수정 |
+| `site-config.js` | 홈페이지 이름·문구(`SITE`), 앱 목록(`TOOLS`), 주제 분류(`SUBJECT_GROUPS`) | 주로 여기만 수정 |
 | `index.html` | 메인 페이지 뼈대 | `data-site`, `id` 속성은 유지 |
-| `script.js` | 검색·과목 필터·카드·QR 동작 | 되도록 수정하지 않음 |
+| `script.js` | 검색·주제 필터·카드·QR 동작 | 되도록 수정하지 않음 |
 | `style.css` | 메인 디자인 | 디자인 변경 시 `:root` 색상부터 수정 |
 | `hero-reel.js` | 첫 화면 오른쪽 모션 그래픽 | 원하지 않으면 index.html에서 스크립트 줄을 지워도 됨 |
 | `app-template/` | 새 앱의 빈 틀 | 복사해서 사용, 원본은 남겨 둠 |
