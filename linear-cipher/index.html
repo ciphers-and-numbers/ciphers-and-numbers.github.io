@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>일차식 암호 | 암호와 수</title>
+<title>10406 학생의 일차식 암호 | 암호와 수</title>
 <style>
   /* ===== 공통 테마 =====
      이 :root 블록과 아래 "공통 셸" 영역은 모든 도구가 동일하게 유지합니다.
@@ -316,12 +316,12 @@
       </a>
       <span class="top-divider" aria-hidden="true"></span>
       <div class="title-row">
-        <div class="eyebrow"><span></span>주제선택 · 암호와 수 · 웹앱</div>
-        <h1>학생이 만든 <em>일차식 암호</em></h1>
+        <div class="eyebrow"><span></span>주제선택 · 암호와 수 · 학생이 만든 암호</div>
+        <h1>10406 학생의 <em>일차식 암호</em></h1>
         <p class="subtitle">10406김O서 학생이 만든 암호를 풀고, 나만의 일차식 암호를 만들어 짝과 주고받습니다.</p>
       </div>
     </div>
-    <div class="badge"><span class="dot"></span><span class="stars" id="starBadge">☆☆☆☆</span></div>
+    <div class="badge"><span class="dot"></span><span class="stars" id="starBadge">☆☆☆☆☆</span></div>
   </div>
 
   <nav class="tabs" id="tabs" aria-label="단계"></nav>
@@ -349,7 +349,8 @@
           <li>도전 1. 규칙 맞히기</li>
           <li>도전 2. 비밀 메시지 풀기</li>
           <li>도전 3. 나만의 일차식 암호 만들기</li>
-          <li>도전 4. 짝의 암호 풀기</li>
+          <li>도전 4. 짝의 암호 풀기 (몇 개나 풀까?)</li>
+          <li>도전 5. 열쇠 없이 풀기</li>
           <li>마무리하고 제출하기</li>
         </ol>
         <p class="hint">별(★)은 도전을 해낼 때마다 하나씩 채워져요.</p>
@@ -417,15 +418,15 @@
   <!-- 3. 나만의 암호 -->
   <section class="slide stage" data-title="도전 3 나만의 일차식 암호">
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">도전 3. 나만의 일차식 암호 만들기</div><div class="panel-desc">y = ax + b 에서 a와 b를 내가 정해요. (A = 1 … Z = 26)</div></div>
+      <div class="panel-head"><div class="panel-title">도전 3. 나만의 일차식 암호 만들기</div><div class="panel-desc">y = ax + b 에서 a와 b를 내가 정해요. (A = 1 … Z = 26) a와 b에 음수를 써도 돼요.</div></div>
       <div class="panel-body">
         <div class="row2">
-          <label class="ans">a (x의 계수)<select data-q="도전3 a" id="myA"><option value="">고르기</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></label>
-          <label class="ans">b (상수항)<input data-q="도전3 b" id="myB" inputmode="numeric" maxlength="2" placeholder="0~20"></label>
+          <label class="ans">a (x의 계수)<select data-q="도전3 a" id="myA"><option value="">고르기</option><option>-2</option><option>-1</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></label>
+          <label class="ans">b (상수항)<select data-q="도전3 b" id="myB"><option value="">고르기</option><option>-10</option><option>-9</option><option>-8</option><option>-7</option><option>-6</option><option>-5</option><option>-4</option><option>-3</option><option>-2</option><option>-1</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option><option>13</option><option>14</option><option>15</option><option>16</option><option>17</option><option>18</option><option>19</option><option>20</option></select></label>
         </div>
         <div class="rule" id="myRule">y = ? x + ?</div>
         <label class="ans">보낼 영어 단어 (3~8글자)<input data-q="도전3 내 단어" id="myWord" class="mono" maxlength="8" autocapitalize="characters" autocomplete="off"></label>
-        <label class="ans">내가 계산한 암호문 <small class="hint">(수 사이는 쉼표나 점으로 구분)</small><input data-q="도전3 내 암호문" id="myCipher" class="mono" maxlength="60" inputmode="decimal" autocomplete="off" placeholder="예) 17, 11, 25"></label>
+        <label class="ans">내가 계산한 암호문 <small class="hint">(수 사이는 쉼표로 구분, 음수는 앞에 −)</small><input data-q="도전3 내 암호문" id="myCipher" class="mono" maxlength="80" inputmode="text" autocomplete="off" placeholder="예) 17, 11, 25"></label>
         <p class="live" id="myLive" aria-live="polite"></p>
         <p class="hint">화면에서 "맞아요"가 나오면 암호문과 a, b를 짝에게 알려 주세요.</p>
       </div>
@@ -437,6 +438,7 @@
         <p class="hint" id="myTableHint" style="margin-top:6px">내 암호를 직접 계산해서 "맞아요"가 나오면 A~Z 전체 암호표가 열려요.</p>
         <label class="ans">내 암호를 푸는 식 (x = …)<input data-q="도전3 푸는 식" autocomplete="off" placeholder="예) x = (y − b) ÷ a"></label>
         <label class="ans">만약 a를 0으로 하면 어떻게 될까요? 암호로 쓸 수 있을까요?<textarea data-q="도전3 a가 0이면" rows="3"></textarea></label>
+        <label class="ans">(해 본 학생만) a나 b를 음수로 했더니 암호 수가 어떻게 되었나요? 음수가 나와도 풀 수 있나요?<textarea data-q="도전3 음수로 해 보기" data-free rows="3"></textarea></label>
       </div>
     </div>
   </section>
@@ -447,28 +449,58 @@
       <div class="panel-head"><div class="panel-title">도전 4. 짝의 암호 풀기</div><div class="panel-desc">짝에게 a, b와 암호문을 받아 풀어요. 짝이 없으면 아래 "문제 받기"를 눌러요.</div></div>
       <div class="panel-body">
         <div class="row2">
-          <label class="ans">짝의 a<input data-q="도전4 짝 a" id="frA" inputmode="numeric" maxlength="1"></label>
-          <label class="ans">짝의 b<input data-q="도전4 짝 b" id="frB" inputmode="numeric" maxlength="2"></label>
+          <label class="ans">짝의 a<input data-q="도전4 짝 a" id="frA" inputmode="text" maxlength="3" autocomplete="off"></label>
+          <label class="ans">짝의 b<input data-q="도전4 짝 b" id="frB" inputmode="text" maxlength="3" autocomplete="off"></label>
         </div>
         <p><button class="btn mini" id="autoBtn" type="button" style="margin-left:0">짝이 없으면: 문제 받기</button> <span class="hint" id="autoNote"></span><input type="hidden" data-q="도전4 문제 출처" data-free id="frSrc" value=""></p>
-        <label class="ans">받은 암호문 <small class="hint">(수 사이는 쉼표나 점으로 구분)</small><input data-q="도전4 받은 암호문" id="frCipher" class="mono" maxlength="60" inputmode="decimal" autocomplete="off"></label>
+        <label class="ans">받은 암호문 <small class="hint">(수 사이는 쉼표로 구분, 음수는 앞에 −)</small><input data-q="도전4 받은 암호문" id="frCipher" class="mono" maxlength="80" inputmode="text" autocomplete="off"></label>
         <label class="ans">푸는 과정 (한 글자 이상)<textarea data-q="도전4 푸는 과정" rows="3" placeholder="예) 3x + 2 = 26 → 3x = 24 → x = 8 → H"></textarea></label>
         <label class="ans">해독한 단어<input data-q="도전4 해독한 단어" id="frWord" class="mono" maxlength="8" autocapitalize="characters" autocomplete="off"></label>
         <p class="live" id="frLive" aria-live="polite"></p>
       </div>
     </div>
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">열쇠 없이 풀 수 있을까?</div></div>
+      <div class="panel-head"><div class="panel-title">몇 개나 풀었나?</div><div class="panel-desc">풀 때마다 하나씩 올라가요. 제출하면 기록에 남아요.</div></div>
       <div class="panel-body">
-        <p>10406김O서 학생은 "단순 역산으로 쉽게 풀린다"고 했어요. a와 b를 몰라도 풀 수 있을까요?</p>
-        <div class="note">힌트: 영어에서 가장 많이 쓰는 글자는 <b>E(5)</b>예요. 암호문에서 가장 많이 나온 수가 E라고 가정하면? 또 A(1)는 a + b, B(2)는 2a + b가 되니, 두 글자만 알면 a와 b를 찾을 수 있어요.</div>
-        <label class="ans" style="margin-top:10px">일차식 암호의 강점과 약점을 정리해 보세요.<textarea data-q="도전4 강점과 약점" rows="4"></textarea></label>
+        <div class="rule" id="solvedCount">0개</div>
+        <p class="hint" id="solvedList">아직 푼 문제가 없어요.</p>
+        <p><button class="btn primary" id="nextProb" type="button">다음 문제</button> <span class="hint">짝에게 새 암호를 받거나, 짝이 없으면 문제를 새로 받아요.</span></p>
+        <input type="hidden" data-q="도전4 푼 문제 수" data-free id="solvedQ" value="">
+        <input type="hidden" data-q="도전4 푼 단어들" data-free id="solvedW" value="">
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. 열쇠 없이 -->
+  <section class="slide stage" data-title="도전 5 열쇠 없이 풀기">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">도전 5. 열쇠 없이 풀어라</div><div class="panel-desc">a와 b를 모르는 일차식 암호예요. a와 b를 바꿔 가며 뜻이 통하는 영어를 찾아요.</div></div>
+      <div class="panel-body">
+        <div class="cipher">73 · 19 · 40 · 40 · 16 · 49 · 46 · 19</div>
+        <div class="row2" style="margin-top:10px">
+          <label class="ans">a 추측<select id="gA"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></label>
+          <label class="ans">b 추측<select id="gB"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option><option>13</option><option>14</option><option>15</option><option>16</option><option>17</option><option>18</option><option>19</option><option>20</option></select></label>
+        </div>
+        <p>되돌린 결과: <b class="mono" id="gOut"></b></p>
+        <p class="hint" id="gNote"></p>
+        <div class="note">힌트: 19와 40이 두 번씩 나와요. 영어에서 가장 많이 쓰는 글자는 E(5)예요. 19가 E라면 5a + b = 19가 돼요.</div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">찾았나요?</div></div>
+      <div class="panel-body">
+        <p>a = <input data-q="도전5 a" class="short" inputmode="numeric" maxlength="1"><button class="btn mini" data-check="도전5 a" type="button">확인</button>
+           &nbsp; b = <input data-q="도전5 b" class="short" inputmode="numeric" maxlength="2"><button class="btn mini" data-check="도전5 b" type="button">확인</button></p>
+        <label class="ans">원래 메시지<input data-q="도전5 메시지" class="mono" maxlength="12" autocapitalize="characters" autocomplete="off"></label>
+        <button class="btn mini" data-check="도전5 메시지" type="button" style="margin-left:0">확인</button>
+        <label class="ans" style="margin-top:12px">a와 b를 어떻게 찾았나요? 글자가 모두 나오는 답이 여러 개였다면 어떻게 골랐나요?<textarea data-q="도전5 찾은 방법" rows="3"></textarea></label>
+        <label class="ans">일차식 암호의 강점과 약점을 정리해 보세요.<textarea data-q="도전4 강점과 약점" rows="3"></textarea></label>
         <label class="ans">더 풀기 어렵게 하려면 어떻게 바꿀까요?<textarea data-q="도전4 업그레이드" rows="3"></textarea></label>
       </div>
     </div>
   </section>
 
-  <!-- 5. 제출 -->
+  <!-- 6. 제출 -->
   <section class="slide stage" data-title="마무리와 제출">
     <div class="panel">
       <div class="panel-head"><div class="panel-title">마무리</div></div>
@@ -496,7 +528,7 @@
     <button class="btn" id="prevBtn" type="button">← 이전</button>
     <div class="nav-mid">
       <div id="deckDots" class="deck-dots" aria-label="단계별 진행 상황"></div>
-      <span class="page"><span class="stars" id="starNav">☆☆☆☆</span> <b id="pageNow">1</b> / <span id="pageAll">6</span><span class="page-title"> · <span id="pageTitle"></span></span></span>
+      <span class="page"><span class="stars" id="starNav">☆☆☆☆☆</span> <b id="pageNow">1</b> / <span id="pageAll">6</span><span class="page-title"> · <span id="pageTitle"></span></span></span>
     </div>
     <button class="btn primary" id="nextBtn" type="button">다음 →</button>
   </nav>
@@ -518,7 +550,7 @@
   const $ = id => document.getElementById(id);
   const stages = [...document.querySelectorAll(".stage")];
   let now = 0;
-  const stars = { 1: false, 3: false, 4: false, 2: false };
+  const stars = { 1: false, 2: false, 3: false, 4: false, 5: false };
 
   // 단계 탭
   $("tabs").innerHTML = stages.map((s, i) => `<button class="tab" type="button" data-i="${i}">${s.dataset.title}<span class="star" id="star${i}"></span></button>`).join("");
@@ -539,10 +571,10 @@
   function star(i, on) {
     stars[i] = on; $("star" + i).textContent = on ? " ★" : "";
     const n = Object.values(stars).filter(Boolean).length;
-    $("starBadge").textContent = $("starNav").textContent = "★".repeat(n) + "☆".repeat(4 - n);
+    $("starBadge").textContent = $("starNav").textContent = "★".repeat(n) + "☆".repeat(5 - n);
   }
   function live(id, cls, msg) { const e = $(id); e.className = "live " + cls; e.textContent = msg; }
-  const nums = v => v.split(/[^0-9]+/).filter(Boolean).map(Number);
+  const nums = v => (v.replace(/[−–]/g, "-").match(/-?\d+/g) || []).map(Number);
   const word = v => v.toUpperCase().replace(/[^A-Z]/g, "");
 
   // 번호표 (A = 1)
@@ -567,13 +599,13 @@
   // 도전 3: 나만의 암호
   function checkMine() {
     const a = parseInt($("myA").value, 10), b = parseInt($("myB").value, 10);
-    $("myB").value = $("myB").value.replace(/\D/g, "");
-    const ok = a >= 1 && a <= 5 && b >= 0 && b <= 20;
-    $("myRule").textContent = ok ? `y = ${a === 1 ? "" : a}x + ${b}` : "y = ? x + ?";
+    const ok = !isNaN(a) && a !== 0 && !isNaN(b);
+    const ax = a === 1 ? "x" : a === -1 ? "−x" : `${a < 0 ? "−" + (-a) : a}x`;
+    $("myRule").textContent = ok ? `y = ${ax} ${b < 0 ? "− " + (-b) : "+ " + b}` : "y = ? x + ?";
     const tableRow = () => "<tr>" + L.map(l => `<td>${l}</td>`).join("") + "</tr><tr>" + L.map((_, i) => `<td>${a * (i + 1) + b}</td>`).join("") + "</tr>";
     $("myTable").innerHTML = ""; $("myTableHint").hidden = false;
     const w = word($("myWord").value), c = nums($("myCipher").value);
-    if (!ok) return live("myLive", "wait", w || c.length ? "먼저 a(1~5)와 b(0~20)를 정해 주세요." : ""), star(3, false);
+    if (!ok) return live("myLive", "wait", w || c.length ? "먼저 a와 b를 골라 주세요." : ""), star(3, false);
     if (!w || !c.length) return live("myLive", "wait", ""), star(3, false);
     if (c.length < w.length) return live("myLive", "wait", `${w.length}글자 모두 계산해 주세요.`), star(3, false);
     const bad = [...w].map((ch, i) => c[i] === a * (L.indexOf(ch) + 1) + b ? "" : ch).filter(Boolean);
@@ -586,18 +618,48 @@
   // 도전 4: 짝의 암호
   function checkFriend() {
     const a = parseInt($("frA").value, 10), b = parseInt($("frB").value, 10), c = nums($("frCipher").value), w = word($("frWord").value);
-    if (!(a >= 1) || isNaN(b) || !c.length || !w) return live("frLive", "wait", ""), star(4, false);
+    if (isNaN(a) || a === 0 || isNaN(b) || !c.length || !w) return live("frLive", "wait", ""), star(4, false);
     const dec = c.map(y => { const x = (y - b) / a; return Number.isInteger(x) && x >= 1 && x <= 26 ? L[x - 1] : "?"; }).join("");
     if (dec.includes("?")) return live("frLive", "no", "받은 암호문에 a, b로 되돌려지지 않는 수가 있어요. 짝에게 다시 확인해 보세요."), star(4, false);
-    if (w === dec) { live("frLive", "ok", "바르게 풀었어요!"); star(4, true); }
+    if (w === dec) { live("frLive", "ok", "바르게 풀었어요! 오른쪽 '다음 문제'로 더 풀어 봐요."); star(4, true); countSolved(c.join(","), w); }
     else { live("frLive", "no", w.length < dec.length ? "아직 다 풀지 않았어요." : "방정식을 다시 풀어 보세요."); star(4, false); }
   }
-  ["frA", "frB", "frCipher", "frWord"].forEach(id => $(id).addEventListener("input", checkFriend));
+  ["frA", "frB", "frCipher", "frWord"].forEach(id => $(id).addEventListener("input", () => { $(id).value = $(id).value.replace(/[−–]/g, "-"); checkFriend(); }));
+  // 7. 푼 문제 수 세기 (같은 문제는 한 번만)
+  const solved = new Map();
+  function showSolved() {
+    $("solvedCount").textContent = solved.size + "개";
+    $("solvedList").textContent = solved.size ? "푼 단어: " + [...solved.values()].join(", ") : "아직 푼 문제가 없어요.";
+    $("solvedQ").value = solved.size || ""; $("solvedW").value = [...solved.values()].join(", ");
+    ["solvedQ", "solvedW"].forEach(id => $(id).dispatchEvent(new Event("input", { bubbles: true })));
+  }
+  function countSolved(key, w) { if (!solved.has(key)) { solved.set(key, w); showSolved(); } }
+  $("nextProb").onclick = () => {
+    if ($("frSrc").value === "컴퓨터 문제") { $("autoBtn").click(); return; }
+    $("frCipher").value = ""; $("frWord").value = "";
+    ["frCipher", "frWord"].forEach(id => $(id).dispatchEvent(new Event("input", { bubbles: true })));
+    $("frCipher").focus();
+  };
+
+  // 5. 열쇠 없이 풀기: a, b를 바꿔 가며 되돌려 보기
+  const G = [73, 19, 40, 40, 16, 49, 46, 19];
+  function guess() {
+    const a = +$("gA").value, b = +$("gB").value;
+    const out = G.map(y => { const x = (y - b) / a; return Number.isInteger(x) && x >= 1 && x <= 26 ? L[x - 1] : "?"; }).join("");
+    $("gOut").textContent = out;
+    const q = (out.match(/\?/g) || []).length;
+    $("gNote").textContent = q ? `되돌려지지 않는 수가 ${q}개 있어요. a나 b를 바꿔 보세요.` : "모든 수가 글자로 바뀌었어요. 뜻이 통하나요?";
+  }
+  ["gA", "gB"].forEach(id => $(id).addEventListener("change", guess));
+  new MutationObserver(() => {
+    const m = document.querySelector('[data-check="도전5 메시지"]').nextElementSibling;
+    if (m && m.classList.contains("check-mark") && m.classList.contains("ok")) star(5, true);
+  }).observe(document.querySelector('[data-check="도전5 메시지"]').parentElement, { subtree: true, childList: true, attributes: true });
   const WORDS = ["MATH", "CODE", "KEY", "SECRET", "PRIME", "LINE", "SOLVE", "EQUAL", "CIPHER", "NUMBER", "SMILE", "HAPPY", "FRIEND", "STAR"];
   $("autoBtn").onclick = () => {
     const a = 1 + Math.floor(Math.random() * 5), b = Math.floor(Math.random() * 21);
     const w = WORDS[Math.floor(Math.random() * WORDS.length)];
-    $("frA").value = a; $("frB").value = b;
+    $("frA").value = a; $("frB").value = b; $("autoNote").textContent = "";
     $("frCipher").value = [...w].map(ch => a * (L.indexOf(ch) + 1) + b).join(", ");
     $("frWord").value = "";
     ["frA", "frB", "frCipher", "frWord"].forEach(id => $(id).dispatchEvent(new Event("input", { bubbles: true })));
@@ -607,7 +669,9 @@
 
   CN.init({ lesson: "linear-cipher", goto: n => { show(n); window.scrollTo(0, 0); }, onBadId: () => show(0) });
   show(Math.max(0, (parseInt(location.hash.slice(1), 10) || 1) - 1));
-  tryRule(); checkMine(); checkFriend();
+  // 저장해 둔 기록이 있으면 이어서 셈 (CN.init이 임시 저장을 불러온 뒤)
+  { const w = $("solvedW").value; if (w) w.split(", ").forEach((x, i) => solved.set("saved" + i, x)); }
+  tryRule(); checkMine(); checkFriend(); guess(); showSolved();
 </script>
 </body>
 </html>
