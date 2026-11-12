@@ -245,7 +245,7 @@
   .brute div{display:flex;gap:12px;padding:2px 0;border-bottom:1px dashed #eee}
   .brute b{min-width:4.5em;color:var(--muted)}
 </style>
-<link rel="stylesheet" href="../common/deck.css?v=3">
+<link rel="stylesheet" href="../common/deck.css?v=4">
 </head>
 <body>
 <div class="app">
@@ -455,7 +455,7 @@
       <div class="panel-head"><div class="panel-title">열쇠를 두 번 쓰면?</div></div>
       <div class="panel-body">
         <p>③ 오른쪽으로 7칸 민 뒤, 다시 왼쪽으로 2칸 밀면 한 번에 몇 칸 민 것과 같을까요?<br>(+7) + (−2) = <input data-q="수직선 +7 −2" class="short" maxlength="3" inputmode="numeric" autocomplete="off"><button class="btn mini" data-check="수직선 +7 −2" type="button">확인</button></p>
-        <p>④ 오른쪽으로 10칸 민 뒤, 다시 16칸 더 밀면?<br>10 + 16 = 26 → <input data-q="수직선 +10 +16" class="short" maxlength="3" inputmode="numeric" autocomplete="off"><button class="btn mini" data-check="수직선 +10 +16" type="button">확인</button>칸 (제자리!)</p>
+        <p>④ 오른쪽으로 10칸 민 뒤, 다시 16칸 더 밀면?<br>10 + 16 = 26 → <input data-q="수직선 +10 +16" class="short" maxlength="3" inputmode="numeric" autocomplete="off"><button class="btn mini" data-check="수직선 +10 +16" type="button">확인</button>칸</p>
         <label class="ans block">⑤ 열쇠를 두 번 쓰면 더 안전해질까요? ③, ④를 보고 까닭을 써 보세요.<textarea data-q="수직선 두 번 쓰면 안전할까" rows="3"></textarea></label>
       </div>
     </div>
@@ -624,7 +624,7 @@
 
 <!-- 홈페이지 이름을 site-config.js에서 가져와 상단에 표시합니다 -->
 <script src="../site-config.js"></script>
-<script src="../common/submit.js?v=6"></script>
+<script src="../common/submit.js?v=7"></script>
 <script src="../common/deck.js?v=1"></script>
 <script>
   if (typeof SITE !== "undefined") {

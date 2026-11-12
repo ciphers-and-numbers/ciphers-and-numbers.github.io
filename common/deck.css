@@ -45,6 +45,9 @@
 .dot-btn.empty{border-color:#b9b3a7}
 .dot-btn.part{border-color:var(--accent);background:linear-gradient(90deg,var(--accent) 50%,transparent 0)}
 .dot-btn.done{border-color:#32724f;background:#32724f}
+.dot-btn{position:relative}
+.dot-btn::after{content:"";position:absolute;inset:-7px -3px}
+.slide .multi input[type=checkbox]{width:20px;height:20px}
 .dot-btn.optional{border-style:dashed}
 .dot-btn.optional.done{border-style:solid}
 .dot-btn.now{outline:2px solid #15171a;outline-offset:2px}
@@ -79,3 +82,5 @@
 .check-mark.no{color:#b44634}
 .slide .status{font-size:.85em;margin-top:10px}
 @media (max-width:900px){ .slide.active{grid-template-columns:1fr} }
+/* 휴대폰에서 누르기 쉽게 */
+.video-link a{display:inline-block;padding:9px 0}

@@ -245,9 +245,9 @@
   .lgrid .gh{font-size:.72em;color:var(--muted);text-align:center;align-self:center;font-weight:700}
   .lgrid input{width:2.1em;height:2.1em;padding:0;text-align:center;font-family:ui-monospace,Consolas,monospace;font-weight:800;font-size:1.05em;text-transform:uppercase}
   .lgrid input.hot{background:#fff3c4;border-color:#d9a400}
-  @media (max-width:520px){ .lgrid input{width:1.9em;height:1.9em} }
+  @media (max-width:520px){ .lgrid input{width:2.2em;height:2.2em} }
 </style>
-<link rel="stylesheet" href="../common/deck.css?v=3">
+<link rel="stylesheet" href="../common/deck.css?v=4">
 </head>
 <body>
 <div class="app">
@@ -449,7 +449,7 @@
       <div class="panel-head"><div class="panel-title">활동 3 ④ 2라운드: 면 수를 모르는 암호 <span class="time">10분</span></div><div class="panel-desc">약수로 후보를 좁혀 풀어 봅니다.</div></div>
       <div class="panel-body">
         <p>누군가 스키테일로 만든 암호문을 가로챘어요. 그런데 <b>막대의 면 수</b>를 몰라요.</p>
-        <div class="question cipher-big" style="letter-spacing:.12em">WAIAETBTMTRNEHAOEEROTLYN</div>
+        <div class="question cipher-big" style="letter-spacing:.12em;overflow-wrap:anywhere;word-break:break-all">WAIAETBTMTRNEHAOEEROTLYN</div>
         <p>글자 수는 <input data-q="2라운드 글자 수" class="short" maxlength="2" inputmode="numeric" autocomplete="off"><button class="btn mini" data-check="2라운드 글자 수" type="button">확인</button>개. 면 수는 글자 수의 <b>약수</b> 가운데 하나예요.</p>
         <label class="ans block">면 수가 될 수 있는 수를 모두 써 보세요.<textarea data-q="2라운드 면 수 후보" rows="2"></textarea></label>
       </div>
@@ -458,7 +458,7 @@
       <div class="panel-head"><div class="panel-title">면 수를 바꿔 풀어 보기</div></div>
       <div class="panel-body">
         <div class="tryer" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span>면 수</span><select id="faceSel"></select></div>
-        <p style="margin-top:.6em">되돌린 결과: <b class="num" id="faceOut"></b></p>
+        <p style="margin-top:.6em">되돌린 결과: <b class="num" id="faceOut" style="overflow-wrap:anywhere;word-break:break-all"></b></p>
         <p>뜻이 통하는 면 수 = <input data-q="2라운드 면 수" class="short" maxlength="2" inputmode="numeric" autocomplete="off"><button class="btn mini" data-check="2라운드 면 수" type="button">확인</button></p>
         <label class="ans block">원래 메시지 (띄어쓰기 없이)<input data-q="2라운드 메시지" maxlength="30" autocapitalize="characters" autocomplete="off"></label>
         <button class="btn mini" data-check="2라운드 메시지" type="button">확인</button>
@@ -518,7 +518,7 @@
 
 <!-- 홈페이지 이름을 site-config.js에서 가져와 상단에 표시합니다 -->
 <script src="../site-config.js"></script>
-<script src="../common/submit.js?v=6"></script>
+<script src="../common/submit.js?v=7"></script>
 <script src="../common/deck.js?v=1"></script>
 <script>
   if (typeof SITE !== "undefined") {

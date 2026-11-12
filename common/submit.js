@@ -271,6 +271,8 @@ const CN = (() => {
     goto = opts.goto || null;
     loadDraft();
     fields().forEach(el => {
+      // 이름표(label)가 없는 칸은 화면 읽기 프로그램이 읽을 이름을 붙인다
+      if (el.type !== "hidden" && !el.closest("label") && !el.getAttribute("aria-label")) el.setAttribute("aria-label", el.dataset.q);
       el.addEventListener("input", () => { saveDraft(); renderProgress(); });
       el.addEventListener("change", () => { saveDraft(); renderProgress(); });
     });

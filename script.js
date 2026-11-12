@@ -196,7 +196,7 @@ function renderTools() {
         <h3>${escapeHtml(tool.title)}</h3>
         <p>${escapeHtml(tool.description)}</p>
         <div class="card-actions">
-          <a class="open-tool" href="${tool.url}">도구 열기 ↗</a>
+          <a class="open-tool" href="${tool.url}">자료 열기 ↗</a>
           <button class="qr-tool" type="button" aria-label="${escapeHtml(tool.title)} QR 열기">
             <span class="qr-glyph" aria-hidden="true">
               <i class="on"></i><i class="on"></i><i></i>
