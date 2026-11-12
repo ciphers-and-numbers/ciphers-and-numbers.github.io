@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>선배의 일차식 암호 | 암호와 수</title>
+<style>
+  /* ===== 공통 테마 =====
+     이 :root 블록과 아래 "공통 셸" 영역은 모든 도구가 동일하게 유지합니다.
+     도구별 CSS는 파일 아래쪽 "도구 전용" 영역에만 추가하세요. */
+  :root{
+    --bg:#f2f0e9;
+    --panel:#fbf9f3;
+    --panel-2:#f4f1e9;
+    --line:#d8d2c7;
+    --border-soft:#eee9df;
+    --text:#15171a;
+    --muted:#6b6f74;
+    --faint:#9a958a;
+    --accent:#ff5a30;
+    --accent-weak:rgba(255,90,48,.14);
+    --lime:#d9f24f;
+    --shadow:0 10px 28px rgba(21,23,26,.055);
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:
+      linear-gradient(rgba(21,23,26,.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(21,23,26,.035) 1px, transparent 1px),
+      var(--bg);
+    background-size:34px 34px;
+    color:var(--text);
+    font-family:Pretendard,"Apple SD Gothic Neo","Noto Sans KR",-apple-system,BlinkMacSystemFont,sans-serif;
+    letter-spacing:-.015em;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  button,input,select{font:inherit;color:inherit}
+  .num{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+
+  .app{width:100%;max-width:1180px;margin:0 auto;padding:12px;display:flex;flex-direction:column;gap:10px}
+
+  /* ---- 공통 셸: 상단바 ---- */
+  .topbar{
+    min-height:72px;
+    display:flex;
+    gap:14px;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 14px;
+    background:rgba(242,240,233,.90);
+    border:1px solid var(--line);
+    border-radius:18px;
+    backdrop-filter:blur(14px);
+  }
+  .brand-area{display:flex;align-items:center;gap:18px;min-width:0}
+  .home-link{
+    display:flex;align-items:center;gap:10px;flex:none;
+    color:var(--text);text-decoration:none;
+    padding:7px 10px 7px 8px;border-radius:12px;
+    transition:background .18s ease;
+  }
+  .home-link:hover{background:#e7e3d9}
+  .home-arrow{
+    width:31px;height:31px;border:1px solid #c9c4b8;border-radius:50%;
+    display:grid;place-items:center;font-size:16px;line-height:1;background:#fbf9f3;
+  }
+  .brand-copy{display:block;line-height:1.15}
+  .brand-copy strong{display:block;font-size:14px;font-weight:800;letter-spacing:-.035em}
+  .brand-copy small{
+    display:block;margin-top:4px;color:#8a8d90;
+    font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+    font-size:7.5px;letter-spacing:.13em;white-space:nowrap;
+  }
+  .top-divider{width:1px;height:34px;background:#d3cec3;flex:none}
+  .title-row{display:block;min-width:0}
+  .eyebrow{
+    display:flex;align-items:center;gap:7px;margin-bottom:4px;
+    color:#7b7770;font-size:10px;font-weight:750;white-space:nowrap;
+  }
+  .eyebrow span{display:block;width:18px;height:2px;background:var(--accent)}
+  h1{
+    font-size:clamp(18px,1.25vw,24px);
+    margin:0;
+    font-weight:800;letter-spacing:-.04em;white-space:nowrap;
+  }
+  h1 em{
+    font-style:normal;font-weight:500;
+    background:linear-gradient(transparent 60%,var(--lime) 0);
+    padding:0 .04em;
+  }
+  .subtitle{margin:4px 0 0;color:#666b6f;font-size:11.5px}
+  .badge{
+    display:inline-flex;align-items:center;gap:7px;flex:none;
+    background:#15171a;color:#fff;border:0;
+    border-radius:999px;padding:8px 12px;font-weight:700;font-size:12px;white-space:nowrap;
+  }
+  .dot{width:9px;height:9px;border-radius:50%;background:#73c48f}
+
+  /* ---- 공통 셸: 패널 ----
+     기본은 "넓은 그림 영역 + 좁은 설정 영역" 2단입니다.
+     패널 수가 다르면 grid-template-columns만 바꾸고, 좁은 화면에서 1단으로
+     떨어지는 @media (max-width:900px) 규칙은 남겨 두세요. */
+  .workspace{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(300px,1fr);gap:10px}
+  .panel{
+    min-width:0;
+    display:flex;flex-direction:column;
+    background:rgba(251,249,243,.96);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+  .panel-head{
+    flex:0 0 auto;
+    padding:12px 14px;
+    border-bottom:1px solid var(--line);
+    background:rgba(247,244,236,.92);
+  }
+  .panel-title{
+    font-size:15px;font-weight:800;letter-spacing:-.025em;
+    position:relative;padding-left:10px;
+  }
+  .panel-title::before{
+    content:"";position:absolute;left:0;top:.15em;bottom:.15em;
+    width:3px;border-radius:3px;background:var(--accent);
+  }
+  .panel-desc{color:#74716b;font-size:11.5px;margin-top:5px;line-height:1.45}
+  .panel-body{flex:1;min-height:0;padding:14px}
+
+  /* ---- 공통 셸: 버튼 ---- */
+  .btn{
+    border:1px solid #c9c4b8;background:#fbf9f3;color:#15171a;
+    border-radius:999px;font-weight:700;font-size:12.5px;
+    padding:9px 14px;cursor:pointer;line-height:1;
+    transition:background .15s ease,border-color .15s ease,transform .15s ease;
+  }
+  .btn:hover:not(:disabled){transform:translateY(-1px);border-color:#15171a;background:#f2efe6}
+  .btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+  .btn.primary{background:#15171a;color:#fff;border-color:#15171a}
+  .btn.primary:hover:not(:disabled){background:#2b2e31}
+  .btn.danger{color:#a73b2c}
+  .btn.icon-btn{width:38px;height:38px;padding:0;border-radius:10px;font-size:18px;display:grid;place-items:center}
+
+  /* ---- 공통 셸: 그림 영역 (캔버스·SVG) ---- */
+  .chart-wrap{background:#fff;border:1px solid #e3ded4;border-radius:12px;overflow:hidden;position:relative}
+  .chart-wrap canvas,.chart-wrap svg{display:block;width:100%;height:100%}
+
+  /* ---- 공통 셸: 입력·지표·안내 (쓰지 않는 것은 지우세요) ---- */
+  .controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .control{display:flex;flex-direction:column;gap:5px}
+  .control label{font-size:11px;color:var(--muted);font-weight:800}
+  .control input{
+    width:100%;padding:9px 10px;font-weight:700;
+    border:1px solid #d3cec3;background:#fff;color:var(--text);border-radius:10px;
+  }
+  .control input:focus{outline:3px solid rgba(217,242,79,.42);border-color:#9aa64b}
+  .control input[type="range"]{
+    padding:0;height:22px;border:0;border-radius:0;background:transparent;
+    accent-color:#15171a;cursor:pointer;
+  }
+  .checkbox-control{
+    justify-content:center;min-height:58px;padding:8px 10px;
+    border:1px solid var(--line);background:var(--panel-2);border-radius:12px;
+  }
+  .checkbox-control label{display:flex;align-items:center;gap:8px;color:var(--text);cursor:pointer;font-size:11px}
+  .checkbox-control input{width:17px;height:17px;padding:0;accent-color:#15171a;cursor:pointer}
+
+  .metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+  .metric{background:var(--panel-2);border:1px solid #ddd7cc;border-radius:11px;padding:8px 9px;min-width:0}
+  .metric .label{color:#77736d;font-size:10px;font-weight:800;margin-bottom:3px}
+  .metric .value{
+    font-size:15px;font-weight:850;color:var(--text);
+    font-variant-numeric:tabular-nums;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+
+  .formula{
+    background:#15171a;color:#f6f2e9;border:1px solid #15171a;border-radius:12px;
+    padding:9px 10px;line-height:1.55;font-size:12px;
+    font-family:ui-monospace,SFMono-Regular,Consolas,monospace;overflow:auto;
+  }
+  .note{
+    padding:10px 12px;border-radius:10px;
+    background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;
+    font-size:11px;line-height:1.5;
+  }
+  .note b{color:#7c2d12;font-weight:800}
+  .status{min-height:19px;font-size:11px;line-height:1.4;font-weight:750;color:var(--muted)}
+  .status.ok{color:#32724f}
+  .status.error{color:#b44634}
+
+  .legend{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
+  .legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
+  .legend-item i{width:11px;height:11px;border-radius:3px;flex:none}
+
+  /* ---- 공통 셸: 반응형 (이 3개 블록은 그대로 유지) ----
+     주의: .topbar에 align-items:stretch를 쓰면 알약 모양 .badge가
+     줄바꿈된 제목 높이만큼 세로로 늘어나 거대한 원처럼 깨집니다. */
+  @media (max-width:1080px){
+    .brand-copy small{display:none}
+    .brand-copy strong{font-size:13px}
+    .top-divider{height:28px}
+  }
+  @media (max-width:900px){
+    .workspace{grid-template-columns:1fr}
+  }
+  @media (max-width:820px){
+    .topbar{align-items:flex-start}
+    .brand-area{align-items:flex-start}
+    .home-link{padding-left:2px}
+    .top-divider{display:none}
+    .brand-copy{display:none}
+    .title-row{display:block}
+    h1{white-space:normal}
+    .eyebrow{white-space:normal}
+    .badge{display:none}
+  }
+  @media (max-width:520px){
+    .app{padding:7px}
+    .topbar{border-radius:14px;padding:9px 10px}
+    .home-arrow{width:34px;height:34px}
+    h1{font-size:20px;line-height:1.25}
+    .subtitle{font-size:11px;white-space:normal}
+    .panel{border-radius:14px}
+    .panel-head{padding:12px}
+    .btn{min-height:40px}
+    .controls{grid-template-columns:1fr}
+  }
+
+
+  /* ===== 도구 전용 CSS는 여기부터 ===== */
+  .tabs{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 12px}
+  .tab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;font:inherit;font-size:13px;font-weight:800;cursor:pointer;color:var(--text)}
+  .tab.on{background:#15171a;color:#fff;border-color:#15171a}
+  .tab .star{margin-left:4px}
+  .stage{display:none}
+  .stage.on{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+  @media (max-width:900px){.stage.on{grid-template-columns:1fr}}
+  .panel-body p{line-height:1.7;margin:.3em 0 .7em}
+  .senior{display:flex;gap:14px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px}
+  .senior .face{width:56px;height:56px;border-radius:50%;background:var(--accent-weak);display:grid;place-items:center;font-size:26px;flex:none}
+  .senior b{font-size:1.05em}
+  .rule{font-family:ui-monospace,Consolas,monospace;font-size:1.5em;font-weight:800;text-align:center;padding:14px;background:#fff;border:2px dashed var(--line);border-radius:12px;margin:10px 0}
+  .ans{display:block;font-weight:700;margin:.4em 0 .9em}
+  .ans input,.ans textarea,.ans select{display:block;width:100%;margin-top:4px;font:inherit;font-weight:500;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:#fff}
+  .ans textarea{resize:vertical}
+  input.short{width:4.2em;text-align:center;font:inherit;padding:7px;border:1px solid var(--line);border-radius:9px;background:#fff}
+  .mono{font-family:ui-monospace,Consolas,monospace;letter-spacing:.06em}
+  .btn.mini{min-height:0;padding:6px 10px;font-size:12px;margin-left:6px;vertical-align:middle}
+  .check-mark{margin-left:6px;font-size:.8em;font-weight:800;color:var(--muted)}
+  .check-mark.ok{color:#32724f}.check-mark.no{color:#b44634}
+  .live{font-size:.88em;font-weight:800;min-height:1.3em;margin:-.4em 0 .8em}
+  .live.ok{color:#32724f}.live.no{color:#b44634}.live.wait{color:var(--muted)}
+  .pairs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}
+  .pair{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 6px;text-align:center;font-weight:800}
+  .pair .l{font-size:1.4em}.pair .n{font-family:ui-monospace,Consolas,monospace;color:var(--accent);font-size:1.2em}
+  .pair.q .n{color:var(--muted)}
+  .table-scroll{overflow-x:auto}
+  table.nums{border-collapse:collapse;background:#fff;font-family:ui-monospace,Consolas,monospace;font-size:13px}
+  table.nums td{border:1px solid var(--border-soft);padding:4px 6px;text-align:center;min-width:1.9em}
+  table.nums tr:first-child td{font-weight:800}
+  table.nums tr:nth-child(2) td{color:var(--muted)}
+  .cipher{font-family:ui-monospace,Consolas,monospace;font-size:1.25em;font-weight:800;letter-spacing:.05em;text-align:center;background:#15171a;color:#fff;border-radius:12px;padding:14px;word-break:break-all}
+  .row2{display:flex;gap:10px;flex-wrap:wrap}.row2 .ans{flex:1;min-width:8em}
+  .tryer{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .tryer input{width:4em}
+  .tryer output{font-family:ui-monospace,Consolas,monospace;font-weight:800}
+  .note{background:#fff7ef;border:1px solid #f4d9bf;border-radius:12px;padding:10px 12px;font-size:.9em;line-height:1.7;color:#7a4a1c}
+  .hint{color:var(--muted);font-size:.85em}
+  .bottom-nav{display:flex;justify-content:space-between;gap:8px;margin-top:14px}
+  .empty-row{font-size:.85em;font-weight:700;color:#b44634;margin:.4em 0}.empty-row.ok{color:#32724f}
+  .stars{font-size:1.1em;letter-spacing:.1em}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="brand-area">
+      <!-- 홈으로 돌아가는 링크: ../#tools 를 바꾸지 마세요 -->
+      <a class="home-link" href="../#tools" aria-label="메인으로">
+        <span class="home-arrow">←</span>
+        <span class="brand-copy">
+          <strong data-site="name">암호와 수</strong>
+          <small data-site="englishName">CIPHERS AND NUMBERS</small>
+        </span>
+      </a>
+      <span class="top-divider" aria-hidden="true"></span>
+      <div class="title-row">
+        <div class="eyebrow"><span></span>주제선택 · 암호와 수 · 웹앱</div>
+        <h1>선배의 <em>일차식 암호</em></h1>
+        <p class="subtitle">1기 선배가 만든 암호를 풀고, 나만의 일차식 암호를 만들어 친구와 주고받습니다.</p>
+      </div>
+    </div>
+    <div class="badge"><span class="dot"></span><span class="stars" id="starBadge">☆☆☆☆</span></div>
+  </div>
+
+  <nav class="tabs" id="tabs" aria-label="단계"></nav>
+
+  <!-- 0. 시작 -->
+  <section class="slide stage" data-title="시작">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">1기 선배의 암호를 만나요</div></div>
+      <div class="panel-body">
+        <div class="senior"><div class="face">🔐</div><div><b>10406김O서 선배</b>의 <b>"일차식 암호"</b><br><span class="hint">1기 「나만의 암호 설계」 수업에서 만든 암호예요.</span></div></div>
+        <p style="margin-top:12px">선배는 알파벳에 순서대로 번호를 붙였어요. <b>A = 1, B = 2, …, Z = 26</b></p>
+        <p>그리고 번호 <b>x</b>를 어떤 <b>일차식</b>에 넣어 나온 수를 암호로 보냈어요. 예를 들어 선배는 <b>S(19)</b>를 <b>39</b>로 바꿨어요.</p>
+        <div class="note">시저 암호 수업에서는 A = 0부터 셌지만, 이 선배는 <b>A = 1</b>부터 셌어요. 암호를 만든 사람의 약속을 따라야 해요.</div>
+        <p>선배의 성찰: "계산이 편리하지만 단순 역산으로 쉽게 풀린다는 약점이 있다." 정말 그런지 직접 확인해 봅시다.</p>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">학번 쓰고 시작하기</div></div>
+      <div class="panel-body">
+        <label class="ans">학번 5자리 <small class="hint">(학년 1자리 + 반 2자리 + 번호 2자리)</small>
+          <input id="studentId" inputmode="numeric" maxlength="5" placeholder="예) 1반 5번 → 10105" autocomplete="off"></label>
+        <p class="status" id="studentIdStatus" aria-live="polite"></p>
+        <p><b>오늘 할 일</b></p>
+        <ol>
+          <li>도전 1. 선배의 규칙 맞히기</li>
+          <li>도전 2. 선배의 비밀 메시지 풀기</li>
+          <li>도전 3. 나만의 일차식 암호 만들기</li>
+          <li>도전 4. 친구의 암호 풀기</li>
+          <li>마무리하고 제출하기</li>
+        </ol>
+        <p class="hint">별(★)은 도전을 해낼 때마다 하나씩 채워져요.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1. 규칙 맞히기 -->
+  <section class="slide stage" data-title="도전 1 규칙 맞히기">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">도전 1. 선배의 규칙을 맞혀라</div><div class="panel-desc">선배가 보낸 암호 몇 개를 보고 규칙을 찾아요.</div></div>
+      <div class="panel-body">
+        <div class="pairs">
+          <div class="pair"><div class="l">A</div><div class="hint">1</div><div class="n">3</div></div>
+          <div class="pair"><div class="l">B</div><div class="hint">2</div><div class="n">5</div></div>
+          <div class="pair"><div class="l">C</div><div class="hint">3</div><div class="n">7</div></div>
+          <div class="pair q"><div class="l">D</div><div class="hint">4</div><div class="n">?</div></div>
+        </div>
+        <p>번호가 1 커질 때마다 암호는 몇씩 커지나요? 그 규칙으로 D와 Z를 맞혀 보세요.</p>
+        <p>D(4) → <input data-q="도전1 D" class="short" inputmode="numeric" maxlength="3"><button class="btn mini" data-check="도전1 D" type="button">확인</button>
+           &nbsp; Z(26) → <input data-q="도전1 Z" class="short" inputmode="numeric" maxlength="3"><button class="btn mini" data-check="도전1 Z" type="button">확인</button></p>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">일차식으로 나타내기</div></div>
+      <div class="panel-body">
+        <p>선배의 암호 규칙을 일차식으로 쓰면</p>
+        <div class="rule">y = <input data-q="도전1 a" class="short" inputmode="numeric" maxlength="2" aria-label="x의 계수"> x + <input data-q="도전1 b" class="short" inputmode="numeric" maxlength="2" aria-label="상수항"></div>
+        <p style="text-align:center"><button class="btn mini" data-check="도전1 a" type="button">x의 계수 확인</button><button class="btn mini" data-check="도전1 b" type="button">상수항 확인</button></p>
+        <div class="tryer"><span>내 식으로 시험해 보기: x =</span><input id="tryX" class="short" inputmode="numeric" maxlength="2" value="19"><span>→ y =</span><output id="tryY">?</output></div>
+        <p class="hint">위 두 칸에 쓴 수로 계산해 보여 줘요. S(19)가 39가 되면 선배의 규칙과 같아요.</p>
+        <label class="ans">규칙을 어떻게 찾았나요?<textarea data-q="도전1 찾은 방법" rows="3"></textarea></label>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. 비밀 메시지 -->
+  <section class="slide stage" data-title="도전 2 선배의 비밀 메시지">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">도전 2. 선배의 비밀 메시지를 풀어라</div><div class="panel-desc">거꾸로 풀려면 일차방정식을 풀면 돼요.</div></div>
+      <div class="panel-body">
+        <div class="table-scroll"><table class="nums" id="numTable"></table></div>
+        <p style="margin-top:10px"><b>메시지 ①</b></p>
+        <div class="cipher">17 · 11 · 25 · 25 · 31</div>
+        <p style="margin-top:10px">첫 수 17을 방정식으로 풀어 봐요.<br>
+          2x + 1 = 17 → 2x = <input data-q="도전2 2x" class="short" inputmode="numeric" maxlength="3"><button class="btn mini" data-check="도전2 2x" type="button">확인</button>
+          → x = <input data-q="도전2 x" class="short" inputmode="numeric" maxlength="3"><button class="btn mini" data-check="도전2 x" type="button">확인</button></p>
+        <label class="ans">메시지 ① 전체<input data-q="도전2 메시지1" class="mono" maxlength="10" autocapitalize="characters" autocomplete="off"></label>
+        <button class="btn mini" data-check="도전2 메시지1" type="button">확인</button>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">조금 더 긴 메시지</div></div>
+      <div class="panel-body">
+        <p><b>메시지 ②</b> <span class="hint">(/ 는 띄어쓰기)</span></p>
+        <div class="cipher">27 · 3 · 41 · 17 / 19 · 39 / 13 · 43 · 29</div>
+        <label class="ans" style="margin-top:10px">메시지 ② 전체 <small class="hint">(띄어쓰기는 빼고 써도 돼요)</small><input data-q="도전2 메시지2" class="mono" maxlength="20" autocapitalize="characters" autocomplete="off"></label>
+        <button class="btn mini" data-check="도전2 메시지2" type="button">확인</button>
+        <label class="ans" style="margin-top:12px">암호 수를 원래 번호로 되돌리는 식을 써 보세요. (x = …)<input data-q="도전2 되돌리는 식" autocomplete="off" placeholder="예) x = (y − □) ÷ □"></label>
+        <label class="ans">암호 수가 모두 홀수예요. 왜 그럴까요?<textarea data-q="도전2 모두 홀수인 까닭" rows="3"></textarea></label>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. 나만의 암호 -->
+  <section class="slide stage" data-title="도전 3 나만의 일차식 암호">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">도전 3. 나만의 일차식 암호 만들기</div><div class="panel-desc">y = ax + b 에서 a와 b를 내가 정해요. (A = 1 … Z = 26)</div></div>
+      <div class="panel-body">
+        <div class="row2">
+          <label class="ans">a (x의 계수)<select data-q="도전3 a" id="myA"><option value="">고르기</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></label>
+          <label class="ans">b (상수항)<input data-q="도전3 b" id="myB" inputmode="numeric" maxlength="2" placeholder="0~20"></label>
+        </div>
+        <div class="rule" id="myRule">y = ? x + ?</div>
+        <label class="ans">보낼 영어 단어 (3~8글자)<input data-q="도전3 내 단어" id="myWord" class="mono" maxlength="8" autocapitalize="characters" autocomplete="off"></label>
+        <label class="ans">내가 계산한 암호문 <small class="hint">(수 사이는 쉼표)</small><input data-q="도전3 내 암호문" id="myCipher" class="mono" maxlength="60" inputmode="numeric" autocomplete="off" placeholder="예) 17, 11, 25"></label>
+        <p class="live" id="myLive" aria-live="polite"></p>
+        <p class="hint">화면에서 "맞아요"가 나오면 암호문과 a, b를 짝에게 알려 주세요.</p>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">내 암호 살펴보기</div></div>
+      <div class="panel-body">
+        <div class="table-scroll"><table class="nums" id="myTable"></table></div>
+        <p class="hint" style="margin-top:6px">a와 b를 고르면 내 암호표가 만들어져요. 직접 계산한 뒤 확인용으로 보세요.</p>
+        <label class="ans">내 암호를 푸는 식 (x = …)<input data-q="도전3 푸는 식" autocomplete="off" placeholder="예) x = (y − b) ÷ a"></label>
+        <label class="ans">만약 a를 0으로 하면 어떻게 될까요? 암호로 쓸 수 있을까요?<textarea data-q="도전3 a가 0이면" rows="3"></textarea></label>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. 친구 암호 -->
+  <section class="slide stage" data-title="도전 4 친구의 암호 풀기">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">도전 4. 친구의 암호 풀기</div><div class="panel-desc">친구에게 a, b와 암호문을 받아 풀어요.</div></div>
+      <div class="panel-body">
+        <div class="row2">
+          <label class="ans">친구의 a<input data-q="도전4 친구 a" id="frA" inputmode="numeric" maxlength="1"></label>
+          <label class="ans">친구의 b<input data-q="도전4 친구 b" id="frB" inputmode="numeric" maxlength="2"></label>
+        </div>
+        <label class="ans">받은 암호문 <small class="hint">(수 사이는 쉼표)</small><input data-q="도전4 받은 암호문" id="frCipher" class="mono" maxlength="60" inputmode="numeric" autocomplete="off"></label>
+        <label class="ans">푸는 과정 (한 글자 이상)<textarea data-q="도전4 푸는 과정" rows="3" placeholder="예) 3x + 2 = 26 → 3x = 24 → x = 8 → H"></textarea></label>
+        <label class="ans">해독한 단어<input data-q="도전4 해독한 단어" id="frWord" class="mono" maxlength="8" autocapitalize="characters" autocomplete="off"></label>
+        <p class="live" id="frLive" aria-live="polite"></p>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">열쇠 없이 풀 수 있을까?</div></div>
+      <div class="panel-body">
+        <p>선배는 "단순 역산으로 쉽게 풀린다"고 했어요. a와 b를 몰라도 풀 수 있을까요?</p>
+        <div class="note">힌트: 영어에서 가장 많이 쓰는 글자는 <b>E(5)</b>예요. 암호문에서 가장 많이 나온 수가 E라고 가정하면? 또 A(1)는 a + b, B(2)는 2a + b가 되니, 두 글자만 알면 a와 b를 찾을 수 있어요.</div>
+        <label class="ans" style="margin-top:10px">일차식 암호의 강점과 약점을 정리해 보세요.<textarea data-q="도전4 강점과 약점" rows="4"></textarea></label>
+        <label class="ans">더 풀기 어렵게 하려면 어떻게 바꿀까요?<textarea data-q="도전4 업그레이드" rows="3"></textarea></label>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. 제출 -->
+  <section class="slide stage" data-title="마무리와 제출">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">마무리</div></div>
+      <div class="panel-body">
+        <label class="ans">오늘 일차식(일차방정식)이 암호에서 어떤 역할을 했나요?<textarea data-q="마무리 일차식의 역할" rows="4"></textarea></label>
+        <label class="ans">10406김O서 선배에게 한마디<textarea data-q="마무리 선배에게 한마디" data-free rows="2"></textarea></label>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">제출하기</div></div>
+      <div class="panel-body">
+        <p>학번: <b id="studentIdView" class="mono"></b> <button class="btn mini" type="button" id="changeIdBtn">학번 바꾸기</button></p>
+        <button class="btn primary" id="submitBtn" type="button">제출하기</button>
+        <p class="status" id="submitStatus" aria-live="polite"></p>
+        <div id="emptyList"></div>
+        <ul class="hint">
+          <li>여러 번 제출해도 됩니다. 제출할 때마다 모두 저장됩니다.</li>
+          <li>쓰던 답은 이 기기에 저장되어, 새로고침해도 남아 있습니다.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="bottom-nav">
+    <button class="btn" id="prevBtn" type="button">← 이전</button>
+    <button class="btn primary" id="nextBtn" type="button">다음 →</button>
+  </div>
+</div>
+
+<!-- 홈페이지 이름을 site-config.js에서 가져와 상단에 표시합니다 -->
+<script src="../site-config.js"></script>
+<script src="../common/submit.js?v=6"></script>
+<script>
+  if (typeof SITE !== "undefined") {
+    document.querySelectorAll("[data-site]").forEach(el => {
+      if (SITE[el.dataset.site]) el.textContent = SITE[el.dataset.site];
+    });
+  }
+</script>
+<script>
+  // ===== 도구 전용 JavaScript는 여기부터 =====
+  const L = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+  const $ = id => document.getElementById(id);
+  const stages = [...document.querySelectorAll(".stage")];
+  let now = 0;
+  const stars = { 1: false, 3: false, 4: false, 2: false };
+
+  // 단계 탭
+  $("tabs").innerHTML = stages.map((s, i) => `<button class="tab" type="button" data-i="${i}">${s.dataset.title}<span class="star" id="star${i}"></span></button>`).join("");
+  function show(n) {
+    now = Math.max(0, Math.min(stages.length - 1, n));
+    stages.forEach((s, i) => s.classList.toggle("on", i === now));
+    [...$("tabs").children].forEach((t, i) => t.classList.toggle("on", i === now));
+    $("prevBtn").disabled = now === 0; $("nextBtn").disabled = now === stages.length - 1;
+    history.replaceState(null, "", "#" + (now + 1));
+    if (typeof CN !== "undefined") CN.refresh(now);
+  }
+  $("tabs").addEventListener("click", e => { const b = e.target.closest(".tab"); if (b) { show(+b.dataset.i); window.scrollTo(0, 0); } });
+  $("prevBtn").onclick = () => { show(now - 1); window.scrollTo(0, 0); };
+  $("nextBtn").onclick = () => { show(now + 1); window.scrollTo(0, 0); };
+  $("changeIdBtn").onclick = () => { show(0); $("studentId").focus(); };
+
+  function star(i, on) {
+    stars[i] = on; $("star" + i).textContent = on ? " ★" : "";
+    const n = Object.values(stars).filter(Boolean).length;
+    $("starBadge").textContent = "★".repeat(n) + "☆".repeat(4 - n);
+  }
+  function live(id, cls, msg) { const e = $(id); e.className = "live " + cls; e.textContent = msg; }
+  const nums = v => v.split(/[^0-9]+/).filter(Boolean).map(Number);
+  const word = v => v.toUpperCase().replace(/[^A-Z]/g, "");
+
+  // 번호표 (A = 1)
+  $("numTable").innerHTML = "<tr>" + L.map(l => `<td>${l}</td>`).join("") + "</tr><tr>" + L.map((_, i) => `<td>${i + 1}</td>`).join("") + "</tr>";
+
+  // 도전 1: 내 식으로 시험
+  function tryRule() {
+    const a = parseInt(document.querySelector('[data-q="도전1 a"]').value, 10), b = parseInt(document.querySelector('[data-q="도전1 b"]').value, 10);
+    const x = parseInt($("tryX").value, 10);
+    $("tryY").textContent = (isNaN(a) || isNaN(b) || isNaN(x)) ? "?" : `${a} × ${x} + ${b} = ${a * x + b}`;
+    star(1, a === 2 && b === 1);
+  }
+  ["도전1 a", "도전1 b"].forEach(q => document.querySelector(`[data-q="${q}"]`).addEventListener("input", tryRule));
+  $("tryX").addEventListener("input", tryRule);
+
+  // 도전 2: 서버 채점이 맞으면 별
+  new MutationObserver(() => {
+    const m = document.querySelector('[data-check="도전2 메시지2"]').nextElementSibling;
+    if (m && m.classList.contains("check-mark") && m.classList.contains("ok")) star(2, true);
+  }).observe(document.querySelector('[data-check="도전2 메시지2"]').parentElement, { subtree: true, childList: true, attributes: true });
+
+  // 도전 3: 나만의 암호
+  function checkMine() {
+    const a = parseInt($("myA").value, 10), b = parseInt($("myB").value, 10);
+    $("myB").value = $("myB").value.replace(/\D/g, "");
+    const ok = a >= 1 && a <= 5 && b >= 0 && b <= 20;
+    $("myRule").textContent = ok ? `y = ${a === 1 ? "" : a}x + ${b}` : "y = ? x + ?";
+    $("myTable").innerHTML = ok ? "<tr>" + L.map(l => `<td>${l}</td>`).join("") + "</tr><tr>" + L.map((_, i) => `<td>${a * (i + 1) + b}</td>`).join("") + "</tr>" : "";
+    const w = word($("myWord").value), c = nums($("myCipher").value);
+    if (!ok) return live("myLive", "wait", w || c.length ? "먼저 a(1~5)와 b(0~20)를 정해 주세요." : ""), star(3, false);
+    if (!w || !c.length) return live("myLive", "wait", ""), star(3, false);
+    if (c.length < w.length) return live("myLive", "wait", `${w.length}글자 모두 계산해 주세요.`), star(3, false);
+    const bad = [...w].map((ch, i) => c[i] === a * (L.indexOf(ch) + 1) + b ? "" : ch).filter(Boolean);
+    if (!bad.length && c.length === w.length) { live("myLive", "ok", "맞아요! 짝에게 a, b와 암호문을 알려 주세요."); star(3, true); }
+    else { live("myLive", "no", bad.length ? `${bad.join(", ")}의 계산을 다시 확인해 보세요.` : "글자 수보다 수가 많아요."); star(3, false); }
+  }
+  ["myA", "myB", "myWord", "myCipher"].forEach(id => $(id).addEventListener("input", checkMine));
+  $("myA").addEventListener("change", checkMine);
+
+  // 도전 4: 친구 암호
+  function checkFriend() {
+    const a = parseInt($("frA").value, 10), b = parseInt($("frB").value, 10), c = nums($("frCipher").value), w = word($("frWord").value);
+    if (!(a >= 1) || isNaN(b) || !c.length || !w) return live("frLive", "wait", ""), star(4, false);
+    const dec = c.map(y => { const x = (y - b) / a; return Number.isInteger(x) && x >= 1 && x <= 26 ? L[x - 1] : "?"; }).join("");
+    if (dec.includes("?")) return live("frLive", "no", "받은 암호문에 a, b로 되돌려지지 않는 수가 있어요. 친구에게 다시 확인해 보세요."), star(4, false);
+    if (w === dec) { live("frLive", "ok", "바르게 풀었어요!"); star(4, true); }
+    else { live("frLive", "no", w.length < dec.length ? "아직 다 풀지 않았어요." : "방정식을 다시 풀어 보세요."); star(4, false); }
+  }
+  ["frA", "frB", "frCipher", "frWord"].forEach(id => $(id).addEventListener("input", checkFriend));
+
+  CN.init({ lesson: "linear-cipher", goto: n => { show(n); window.scrollTo(0, 0); }, onBadId: () => show(0) });
+  show(Math.max(0, (parseInt(location.hash.slice(1), 10) || 1) - 1));
+  tryRule(); checkMine(); checkFriend();
+</script>
+</body>
+</html>
