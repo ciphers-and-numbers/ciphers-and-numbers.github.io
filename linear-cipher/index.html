@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>1기 친구의 일차식 암호 | 암호와 수</title>
+<title>일차식 암호 | 암호와 수</title>
 <style>
   /* ===== 공통 테마 =====
      이 :root 블록과 아래 "공통 셸" 영역은 모든 도구가 동일하게 유지합니다.
@@ -293,6 +293,9 @@
     .bottom-nav{width:calc(100% - 14px);bottom:7px;padding:7px 8px}
     .bottom-nav .btn{min-width:64px;padding:8px 10px}
     .page-title{display:none}
+    .tabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-left:-2px;margin-right:-2px;padding:2px}
+    .tabs::-webkit-scrollbar{display:none}
+    .tab{flex:none}
     .deck-dots{gap:4px}.dot-btn{width:10px;height:10px;border-width:1.5px}
   }
   .empty-row{font-size:.85em;font-weight:700;color:#b44634;margin:.4em 0}.empty-row.ok{color:#32724f}
@@ -314,8 +317,8 @@
       <span class="top-divider" aria-hidden="true"></span>
       <div class="title-row">
         <div class="eyebrow"><span></span>주제선택 · 암호와 수 · 웹앱</div>
-        <h1>1기 친구의 <em>일차식 암호</em></h1>
-        <p class="subtitle">1기 친구가 만든 암호를 풀고, 나만의 일차식 암호를 만들어 친구와 주고받습니다.</p>
+        <h1>학생이 만든 <em>일차식 암호</em></h1>
+        <p class="subtitle">10406김O서 학생이 만든 암호를 풀고, 나만의 일차식 암호를 만들어 짝과 주고받습니다.</p>
       </div>
     </div>
     <div class="badge"><span class="dot"></span><span class="stars" id="starBadge">☆☆☆☆</span></div>
@@ -326,13 +329,13 @@
   <!-- 0. 시작 -->
   <section class="slide stage" data-title="시작">
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">1기 친구의 암호를 만나요</div></div>
+      <div class="panel-head"><div class="panel-title">10406김O서 학생의 암호를 만나요</div></div>
       <div class="panel-body">
-        <div class="senior"><div class="face">🔐</div><div><b>1기 10406김O서</b> 학생의 <b>"일차식 암호"</b><br><span class="hint">1기 「나만의 암호 설계」 수업에서 만든 암호예요.</span></div></div>
-        <p style="margin-top:12px">이 친구는 알파벳에 순서대로 번호를 붙였어요. <b>A = 1, B = 2, …, Z = 26</b></p>
+        <div class="senior"><div class="face">🔐</div><div><b>10406김O서 학생</b>의 <b>"일차식 암호"</b><br><span class="hint">「나만의 암호 설계」 수업에서 만든 암호예요.</span></div></div>
+        <p style="margin-top:12px">10406김O서 학생은 알파벳에 순서대로 번호를 붙였어요. <b>A = 1, B = 2, …, Z = 26</b></p>
         <p>그리고 번호 <b>x</b>를 어떤 <b>일차식</b>에 넣어 나온 수를 암호로 보냈어요. 예를 들어 <b>S(19)</b>를 <b>39</b>로 바꿨어요.</p>
-        <div class="note">시저 암호 수업에서는 A = 0부터 셌지만, 이 친구는 <b>A = 1</b>부터 셌어요. 암호를 만든 사람의 약속을 따라야 해요.</div>
-        <p>이 친구가 남긴 성찰: "계산이 편리하지만 단순 역산으로 쉽게 풀린다는 약점이 있다." 정말 그런지 직접 확인해 봅시다.</p>
+        <div class="note">시저 암호 수업에서는 A = 0부터 셌지만, 10406김O서 학생은 <b>A = 1</b>부터 셌어요. 암호를 만든 사람의 약속을 따라야 해요.</div>
+        <p>10406김O서 학생이 남긴 성찰: "계산이 편리하지만 단순 역산으로 쉽게 풀린다는 약점이 있다." 정말 그런지 직접 확인해 봅시다.</p>
       </div>
     </div>
     <div class="panel">
@@ -346,7 +349,7 @@
           <li>도전 1. 규칙 맞히기</li>
           <li>도전 2. 비밀 메시지 풀기</li>
           <li>도전 3. 나만의 일차식 암호 만들기</li>
-          <li>도전 4. 친구의 암호 풀기</li>
+          <li>도전 4. 짝의 암호 풀기</li>
           <li>마무리하고 제출하기</li>
         </ol>
         <p class="hint">별(★)은 도전을 해낼 때마다 하나씩 채워져요.</p>
@@ -357,7 +360,7 @@
   <!-- 1. 규칙 맞히기 -->
   <section class="slide stage" data-title="도전 1 규칙 맞히기">
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">도전 1. 규칙을 맞혀라</div><div class="panel-desc">1기 친구가 보낸 암호 몇 개를 보고 규칙을 찾아요.</div></div>
+      <div class="panel-head"><div class="panel-title">도전 1. 규칙을 맞혀라</div><div class="panel-desc">10406김O서 학생이 보낸 암호 몇 개를 보고 규칙을 찾아요.</div></div>
       <div class="panel-body">
         <div class="pairs">
           <div class="pair"><div class="l">A</div><div class="hint">1</div><div class="n">3</div></div>
@@ -377,7 +380,7 @@
         <div class="rule">y = <input data-q="도전1 a" class="short" inputmode="numeric" maxlength="2" aria-label="x의 계수"> x + <input data-q="도전1 b" class="short" inputmode="numeric" maxlength="2" aria-label="상수항"></div>
         <p style="text-align:center"><button class="btn mini" data-check="도전1 a" type="button">x의 계수 확인</button><button class="btn mini" data-check="도전1 b" type="button">상수항 확인</button></p>
         <div class="tryer"><span>내 식으로 시험해 보기: x =</span><input id="tryX" class="short" inputmode="numeric" maxlength="2" value="19"><span>→ y =</span><output id="tryY">?</output></div>
-        <p class="hint">위 두 칸에 쓴 수로 계산해 보여 줘요. S(19)가 39가 되면 1기 친구의 규칙과 같아요.</p>
+        <p class="hint">위 두 칸에 쓴 수로 계산해 보여 줘요. S(19)가 39가 되면 10406김O서 학생의 규칙과 같아요.</p>
         <label class="ans">규칙을 어떻게 찾았나요?<textarea data-q="도전1 찾은 방법" rows="3"></textarea></label>
       </div>
     </div>
@@ -386,7 +389,7 @@
   <!-- 2. 비밀 메시지 -->
   <section class="slide stage" data-title="도전 2 비밀 메시지">
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">도전 2. 1기 친구의 비밀 메시지를 풀어라</div><div class="panel-desc">거꾸로 풀려면 일차방정식을 풀면 돼요.</div></div>
+      <div class="panel-head"><div class="panel-title">도전 2. 비밀 메시지를 풀어라</div><div class="panel-desc">거꾸로 풀려면 일차방정식을 풀면 돼요.</div></div>
       <div class="panel-body">
         <div class="table-scroll"><table class="nums" id="numTable"></table></div>
         <p style="margin-top:10px"><b>메시지 ①</b></p>
@@ -422,7 +425,7 @@
         </div>
         <div class="rule" id="myRule">y = ? x + ?</div>
         <label class="ans">보낼 영어 단어 (3~8글자)<input data-q="도전3 내 단어" id="myWord" class="mono" maxlength="8" autocapitalize="characters" autocomplete="off"></label>
-        <label class="ans">내가 계산한 암호문 <small class="hint">(수 사이는 쉼표)</small><input data-q="도전3 내 암호문" id="myCipher" class="mono" maxlength="60" inputmode="numeric" autocomplete="off" placeholder="예) 17, 11, 25"></label>
+        <label class="ans">내가 계산한 암호문 <small class="hint">(수 사이는 쉼표나 점으로 구분)</small><input data-q="도전3 내 암호문" id="myCipher" class="mono" maxlength="60" inputmode="decimal" autocomplete="off" placeholder="예) 17, 11, 25"></label>
         <p class="live" id="myLive" aria-live="polite"></p>
         <p class="hint">화면에서 "맞아요"가 나오면 암호문과 a, b를 짝에게 알려 주세요.</p>
       </div>
@@ -431,23 +434,24 @@
       <div class="panel-head"><div class="panel-title">내 암호 살펴보기</div></div>
       <div class="panel-body">
         <div class="table-scroll"><table class="nums" id="myTable"></table></div>
-        <p class="hint" style="margin-top:6px">a와 b를 고르면 내 암호표가 만들어져요. 직접 계산한 뒤 확인용으로 보세요.</p>
+        <p class="hint" id="myTableHint" style="margin-top:6px">내 암호를 직접 계산해서 "맞아요"가 나오면 A~Z 전체 암호표가 열려요.</p>
         <label class="ans">내 암호를 푸는 식 (x = …)<input data-q="도전3 푸는 식" autocomplete="off" placeholder="예) x = (y − b) ÷ a"></label>
         <label class="ans">만약 a를 0으로 하면 어떻게 될까요? 암호로 쓸 수 있을까요?<textarea data-q="도전3 a가 0이면" rows="3"></textarea></label>
       </div>
     </div>
   </section>
 
-  <!-- 4. 친구 암호 -->
-  <section class="slide stage" data-title="도전 4 친구의 암호 풀기">
+  <!-- 4. 짝의 암호 -->
+  <section class="slide stage" data-title="도전 4 짝의 암호 풀기">
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">도전 4. 친구의 암호 풀기</div><div class="panel-desc">친구에게 a, b와 암호문을 받아 풀어요.</div></div>
+      <div class="panel-head"><div class="panel-title">도전 4. 짝의 암호 풀기</div><div class="panel-desc">짝에게 a, b와 암호문을 받아 풀어요. 짝이 없으면 아래 "문제 받기"를 눌러요.</div></div>
       <div class="panel-body">
         <div class="row2">
-          <label class="ans">친구의 a<input data-q="도전4 친구 a" id="frA" inputmode="numeric" maxlength="1"></label>
-          <label class="ans">친구의 b<input data-q="도전4 친구 b" id="frB" inputmode="numeric" maxlength="2"></label>
+          <label class="ans">짝의 a<input data-q="도전4 짝 a" id="frA" inputmode="numeric" maxlength="1"></label>
+          <label class="ans">짝의 b<input data-q="도전4 짝 b" id="frB" inputmode="numeric" maxlength="2"></label>
         </div>
-        <label class="ans">받은 암호문 <small class="hint">(수 사이는 쉼표)</small><input data-q="도전4 받은 암호문" id="frCipher" class="mono" maxlength="60" inputmode="numeric" autocomplete="off"></label>
+        <p><button class="btn mini" id="autoBtn" type="button" style="margin-left:0">짝이 없으면: 문제 받기</button> <span class="hint" id="autoNote"></span><input type="hidden" data-q="도전4 문제 출처" data-free id="frSrc" value=""></p>
+        <label class="ans">받은 암호문 <small class="hint">(수 사이는 쉼표나 점으로 구분)</small><input data-q="도전4 받은 암호문" id="frCipher" class="mono" maxlength="60" inputmode="decimal" autocomplete="off"></label>
         <label class="ans">푸는 과정 (한 글자 이상)<textarea data-q="도전4 푸는 과정" rows="3" placeholder="예) 3x + 2 = 26 → 3x = 24 → x = 8 → H"></textarea></label>
         <label class="ans">해독한 단어<input data-q="도전4 해독한 단어" id="frWord" class="mono" maxlength="8" autocapitalize="characters" autocomplete="off"></label>
         <p class="live" id="frLive" aria-live="polite"></p>
@@ -456,7 +460,7 @@
     <div class="panel">
       <div class="panel-head"><div class="panel-title">열쇠 없이 풀 수 있을까?</div></div>
       <div class="panel-body">
-        <p>1기 친구는 "단순 역산으로 쉽게 풀린다"고 했어요. a와 b를 몰라도 풀 수 있을까요?</p>
+        <p>10406김O서 학생은 "단순 역산으로 쉽게 풀린다"고 했어요. a와 b를 몰라도 풀 수 있을까요?</p>
         <div class="note">힌트: 영어에서 가장 많이 쓰는 글자는 <b>E(5)</b>예요. 암호문에서 가장 많이 나온 수가 E라고 가정하면? 또 A(1)는 a + b, B(2)는 2a + b가 되니, 두 글자만 알면 a와 b를 찾을 수 있어요.</div>
         <label class="ans" style="margin-top:10px">일차식 암호의 강점과 약점을 정리해 보세요.<textarea data-q="도전4 강점과 약점" rows="4"></textarea></label>
         <label class="ans">더 풀기 어렵게 하려면 어떻게 바꿀까요?<textarea data-q="도전4 업그레이드" rows="3"></textarea></label>
@@ -470,7 +474,7 @@
       <div class="panel-head"><div class="panel-title">마무리</div></div>
       <div class="panel-body">
         <label class="ans">오늘 일차식(일차방정식)이 암호에서 어떤 역할을 했나요?<textarea data-q="마무리 일차식의 역할" rows="4"></textarea></label>
-        <label class="ans">1기 10406김O서 학생에게 한마디<textarea data-q="마무리 만든 친구에게 한마디" data-free rows="2"></textarea></label>
+        <label class="ans">10406김O서 학생에게 한마디<textarea data-q="마무리 만든 학생에게 한마디" data-free rows="2"></textarea></label>
       </div>
     </div>
     <div class="panel">
@@ -492,7 +496,7 @@
     <button class="btn" id="prevBtn" type="button">← 이전</button>
     <div class="nav-mid">
       <div id="deckDots" class="deck-dots" aria-label="단계별 진행 상황"></div>
-      <span class="page"><b id="pageNow">1</b> / <span id="pageAll">6</span><span class="page-title"> · <span id="pageTitle"></span></span></span>
+      <span class="page"><span class="stars" id="starNav">☆☆☆☆</span> <b id="pageNow">1</b> / <span id="pageAll">6</span><span class="page-title"> · <span id="pageTitle"></span></span></span>
     </div>
     <button class="btn primary" id="nextBtn" type="button">다음 →</button>
   </nav>
@@ -521,7 +525,7 @@
   function show(n) {
     now = Math.max(0, Math.min(stages.length - 1, n));
     stages.forEach((s, i) => s.classList.toggle("on", i === now));
-    [...$("tabs").children].forEach((t, i) => t.classList.toggle("on", i === now));
+    [...$("tabs").children].forEach((t, i) => { t.classList.toggle("on", i === now); if (i === now) t.scrollIntoView({ block: "nearest", inline: "center" }); });
     $("prevBtn").disabled = now === 0; $("nextBtn").disabled = now === stages.length - 1;
     $("pageNow").textContent = now + 1; $("pageAll").textContent = stages.length; $("pageTitle").textContent = stages[now].dataset.title;
     history.replaceState(null, "", "#" + (now + 1));
@@ -535,7 +539,7 @@
   function star(i, on) {
     stars[i] = on; $("star" + i).textContent = on ? " ★" : "";
     const n = Object.values(stars).filter(Boolean).length;
-    $("starBadge").textContent = "★".repeat(n) + "☆".repeat(4 - n);
+    $("starBadge").textContent = $("starNav").textContent = "★".repeat(n) + "☆".repeat(4 - n);
   }
   function live(id, cls, msg) { const e = $(id); e.className = "live " + cls; e.textContent = msg; }
   const nums = v => v.split(/[^0-9]+/).filter(Boolean).map(Number);
@@ -566,28 +570,40 @@
     $("myB").value = $("myB").value.replace(/\D/g, "");
     const ok = a >= 1 && a <= 5 && b >= 0 && b <= 20;
     $("myRule").textContent = ok ? `y = ${a === 1 ? "" : a}x + ${b}` : "y = ? x + ?";
-    $("myTable").innerHTML = ok ? "<tr>" + L.map(l => `<td>${l}</td>`).join("") + "</tr><tr>" + L.map((_, i) => `<td>${a * (i + 1) + b}</td>`).join("") + "</tr>" : "";
+    const tableRow = () => "<tr>" + L.map(l => `<td>${l}</td>`).join("") + "</tr><tr>" + L.map((_, i) => `<td>${a * (i + 1) + b}</td>`).join("") + "</tr>";
+    $("myTable").innerHTML = ""; $("myTableHint").hidden = false;
     const w = word($("myWord").value), c = nums($("myCipher").value);
     if (!ok) return live("myLive", "wait", w || c.length ? "먼저 a(1~5)와 b(0~20)를 정해 주세요." : ""), star(3, false);
     if (!w || !c.length) return live("myLive", "wait", ""), star(3, false);
     if (c.length < w.length) return live("myLive", "wait", `${w.length}글자 모두 계산해 주세요.`), star(3, false);
     const bad = [...w].map((ch, i) => c[i] === a * (L.indexOf(ch) + 1) + b ? "" : ch).filter(Boolean);
-    if (!bad.length && c.length === w.length) { live("myLive", "ok", "맞아요! 짝에게 a, b와 암호문을 알려 주세요."); star(3, true); }
+    if (!bad.length && c.length === w.length) { live("myLive", "ok", "맞아요! 짝에게 a, b와 암호문을 알려 주세요."); star(3, true); $("myTable").innerHTML = tableRow(); $("myTableHint").hidden = true; }
     else { live("myLive", "no", bad.length ? `${bad.join(", ")}의 계산을 다시 확인해 보세요.` : "글자 수보다 수가 많아요."); star(3, false); }
   }
   ["myA", "myB", "myWord", "myCipher"].forEach(id => $(id).addEventListener("input", checkMine));
   $("myA").addEventListener("change", checkMine);
 
-  // 도전 4: 친구 암호
+  // 도전 4: 짝의 암호
   function checkFriend() {
     const a = parseInt($("frA").value, 10), b = parseInt($("frB").value, 10), c = nums($("frCipher").value), w = word($("frWord").value);
     if (!(a >= 1) || isNaN(b) || !c.length || !w) return live("frLive", "wait", ""), star(4, false);
     const dec = c.map(y => { const x = (y - b) / a; return Number.isInteger(x) && x >= 1 && x <= 26 ? L[x - 1] : "?"; }).join("");
-    if (dec.includes("?")) return live("frLive", "no", "받은 암호문에 a, b로 되돌려지지 않는 수가 있어요. 친구에게 다시 확인해 보세요."), star(4, false);
+    if (dec.includes("?")) return live("frLive", "no", "받은 암호문에 a, b로 되돌려지지 않는 수가 있어요. 짝에게 다시 확인해 보세요."), star(4, false);
     if (w === dec) { live("frLive", "ok", "바르게 풀었어요!"); star(4, true); }
     else { live("frLive", "no", w.length < dec.length ? "아직 다 풀지 않았어요." : "방정식을 다시 풀어 보세요."); star(4, false); }
   }
   ["frA", "frB", "frCipher", "frWord"].forEach(id => $(id).addEventListener("input", checkFriend));
+  const WORDS = ["MATH", "CODE", "KEY", "SECRET", "PRIME", "LINE", "SOLVE", "EQUAL", "CIPHER", "NUMBER", "SMILE", "HAPPY", "FRIEND", "STAR"];
+  $("autoBtn").onclick = () => {
+    const a = 1 + Math.floor(Math.random() * 5), b = Math.floor(Math.random() * 21);
+    const w = WORDS[Math.floor(Math.random() * WORDS.length)];
+    $("frA").value = a; $("frB").value = b;
+    $("frCipher").value = [...w].map(ch => a * (L.indexOf(ch) + 1) + b).join(", ");
+    $("frWord").value = "";
+    ["frA", "frB", "frCipher", "frWord"].forEach(id => $(id).dispatchEvent(new Event("input", { bubbles: true })));
+    $("frSrc").value = "컴퓨터 문제"; $("frSrc").dispatchEvent(new Event("input", { bubbles: true }));
+    $("autoNote").textContent = "새 문제가 나왔어요. 방정식으로 풀어 보세요.";
+  };
 
   CN.init({ lesson: "linear-cipher", goto: n => { show(n); window.scrollTo(0, 0); }, onBadId: () => show(0) });
   show(Math.max(0, (parseInt(location.hash.slice(1), 10) || 1) - 1));
