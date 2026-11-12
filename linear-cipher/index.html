@@ -270,7 +270,20 @@
   .tryer output{font-family:ui-monospace,Consolas,monospace;font-weight:800}
   .note{background:#fff7ef;border:1px solid #f4d9bf;border-radius:12px;padding:10px 12px;font-size:.9em;line-height:1.7;color:#7a4a1c}
   .hint{color:var(--muted);font-size:.85em}
-  .bottom-nav{display:flex;justify-content:space-between;gap:8px;margin-top:14px}
+  /* 이전·다음 바는 화면 맨 아래에 고정 (차시 슬라이드와 같은 모양) */
+  .bottom-nav{
+    position:fixed;left:50%;bottom:10px;transform:translateX(-50%);z-index:20;
+    width:calc(100% - 24px);max-width:1156px;
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:8px 10px;background:rgba(251,249,243,.97);border:1px solid var(--line);border-radius:14px;
+    box-shadow:0 6px 20px rgba(21,23,26,.10);backdrop-filter:blur(10px);
+  }
+  .bottom-nav .page{font-size:13px;font-weight:800;color:var(--muted);text-align:center}
+  .app{padding-bottom:96px}
+  @media (max-width:520px){
+    .bottom-nav{width:calc(100% - 14px);bottom:7px;padding:7px 8px}
+    .bottom-nav .btn{min-width:64px;padding:8px 10px}
+  }
   .empty-row{font-size:.85em;font-weight:700;color:#b44634;margin:.4em 0}.empty-row.ok{color:#32724f}
   .stars{font-size:1.1em;letter-spacing:.1em}
 </style>
@@ -464,10 +477,11 @@
     </div>
   </section>
 
-  <div class="bottom-nav">
+  <nav class="bottom-nav" aria-label="단계 이동">
     <button class="btn" id="prevBtn" type="button">← 이전</button>
+    <span class="page"><b id="pageNow">1</b> / <span id="pageAll">6</span> · <span id="pageTitle"></span></span>
     <button class="btn primary" id="nextBtn" type="button">다음 →</button>
-  </div>
+  </nav>
 </div>
 
 <!-- 홈페이지 이름을 site-config.js에서 가져와 상단에 표시합니다 -->
@@ -495,6 +509,7 @@
     stages.forEach((s, i) => s.classList.toggle("on", i === now));
     [...$("tabs").children].forEach((t, i) => t.classList.toggle("on", i === now));
     $("prevBtn").disabled = now === 0; $("nextBtn").disabled = now === stages.length - 1;
+    $("pageNow").textContent = now + 1; $("pageAll").textContent = stages.length; $("pageTitle").textContent = stages[now].dataset.title;
     history.replaceState(null, "", "#" + (now + 1));
     if (typeof CN !== "undefined") CN.refresh(now);
   }
