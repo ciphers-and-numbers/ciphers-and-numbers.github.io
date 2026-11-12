@@ -255,8 +255,11 @@
   .card .v{font-size:1.3em;font-weight:800}.card .bit{font-family:ui-monospace,Consolas,monospace;font-size:1.4em;font-weight:800;margin-top:4px}
   .card.on{background:#15171a;color:#fff;border-color:#15171a}
   .card-sum{margin-top:10px;font-weight:800}
+  .live{font-size:.85em;font-weight:800;margin:-.3em 0 .8em;min-height:1.2em}
+  .live.ok{color:#32724f}.live.no{color:#b44634}.live.wait{color:var(--muted)}
+  .morse.small{grid-template-columns:repeat(auto-fill,minmax(70px,1fr));font-size:.82em;margin-top:.8em}
 </style>
-<link rel="stylesheet" href="../common/deck.css?v=2">
+<link rel="stylesheet" href="../common/deck.css?v=3">
 </head>
 <body>
 <div class="app">
@@ -417,16 +420,19 @@
         <p>짧은 영어 단어(3~5글자)를 하나 정해 모스 부호로 바꾸고, <b>• = 0, − = 1</b>로 바꿔 짝에게 보내요. (글자 사이는 / )</p>
         <p>짝의 신호를 거꾸로 풀어 맞혀 봐요.</p>
         <div class="note">예) SUN → ••• / ••− / −• → 000 / 001 / 10<br>• 와 − 는 칸 아래 버튼으로 넣어요. 자판의 마침표(.)와 빼기(-)로 써도 저절로 바뀌어요.</div>
+        <div class="morse small morseRef"></div>
       </div>
     </div>
     <div class="panel">
       <div class="panel-head"><div class="panel-title">내가 보낸 신호</div></div>
       <div class="panel-body">
-        <label class="ans block">내 영어 단어 (3~5글자)<input data-q="활동4 내 단어" maxlength="5" autocapitalize="characters" autocomplete="off"></label>
+        <label class="ans block">내 영어 단어 (3~5글자)<input data-q="활동4 내 단어" id="myWord" maxlength="5" autocapitalize="characters" autocomplete="off"></label>
         <label class="ans block">모스 부호<input data-q="활동4 내 모스 부호" class="morse-in" maxlength="40" placeholder="예) ••• / ••− / −•" autocomplete="off" inputmode="none"></label>
         <div class="keys" data-for="활동4 내 모스 부호"><button class="btn" type="button" data-k="•">•</button><button class="btn" type="button" data-k="−">−</button><button class="btn" type="button" data-k=" / ">/</button><button class="btn" type="button" data-k="BS" aria-label="한 글자 지우기">⌫</button></div>
+        <p class="live" id="liveMyMorse" aria-live="polite"></p>
         <label class="ans block">이진 신호 (0, 1)<input data-q="활동4 내 이진 신호" class="bin-in" maxlength="40" inputmode="numeric" placeholder="예) 000 / 001 / 10" autocomplete="off"></label>
         <div class="keys" data-for="활동4 내 이진 신호"><button class="btn" type="button" data-k="0">0</button><button class="btn" type="button" data-k="1">1</button><button class="btn" type="button" data-k=" / ">/</button><button class="btn" type="button" data-k="BS" aria-label="한 글자 지우기">⌫</button></div>
+        <p class="live" id="liveMyBin" aria-live="polite"></p>
       </div>
     </div>
   </section>
@@ -438,14 +444,18 @@
         <div class="keys" data-for="활동4 받은 이진 신호"><button class="btn" type="button" data-k="0">0</button><button class="btn" type="button" data-k="1">1</button><button class="btn" type="button" data-k=" / ">/</button><button class="btn" type="button" data-k="BS" aria-label="한 글자 지우기">⌫</button></div>
         <label class="ans block">모스 부호로 되돌리기<input data-q="활동4 모스로 되돌리기" class="morse-in" maxlength="40" autocomplete="off" inputmode="none"></label>
         <div class="keys" data-for="활동4 모스로 되돌리기"><button class="btn" type="button" data-k="•">•</button><button class="btn" type="button" data-k="−">−</button><button class="btn" type="button" data-k=" / ">/</button><button class="btn" type="button" data-k="BS" aria-label="한 글자 지우기">⌫</button></div>
-        <label class="ans block">해독한 단어<input data-q="활동4 해독한 단어" maxlength="5" autocapitalize="characters" autocomplete="off"></label>
-        <label class="ans block">맞았나요?<select data-q="활동4 맞았나"><option value="">고르기</option><option>O</option><option>X</option></select></label>
+        <p class="live" id="liveBack" aria-live="polite"></p>
+        <label class="ans block">해독한 단어<input data-q="활동4 해독한 단어" id="gotWord" maxlength="5" autocapitalize="characters" autocomplete="off"></label>
+        <p class="live" id="liveWord" aria-live="polite"></p>
+        <label class="ans block">짝에게 확인해 보니 맞았나요?<select data-q="활동4 맞았나"><option value="">고르기</option><option>O</option><option>X</option></select></label>
       </div>
     </div>
     <div class="panel">
       <div class="panel-head"><div class="panel-title">생각해 보기</div></div>
       <div class="panel-body">
-        <label class="ans block">이진 신호에서 글자 사이의 / 를 지우면 어떤 문제가 생길까요?<textarea data-q="활동4 슬래시를 지우면" rows="5"></textarea></label>
+        <div class="note"><b>잠깐!</b> / 없이 <b class="num">•−</b> 를 받았다면,<br>E(•)와 T(−) 두 글자일까요, A(•−) 한 글자일까요?</div>
+        <label class="ans block" style="margin-top:.8em">이진 신호에서 글자 사이의 / 를 지우면 어떤 문제가 생길까요?<textarea data-q="활동4 슬래시를 지우면" rows="5"></textarea></label>
+        <div class="morse small morseRef"></div>
       </div>
     </div>
   </section>
@@ -588,8 +598,42 @@
   });
   showCards();
 
+  // 작은 모스 부호표 (활동 4)
+  document.querySelectorAll(".morseRef").forEach(d => { d.innerHTML = Object.keys(MORSE).map(c => `<div><b>${c}</b><span>${MORSE[c]}</span></div>`).join(""); });
+
+  // 활동 4: 짝에게 보내기 전·해독하면서 서로 맞는지 바로 확인
+  const Q = q => document.querySelector(`[data-q="${q}"]`);
+  const toks = v => v.split("/").map(t => t.replace(/\s/g, "")).filter(Boolean);
+  const BACK = Object.fromEntries(Object.entries(MORSE).map(([k, v]) => [v, k]));
+  function say(id, cls, msg) { const e = document.getElementById(id); e.className = "live " + cls; e.textContent = msg; }
+  function sameLen(a, b) { return a.length === b.length; }
+  function checkAct4() {
+    const word = Q("활동4 내 단어").value.toUpperCase().replace(/[^A-Z]/g, "");
+    const mm = toks(Q("활동4 내 모스 부호").value), mb = toks(Q("활동4 내 이진 신호").value);
+    if (!word || !mm.length) say("liveMyMorse", "wait", "");
+    else if (mm.length < word.length) say("liveMyMorse", "wait", `${word.length}글자 모두 써 주세요. (글자 사이는 /)`);
+    else { const bad = [...word].filter((c, i) => mm[i] !== MORSE[c]);
+      say("liveMyMorse", bad.length || mm.length > word.length ? "no" : "ok", bad.length ? `${bad.join(", ")}의 모스 부호를 다시 확인해 보세요.` : mm.length > word.length ? "글자 수보다 부호가 많아요." : "단어와 모스 부호가 맞아요!"); }
+    if (!mm.length || !mb.length) say("liveMyBin", "wait", "");
+    else { const want = mm.map(t => t.replace(/•/g, "0").replace(/−/g, "1"));
+      const ok = sameLen(want, mb) && want.every((t, i) => t === mb[i]);
+      say("liveMyBin", ok ? "ok" : (mb.length < want.length ? "wait" : "no"), ok ? "모스 부호와 이진 신호가 맞아요! 짝에게 보내도 돼요." : mb.length < want.length ? "모스 부호의 글자 수만큼 써 주세요." : "• = 0, − = 1로 바꿨는지 다시 확인해 보세요."); }
+    const gb = toks(Q("활동4 받은 이진 신호").value), back = toks(Q("활동4 모스로 되돌리기").value);
+    if (!gb.length || !back.length) say("liveBack", "wait", "");
+    else { const want = gb.map(t => t.replace(/0/g, "•").replace(/1/g, "−"));
+      const ok = sameLen(want, back) && want.every((t, i) => t === back[i]);
+      say("liveBack", ok ? "ok" : (back.length < want.length ? "wait" : "no"), ok ? "이진 신호를 모스 부호로 바르게 되돌렸어요!" : back.length < want.length ? "받은 신호의 글자 수만큼 써 주세요." : "0 = •, 1 = − 로 바꿨는지 다시 확인해 보세요."); }
+    const gw = Q("활동4 해독한 단어").value.toUpperCase().replace(/[^A-Z]/g, "");
+    if (!back.length || !gw) say("liveWord", "wait", "");
+    else { const want = back.map(t => BACK[t] || "?").join("");
+      say("liveWord", gw === want ? "ok" : "no", gw === want ? "모스 부호표대로 바르게 읽었어요." : want.includes("?") ? "모스 부호표에 없는 부호가 있어요. 받은 신호를 다시 확인해 보세요." : "모스 부호표에서 글자를 다시 찾아보세요."); }
+  }
+  ["활동4 내 단어", "활동4 내 모스 부호", "활동4 내 이진 신호", "활동4 받은 이진 신호", "활동4 모스로 되돌리기", "활동4 해독한 단어"]
+    .forEach(q => Q(q).addEventListener("input", checkAct4));
+
   // 슬라이드 넘기기·영상·입력·제출 (공통 파일)
   Deck.init({ lesson: "morse-binary" });
+  checkAct4();
 </script>
 </body>
 </html>
