@@ -284,6 +284,8 @@
           <li>곱하기는 쉽고, 쪼개기는 어렵다 <span class="time">10분</span></li>
           <li>영상: 비밀키와 공개키 <span class="time">2분</span></li>
           <li>짝 활동: 비밀 자물쇠 N = p × q <span class="time">15분</span></li>
+          <li>세 자리 자물쇠 2라운드 <span class="time">10분</span></li>
+          <li>영상: 곱하기는 쉽고 거꾸로 찾기는 어렵다 <span class="time">2분</span></li>
           <li>AI 탐구와 오늘의 성찰 일지 <span class="time">15분</span></li>
         </ol>
       </div>
@@ -383,7 +385,7 @@
   </section>
   <section class="slide workspace" data-title="영상: 비밀키와 공개키">
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">영상 보기. 비밀키 방식과 공개키 방식 <span class="time">약 1분</span></div><div class="panel-desc">2:40 ~ 3:28 구간만 재생됩니다.</div></div>
+      <div class="panel-head"><div class="panel-title">영상 보기. 비밀키 방식과 공개키 방식 <span class="time">2분</span></div><div class="panel-desc">2:40 ~ 3:28 구간만 재생됩니다.</div></div>
       <div class="panel-body">
         <div class="video"><iframe data-src="https://www.youtube-nocookie.com/embed/77uYvLOXy7I?start=160&amp;end=208&amp;rel=0&amp;playsinline=1&amp;enablejsapi=1" title="암호키를 오픈해도 털리지 않는 이유" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div>
         <p class="video-note" aria-live="polite"></p>
@@ -435,9 +437,32 @@
       </div>
     </div>
   </section>
+  <section class="slide workspace" data-title="활동 3 ③ 세 자리 자물쇠 2라운드">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">활동 3 ③ 세 자리 자물쇠 2라운드 <span class="time">10분</span></div><div class="panel-desc">곱하기는 쉽고 쪼개기는 어렵다는 것을 직접 느껴 봅니다.</div></div>
+      <div class="panel-body">
+        <p>이번 자물쇠는 세 자리 수예요. 두 소수의 곱으로 쪼개 보세요. <b>시작</b>을 누르고, 다 풀면 <b>멈춤</b>을 눌러 걸린 시간을 재요.</p>
+        <p><button class="btn mini" id="swStart" type="button" style="margin-left:0">시작</button><button class="btn mini" id="swStop" type="button">멈춤</button> <b class="num" id="swView">0초</b></p>
+        <p><b class="num">221</b> = <input data-q="2라운드 221 작은 소수" class="short" maxlength="3" inputmode="numeric" autocomplete="off"><button class="btn mini" data-check="2라운드 221 작은 소수" type="button">확인</button> × <input data-q="2라운드 221 큰 소수" class="short" maxlength="3" inputmode="numeric" autocomplete="off"><button class="btn mini" data-check="2라운드 221 큰 소수" type="button">확인</button></p>
+        <p><b class="num">437</b> = <input data-q="2라운드 437 작은 소수" class="short" maxlength="3" inputmode="numeric" autocomplete="off"><button class="btn mini" data-check="2라운드 437 작은 소수" type="button">확인</button> × <input data-q="2라운드 437 큰 소수" class="short" maxlength="3" inputmode="numeric" autocomplete="off"><button class="btn mini" data-check="2라운드 437 큰 소수" type="button">확인</button></p>
+        <p><b class="num">667</b> = <input data-q="2라운드 667 작은 소수" class="short" maxlength="3" inputmode="numeric" autocomplete="off"><button class="btn mini" data-check="2라운드 667 작은 소수" type="button">확인</button> × <input data-q="2라운드 667 큰 소수" class="short" maxlength="3" inputmode="numeric" autocomplete="off"><button class="btn mini" data-check="2라운드 667 큰 소수" type="button">확인</button></p>
+        <input type="hidden" data-q="2라운드 걸린 시간(초)" data-free id="swQ" value="">
+        <p class="hint">작은 소수 2, 3, 5, 7, 11, 13, …로 차례로 나눠 보세요.</p>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">생각해 보기</div></div>
+      <div class="panel-body">
+        <label class="ans block">세 수 가운데 가장 오래 걸린 수는 무엇이었나요? 왜 그랬을까요?<textarea data-q="2라운드 가장 오래 걸린 수" rows="3"></textarea></label>
+        <label class="ans block">667을 쪼갤 때 몇 개의 소수로 나눠 봤나요? 수가 더 커지면 어떻게 될까요?<textarea data-q="2라운드 몇 번 나눴나" rows="3"></textarea></label>
+        <label class="ans block">(더 생각해 보기) 667을 쪼갤 때 30보다 큰 소수로는 나눠 보지 않아도 되는 까닭은 무엇일까요?<textarea data-q="2라운드 루트 생각" data-free rows="3"></textarea></label>
+      </div>
+    </div>
+  </section>
+
   <section class="slide workspace" data-title="영상: RSA 암호">
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">영상 보기. 곱하기는 쉽고, 거꾸로 찾기는 어렵다 <span class="time">약 1분</span></div><div class="panel-desc">0:37 ~ 1:59 구간만 재생됩니다.</div></div>
+      <div class="panel-head"><div class="panel-title">영상 보기. 곱하기는 쉽고, 거꾸로 찾기는 어렵다 <span class="time">2분</span></div><div class="panel-desc">0:37 ~ 1:59 구간만 재생됩니다.</div></div>
       <div class="panel-body">
         <div class="video"><iframe data-src="https://www.youtube-nocookie.com/embed/4h_WRykkI5o?start=37&amp;end=119&amp;rel=0&amp;playsinline=1&amp;enablejsapi=1" title="카오스 짧강 암호의 수학적 원리" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div>
         <p class="video-note" aria-live="polite"></p>
@@ -532,6 +557,18 @@
   // 슬라이드 넘기기·영상·입력·제출 (공통 파일)
   Deck.init({ lesson: "prime-rsa" });
   sieveLoad();
+
+</script>
+<script>
+  // 2라운드 초시계
+  (() => {
+    const $ = id => document.getElementById(id); let t0 = 0, timer = null;
+    const show = s => { $("swView").textContent = s + "초"; };
+    $("swStart").onclick = () => { t0 = Date.now(); clearInterval(timer); timer = setInterval(() => show(Math.round((Date.now() - t0) / 1000)), 500); };
+    $("swStop").onclick = () => { if (!timer) return; clearInterval(timer); timer = null; const s = Math.round((Date.now() - t0) / 1000); show(s);
+      $("swQ").value = s; $("swQ").dispatchEvent(new Event("input", { bubbles: true })); };
+    if ($("swQ").value) show($("swQ").value);
+  })();
 </script>
 </body>
 </html>

@@ -298,13 +298,16 @@
       <div class="panel-head"><div class="panel-title">오늘 할 일</div></div>
       <div class="panel-body">
         <ol>
-          <li>모스 부호 들어 보고, AI와 함께 모스 부호의 탄생 알아보기 <span class="time">5분</span></li>
-          <li>신호 몇 개면 알파벳 26개를 다 만들까? <span class="time">10분</span></li>
-          <li>컴퓨터의 언어, 이진법 (이진 카드) <span class="time">12분</span></li>
-          <li>짝 활동: 모스-이진 비밀 대화 <span class="time">13분</span></li>
+          <li>모스 부호 들어 보고, AI와 함께 모스 부호의 탄생 알아보기 <span class="time">6분</span></li>
+          <li>신호 몇 개면 알파벳 26개를 다 만들까? <span class="time">11분</span></li>
+          <li>소리 신호 받아 적기 <span class="time">8분</span></li>
+          <li>영상과 이진 카드로 이진법 익히기 <span class="time">10분</span></li>
+          <li>이진 비밀 메시지 <span class="time">5분</span></li>
+          <li>짝 활동: 모스-이진 비밀 대화 <span class="time">20분</span></li>
+          <li>영상과 함께 아스키코드, 신호가 3가지라면? <span class="time">11분</span></li>
           <li>오늘의 성찰 일지 <span class="time">5분</span></li>
         </ol>
-        <p class="extra">시간이 되면: 컴퓨터 속 글자(아스키코드) · 신호가 3가지라면?</p>
+        
       </div>
     </div>
   </section>
@@ -323,7 +326,7 @@
       </div>
     </div>
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">활동 1. AI와 함께하는 모스 부호의 탄생 <span class="time">5분</span></div></div>
+      <div class="panel-head"><div class="panel-title">활동 1. AI와 함께하는 모스 부호의 탄생 <span class="time">6분</span></div></div>
       <div class="panel-body">
         <p>AI에게 이렇게 물어보세요.</p>
         <div class="question prompt">"모스 부호와 전신기가 발명되기 전에는 먼 곳에 소식을 어떻게 전했어? 그 뒤 무엇이 달라졌는지 2문장으로 알려 줘."</div>
@@ -334,7 +337,7 @@
   </section>
   <section class="slide workspace" data-title="활동 2 ① 경우의 수">
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">활동 2. 신호 몇 개면 알파벳 26개를 다 만들까? <span class="time">10분</span></div></div>
+      <div class="panel-head"><div class="panel-title">활동 2. 신호 몇 개면 알파벳 26개를 다 만들까? <span class="time">7분</span></div></div>
       <div class="panel-body">
         <table class="pow">
           <tr><th>신호 개수</th><th>만들 수 있는 조합</th><th>조합의 수</th><th>거듭제곱으로</th></tr>
@@ -355,7 +358,7 @@
   </section>
   <section class="slide workspace" data-title="활동 2 ② 모스 부호는 몇 가지?">
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">1개~4개짜리를 모두 쓰면</div></div>
+      <div class="panel-head"><div class="panel-title">1개~4개짜리를 모두 쓰면 <span class="time">4분</span></div></div>
       <div class="panel-body">
         <p>4개짜리만으로는 알파벳 26개를 다 만들 수 없어요. 모스 부호는 1개~4개짜리를 모두 써요. 모두 몇 가지일까요?</p>
         <p><input data-q="활동2 합 1개" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> + <input data-q="활동2 합 2개" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> + <input data-q="활동2 합 3개" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> + <input data-q="활동2 합 4개" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> = <input data-q="활동2 모두 몇 가지" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="활동2 모두 몇 가지" type="button">확인</button></p>
@@ -372,9 +375,36 @@
       </div>
     </div>
   </section>
-    <section class="slide workspace" data-title="영상: 이진법 (선택)" data-optional>
+  <section class="slide workspace" data-title="활동 2 ③ 소리 신호 받아 적기">
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">영상 보기. 이진법으로 수 나타내기 <span class="time">약 1분</span></div><div class="panel-desc">0:34 ~ 1:31 구간만 재생됩니다. 시간이 부족하면 건너뛰어도 됩니다.</div></div>
+      <div class="panel-head"><div class="panel-title">활동 2 ③ 소리 신호 받아 적기 <span class="time">8분</span></div><div class="panel-desc">소리는 선생님 화면에서 함께 들어도 좋아요.</div></div>
+      <div class="panel-body">
+        <p>컴퓨터가 영어 단어 하나를 모스 부호 소리로 보내요. 화면에는 단어가 나오지 않아요. 잘 듣고 받아 적어 보세요.</p>
+        <div class="player"><span class="lamp" id="qLamp" aria-hidden="true"></span>
+          <button class="btn mini" id="qNew" type="button" style="margin-left:0">새 문제 듣기</button>
+          <button class="btn mini" id="qAgain" type="button">다시 듣기</button>
+          <button class="btn mini" id="qSlow" type="button">느리게 듣기</button></div>
+        <p class="hint" id="qInfo">'새 문제 듣기'를 눌러 시작해요. 짧은 소리는 •, 긴 소리는 −예요.</p>
+        <label class="ans block">들은 모스 부호<input data-q="받아적기 들은 부호" class="morse-in" id="qMorse" maxlength="40" inputmode="none" placeholder="예) •−• / −−−" autocomplete="off"></label>
+        <div class="keys" data-for="받아적기 들은 부호"><button class="btn" type="button" data-k="•">•</button><button class="btn" type="button" data-k="−">−</button><button class="btn" type="button" data-k=" / ">/</button><button class="btn" type="button" data-k="BS" aria-label="한 글자 지우기">⌫</button></div>
+        <label class="ans block">해독한 단어<input data-q="받아적기 단어" id="qWord" maxlength="8" autocapitalize="characters" autocomplete="off"></label>
+        <p><button class="btn mini" id="qCheck" type="button" style="margin-left:0">맞았는지 보기</button> <span class="live" id="qLive" aria-live="polite"></span></p>
+        <p>맞힌 문제: <b id="qScore">0</b>개</p>
+        <input type="hidden" data-q="받아적기 맞힌 수" data-free id="qScoreQ" value="">
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">생각해 보기</div></div>
+      <div class="panel-body">
+        <label class="ans block">점과 선을 구별하기 어려웠던 때는 언제였나요? 모스 부호를 더 잘 보내려면 무엇을 지켜야 할까요?<textarea data-q="받아적기 어려웠던 점" rows="4"></textarea></label>
+        <div class="note">이 활동의 소리는 같은 방에서 여러 기기가 한꺼번에 울리면 헷갈려요. 이어폰을 쓰거나 차례로 들어요.</div>
+      </div>
+    </div>
+  </section>
+
+    <section class="slide workspace" data-title="영상: 이진법">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">영상 보기. 이진법으로 수 나타내기 <span class="time">3분</span></div><div class="panel-desc">0:34 ~ 1:31 구간만 재생됩니다.</div></div>
       <div class="panel-body">
         <div class="video"><iframe data-src="https://www.youtube-nocookie.com/embed/_b3BlbSI8kM?start=34&amp;end=91&amp;rel=0&amp;playsinline=1&amp;enablejsapi=1" title="이진법으로 숫자를 표현하는 방법" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div>
         <p class="video-note" aria-live="polite"></p>
@@ -390,7 +420,7 @@
   </section>
 <section class="slide workspace" data-title="활동 3 ① 이진법">
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">활동 3. 컴퓨터의 언어, 이진법 <span class="time">12분</span></div></div>
+      <div class="panel-head"><div class="panel-title">활동 3. 컴퓨터의 언어, 이진법 <span class="time">7분</span></div></div>
       <div class="panel-body">
         <p>이진법의 자리값 — 한 자리 올라갈 때마다 <b>2배!</b></p>
         <table class="bin">
@@ -414,7 +444,7 @@
   </section>
   <section class="slide workspace" data-title="활동 3 ② 이진 비밀 메시지">
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">이진 비밀 메시지</div></div>
+      <div class="panel-head"><div class="panel-title">이진 비밀 메시지 <span class="time">5분</span></div></div>
       <div class="panel-body">
         <p><b>시저 암호 때처럼 A=0, B=1, …, Z=25</b>로 번호를 붙이고, 그 번호를 다섯 자리 이진수로 바꿨어요.</p>
         <div class="question cipher-big">00010 / 00000 / 10011</div>
@@ -431,7 +461,7 @@
   </section>
   <section class="slide workspace" data-title="활동 4 ① 내가 보낸 신호">
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">활동 4. 짝 활동: 모스-이진 비밀 대화 <span class="time">13분</span></div></div>
+      <div class="panel-head"><div class="panel-title">활동 4. 짝 활동: 모스-이진 비밀 대화 <span class="time">10분</span></div></div>
       <div class="panel-body">
         <p>짧은 영어 단어(3~5글자)를 하나 정해 모스 부호로 바꾸고, <b>• = 0, − = 1</b>로 바꿔 짝에게 보내요. (글자 사이는 / )</p>
         <p>짝의 신호를 거꾸로 풀어 맞혀 봐요.</p>
@@ -454,7 +484,7 @@
   </section>
   <section class="slide workspace" data-title="활동 4 ② 짝의 신호 해독">
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">짝의 신호 해독</div></div>
+      <div class="panel-head"><div class="panel-title">짝의 신호 해독 <span class="time">10분</span></div></div>
       <div class="panel-body">
         <label class="ans block">받은 이진 신호<input data-q="활동4 받은 이진 신호" class="bin-in" maxlength="40" inputmode="numeric" autocomplete="off"></label>
         <div class="keys" data-for="활동4 받은 이진 신호"><button class="btn" type="button" data-k="0">0</button><button class="btn" type="button" data-k="1">1</button><button class="btn" type="button" data-k=" / ">/</button><button class="btn" type="button" data-k="BS" aria-label="한 글자 지우기">⌫</button></div>
@@ -475,25 +505,9 @@
       </div>
     </div>
   </section>
-  <section class="slide workspace" data-title="활동 5">
+      <section class="slide workspace" data-title="영상: 아스키코드">
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">활동 5. 오늘의 성찰 일지 <span class="time">5분</span></div></div>
-      <div class="panel-body">
-        <p>"모스 부호와 컴퓨터는 모두 <input data-q="성찰 몇 가지 신호" class="short" maxlength="2" inputmode="numeric" autocomplete="off">가지 신호만으로 정보를 전달한다. <button class="btn mini" data-check="성찰 몇 가지 신호" type="button">확인</button><br>신호를 하나 늘릴 때마다 만들 수 있는 조합의 수는 <input data-q="성찰 몇 배" class="short" maxlength="2" inputmode="numeric" autocomplete="off">배가 된다." <button class="btn mini" data-check="성찰 몇 배" type="button">확인</button></p>
-        <label class="ans block">오늘 만난 거듭제곱과 이진법을 내 말로 정리해 보세요.<textarea data-q="성찰 오늘 배운 수학" rows="4"></textarea></label>
-      </div>
-    </div>
-    <div class="panel">
-      <div class="panel-head"><div class="panel-title">다시 생각해 보기</div></div>
-      <div class="panel-body">
-        <p>오늘 처음 질문은 "<b>단 두 가지 신호</b>로 어떻게 모든 글자를 보낼까?"였어요.</p>
-        <label class="ans block">그런데 모스 부호는 정말 두 가지 신호만 쓸까요? 활동 4에서 글자 사이의 / (쉼)가 없으면 어떻게 되었는지 떠올리며 써 보세요.<textarea data-q="성찰 정말 두 가지 신호일까" rows="5"></textarea></label>
-      </div>
-    </div>
-  </section>
-    <section class="slide workspace" data-title="영상: 아스키코드 (선택)" data-optional>
-    <div class="panel">
-      <div class="panel-head"><div class="panel-title">영상 보기. 글자를 수로 바꾸는 아스키코드 <span class="time">약 1분</span></div><div class="panel-desc">1:13 ~ 2:15 구간만 재생됩니다. 시간이 부족하면 건너뛰어도 됩니다.</div></div>
+      <div class="panel-head"><div class="panel-title">영상 보기. 글자를 수로 바꾸는 아스키코드 <span class="time">3분</span></div><div class="panel-desc">1:13 ~ 2:15 구간만 재생됩니다.</div></div>
       <div class="panel-body">
         <div class="video"><iframe data-src="https://www.youtube-nocookie.com/embed/qBycP3Eo8W4?start=73&amp;end=135&amp;rel=0&amp;playsinline=1&amp;enablejsapi=1" title="컴퓨터가 이해할 수 있는 아스키코드" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div>
         <p class="video-note" aria-live="polite"></p>
@@ -507,9 +521,9 @@
       </div>
     </div>
   </section>
-<section class="slide workspace" data-title="더 해보기 (선택)" data-optional>
+<section class="slide workspace" data-title="활동 5 아스키코드와 신호 3가지">
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">더 해보기 1. 컴퓨터 속 글자, 아스키코드</div></div>
+      <div class="panel-head"><div class="panel-title">활동 5 ① 컴퓨터 속 글자, 아스키코드 <span class="time">8분</span></div></div>
       <div class="panel-body">
         <p>AI에게 "컴퓨터는 글자 A를 어떤 이진수로 저장해? 아스키코드로 알려 줘."라고 물어보세요.</p>
         <p>A의 아스키코드: 십진수 <input data-q="활동3 A 아스키 십진수" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="활동3 A 아스키 십진수" type="button">확인</button> = 이진수 <input data-q="활동3 A 아스키 이진수" class="mid" maxlength="9" inputmode="numeric" autocomplete="off">₂ <button class="btn mini" data-check="활동3 A 아스키 이진수" type="button">확인</button></p>
@@ -517,13 +531,29 @@
       </div>
     </div>
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">더 해보기 2. 신호가 3가지라면?</div></div>
+      <div class="panel-head"><div class="panel-title">활동 5 ② 신호가 3가지라면?</div></div>
       <div class="panel-body">
         <label class="ans block">신호가 점, 선, 긴 선 3가지라면 신호 2개로 몇 가지를 만들 수 있을까요? 그렇게 생각한 까닭도 써 보세요.<textarea data-q="성찰 신호가 3가지라면" rows="4"></textarea></label>
       </div>
     </div>
   </section>
-  <section class="slide workspace" data-title="제출하기">
+  <section class="slide workspace" data-title="활동 6 성찰">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">활동 6. 오늘의 성찰 일지 <span class="time">5분</span></div></div>
+      <div class="panel-body">
+        <p>"모스 부호와 컴퓨터는 모두 <input data-q="성찰 몇 가지 신호" class="short" maxlength="2" inputmode="numeric" autocomplete="off">가지 신호만으로 정보를 전달한다. <button class="btn mini" data-check="성찰 몇 가지 신호" type="button">확인</button><br>신호를 하나 늘릴 때마다 만들 수 있는 조합의 수는 <input data-q="성찰 몇 배" class="short" maxlength="2" inputmode="numeric" autocomplete="off">배가 된다." <button class="btn mini" data-check="성찰 몇 배" type="button">확인</button></p>
+        <label class="ans block">오늘 만난 거듭제곱과 이진법을 내 말로 정리해 보세요.<textarea data-q="성찰 오늘 배운 수학" rows="4"></textarea></label>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">다시 생각해 보기</div></div>
+      <div class="panel-body">
+        <p>오늘 처음 질문은 "<b>단 두 가지 신호</b>로 어떻게 모든 글자를 보낼까?"였어요.</p>
+        <label class="ans block">그런데 모스 부호는 정말 두 가지 신호만 쓸까요? 활동 4에서 글자 사이의 / (쉼)가 없으면 어떻게 되었는지 떠올리며 써 보세요.<textarea data-q="성찰 정말 두 가지 신호일까" rows="5"></textarea></label>
+      </div>
+    </div>
+  </section>
+<section class="slide workspace" data-title="제출하기">
     <div class="panel">
       <div class="panel-head"><div class="panel-title">제출하기</div><div class="panel-desc">학번은 첫 화면에서 쓴 것이 그대로 쓰입니다.</div></div>
       <div class="panel-body">
@@ -666,6 +696,37 @@
   // 슬라이드 넘기기·영상·입력·제출 (공통 파일)
   Deck.init({ lesson: "morse-binary" });
   checkAct4();
+
+</script>
+<script>
+  // 소리 신호 받아 적기 (단어는 화면에 보이지 않음)
+  (() => {
+    const W = ["SUN", "CAT", "MAP", "TOP", "BEE", "KEY", "SKY", "RED", "TEN", "OWL", "MOON", "STAR", "FISH", "TREE", "RAIN", "BIRD"];
+    const $ = id => document.getElementById(id);
+    let cur = "", score = 0, busy = false, ac = null;
+    async function play(word, U) {
+      if (busy || !word) return; busy = true;
+      try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); await ac.resume(); } catch (e) { ac = null; }
+      const wait = ms => new Promise(r => setTimeout(r, ms));
+      for (const c of word) { for (const sym of MORSE[c]) { const len = sym === "•" ? U : U * 3; $("qLamp").classList.add("on");
+          if (ac) { const o = ac.createOscillator(), g = ac.createGain(); o.frequency.value = 650; g.gain.value = .15; o.connect(g).connect(ac.destination); o.start(); o.stop(ac.currentTime + len / 1000); }
+          await wait(len); $("qLamp").classList.remove("on"); await wait(U); }
+        await wait(U * 3); }
+      busy = false;
+    }
+    $("qNew").onclick = () => { let w; do { w = W[Math.floor(Math.random() * W.length)]; } while (w === cur); cur = w;
+      $("qInfo").textContent = `${cur.length}글자 단어예요. 잘 들어 보세요.`; $("qLive").textContent = ""; play(cur, 130); };
+    $("qAgain").onclick = () => play(cur, 130);
+    $("qSlow").onclick = () => play(cur, 260);
+    $("qCheck").onclick = () => {
+      const w = $("qWord").value.toUpperCase().replace(/[^A-Z]/g, ""), live = $("qLive");
+      if (!cur) { live.className = "live wait"; live.textContent = "먼저 '새 문제 듣기'를 눌러요."; return; }
+      if (w === cur) { score++; $("qScore").textContent = score; $("qScoreQ").value = score; $("qScoreQ").dispatchEvent(new Event("input", { bubbles: true }));
+        live.className = "live ok"; live.textContent = "맞았어요! 새 문제도 들어 보세요."; cur = ""; }
+      else { live.className = "live no"; live.textContent = "다시 들어 보세요. 모스 부호표와 비교해 봐요."; }
+    };
+    const saved = parseInt($("qScoreQ").value, 10); if (saved) { score = saved; $("qScore").textContent = score; }
+  })();
 </script>
 </body>
 </html>

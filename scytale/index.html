@@ -286,10 +286,11 @@
       <div class="panel-head"><div class="panel-title">오늘 할 일</div></div>
       <div class="panel-body">
         <ol>
-          <li>영상으로 자리 바꾸기 암호 만나기 <span class="time">3분</span></li>
+          <li>영상으로 스키테일 만나기 <span class="time">3분</span></li>
           <li>AI와 함께하는 암호의 역사 탐험 <span class="time">10분</span></li>
           <li>스키테일의 비밀: 배수 규칙 찾기 <span class="time">15분</span></li>
           <li>짝 활동: 격자로 스키테일 암호 만들기 <span class="time">25분</span></li>
+          <li>2라운드: 면 수를 모르는 암호 <span class="time">10분</span></li>
           <li>오늘의 성찰 일지 <span class="time">10분</span></li>
         </ol>
       </div>
@@ -297,7 +298,7 @@
   </section>
   <section class="slide workspace" data-title="영상: 자리 바꾸기 암호">
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">영상 보기. 스파르타의 스키테일 <span class="time">약 1분</span></div><div class="panel-desc">1:05 ~ 1:44 구간만 재생됩니다.</div></div>
+      <div class="panel-head"><div class="panel-title">영상 보기. 스파르타의 스키테일 <span class="time">3분</span></div><div class="panel-desc">1:05 ~ 1:44 구간만 재생됩니다.</div></div>
       <div class="panel-body">
         <div class="video"><iframe data-src="https://www.youtube-nocookie.com/embed/NRqknEWhl-Q?start=65&amp;end=104&amp;rel=0&amp;playsinline=1&amp;enablejsapi=1" title="인류의 역사만큼이나 오래된 암호" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div>
         <p class="video-note" aria-live="polite"></p>
@@ -443,6 +444,29 @@
       </div>
     </div>
   </section>
+  <section class="slide workspace" data-title="활동 3 ④ 2라운드: 면 수를 모르는 암호">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">활동 3 ④ 2라운드: 면 수를 모르는 암호 <span class="time">10분</span></div><div class="panel-desc">약수로 후보를 좁혀 풀어 봅니다.</div></div>
+      <div class="panel-body">
+        <p>누군가 스키테일로 만든 암호문을 가로챘어요. 그런데 <b>막대의 면 수</b>를 몰라요.</p>
+        <div class="question cipher-big" style="letter-spacing:.12em">WAIAETBTMTRNEHAOEEROTLYN</div>
+        <p>글자 수는 <input data-q="2라운드 글자 수" class="short" maxlength="2" inputmode="numeric" autocomplete="off"><button class="btn mini" data-check="2라운드 글자 수" type="button">확인</button>개. 면 수는 글자 수의 <b>약수</b> 가운데 하나예요.</p>
+        <label class="ans block">면 수가 될 수 있는 수를 모두 써 보세요.<textarea data-q="2라운드 면 수 후보" rows="2"></textarea></label>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">면 수를 바꿔 풀어 보기</div></div>
+      <div class="panel-body">
+        <div class="tryer" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span>면 수</span><select id="faceSel"></select></div>
+        <p style="margin-top:.6em">되돌린 결과: <b class="num" id="faceOut"></b></p>
+        <p>뜻이 통하는 면 수 = <input data-q="2라운드 면 수" class="short" maxlength="2" inputmode="numeric" autocomplete="off"><button class="btn mini" data-check="2라운드 면 수" type="button">확인</button></p>
+        <label class="ans block">원래 메시지 (띄어쓰기 없이)<input data-q="2라운드 메시지" maxlength="30" autocapitalize="characters" autocomplete="off"></label>
+        <button class="btn mini" data-check="2라운드 메시지" type="button">확인</button>
+        <label class="ans block">몇 번 만에 찾았나요? 면 수를 모르면 스키테일은 얼마나 안전할까요?<textarea data-q="2라운드 몇 번 만에" rows="3"></textarea></label>
+      </div>
+    </div>
+  </section>
+
   <section class="slide workspace" data-title="활동 4">
     <div class="panel">
       <div class="panel-head"><div class="panel-title">활동 4. 오늘의 성찰 일지 (스키테일의 약점과 현대 보안) <span class="time">10분</span></div></div>
@@ -542,6 +566,16 @@
   // 슬라이드 넘기기·영상·입력·제출 (공통 파일)
   Deck.init({ lesson: "scytale" });
   document.querySelectorAll("[data-grid]").forEach(b => b._load && b._load()); // 저장해 둔 격자 다시 채우기
+
+</script>
+<script>
+  // 2라운드: 면 수를 바꿔 되돌려 보기 (띠를 면 수만큼 건너뛰며 읽음)
+  (() => {
+    const C = "WAIAETBTMTRNEHAOEEROTLYN", sel = document.getElementById("faceSel"), out = document.getElementById("faceOut");
+    sel.innerHTML = [2, 3, 4, 6, 8, 12].map(n => `<option>${n}</option>`).join("");
+    function go() { const n = +sel.value, t = C.length / n; let s = ""; for (let f = 0; f < n; f++) for (let k = 0; k < t; k++) s += C[f + k * n]; out.textContent = s; }
+    sel.addEventListener("change", go); go();
+  })();
 </script>
 </body>
 </html>
