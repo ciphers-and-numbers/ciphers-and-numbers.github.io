@@ -263,6 +263,10 @@
   table.nums td{border:1px solid var(--border-soft);padding:4px 6px;text-align:center;min-width:1.9em}
   table.nums tr:first-child td{font-weight:800}
   table.nums tr:nth-child(2) td{color:var(--muted)}
+  table.nums.split{width:100%}
+  table.nums.split td{min-width:0;padding:4px 0}
+  table.nums.split tr:nth-child(3) td{font-weight:800;border-top:3px solid var(--line)}
+  table.nums.split tr:nth-child(4) td{color:var(--muted)}
   .cipher{font-family:ui-monospace,Consolas,monospace;font-size:1.25em;font-weight:800;letter-spacing:.05em;text-align:center;background:#15171a;color:#fff;border-radius:12px;padding:14px;word-break:break-all}
   .row2{display:flex;gap:10px;flex-wrap:wrap}.row2 .ans{flex:1;min-width:8em}
   .tryer{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
@@ -392,7 +396,7 @@
     <div class="panel">
       <div class="panel-head"><div class="panel-title">도전 2. 비밀 메시지를 풀어라</div><div class="panel-desc">거꾸로 풀려면 일차방정식을 풀면 돼요.</div></div>
       <div class="panel-body">
-        <div class="table-scroll"><table class="nums" id="numTable"></table></div>
+        <div class="table-scroll"><table class="nums split" id="numTable"></table></div>
         <p style="margin-top:10px"><b>메시지 ①</b></p>
         <div class="cipher">17 · 11 · 25 · 25 · 31</div>
         <p style="margin-top:10px">첫 수 17을 방정식으로 풀어 봐요.<br>
@@ -434,7 +438,7 @@
     <div class="panel">
       <div class="panel-head"><div class="panel-title">내 암호 살펴보기</div></div>
       <div class="panel-body">
-        <div class="table-scroll"><table class="nums" id="myTable"></table></div>
+        <div class="table-scroll"><table class="nums split" id="myTable"></table></div>
         <p class="hint" id="myTableHint" style="margin-top:6px">내 암호를 직접 계산해서 "맞아요"가 나오면 A~Z 전체 암호표가 열려요.</p>
         <label class="ans">내 암호를 푸는 식 (x = …)<input data-q="도전3 푸는 식" autocomplete="off" placeholder="예) x = (y − b) ÷ a"></label>
         <label class="ans">만약 a를 0으로 하면 어떻게 될까요? 암호로 쓸 수 있을까요?<textarea data-q="도전3 a가 0이면" rows="3"></textarea></label>
@@ -578,7 +582,7 @@
   const word = v => v.toUpperCase().replace(/[^A-Z]/g, "");
 
   // 번호표 (A = 1)
-  $("numTable").innerHTML = "<tr>" + L.map(l => `<td>${l}</td>`).join("") + "</tr><tr>" + L.map((_, i) => `<td>${i + 1}</td>`).join("") + "</tr>";
+  $("numTable").innerHTML = "<tr>" + L.slice(0, 13).map(l => `<td>${l}</td>`).join("") + "</tr><tr>" + L.slice(0, 13).map((_, i) => `<td>${i + 1}</td>`).join("") + "</tr><tr>" + L.slice(13).map(l => `<td>${l}</td>`).join("") + "</tr><tr>" + L.slice(13).map((_, i) => `<td>${i + 13 + 1}</td>`).join("") + "</tr>";
 
   // 도전 1: 내 식으로 시험
   function tryRule() {
@@ -602,7 +606,8 @@
     const ok = !isNaN(a) && a !== 0 && !isNaN(b);
     const ax = a === 1 ? "x" : a === -1 ? "−x" : `${a < 0 ? "−" + (-a) : a}x`;
     $("myRule").textContent = ok ? `y = ${ax} ${b < 0 ? "− " + (-b) : "+ " + b}` : "y = ? x + ?";
-    const tableRow = () => "<tr>" + L.map(l => `<td>${l}</td>`).join("") + "</tr><tr>" + L.map((_, i) => `<td>${a * (i + 1) + b}</td>`).join("") + "</tr>";
+    const half = (from, to) => "<tr>" + L.slice(from, to).map(l => `<td>${l}</td>`).join("") + "</tr><tr>" + L.slice(from, to).map((_, i) => `<td>${a * (i + from + 1) + b}</td>`).join("") + "</tr>";
+    const tableRow = () => half(0, 13) + half(13, 26);
     $("myTable").innerHTML = ""; $("myTableHint").hidden = false;
     const w = word($("myWord").value), c = nums($("myCipher").value);
     if (!ok) return live("myLive", "wait", w || c.length ? "먼저 a와 b를 골라 주세요." : ""), star(3, false);

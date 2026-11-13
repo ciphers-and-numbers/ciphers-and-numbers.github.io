@@ -263,6 +263,10 @@
   table.nums td{border:1px solid var(--border-soft);padding:4px 6px;text-align:center;min-width:1.9em}
   table.nums tr:first-child td{font-weight:800}
   table.nums tr:nth-child(2) td{color:var(--muted)}
+  table.nums.split{width:100%}
+  table.nums.split td{min-width:0;padding:4px 0}
+  table.nums.split tr:nth-child(3) td{font-weight:800;border-top:3px solid var(--line)}
+  table.nums.split tr:nth-child(4) td{color:var(--muted)}
   .cipher{font-family:ui-monospace,Consolas,monospace;font-size:1.25em;font-weight:800;letter-spacing:.05em;text-align:center;background:#15171a;color:#fff;border-radius:12px;padding:14px;word-break:break-all}
   .row2{display:flex;gap:10px;flex-wrap:wrap}.row2 .ans{flex:1;min-width:8em}
   .tryer{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
@@ -373,7 +377,7 @@
       <div class="panel-head"><div class="panel-title">도전 1. 두 열쇠의 규칙을 찾아라</div><div class="panel-desc">MEET를 이 암호로 바꾸면 OHGW가 돼요.</div></div>
       <div class="panel-body">
         <div class="posrow" id="posRow"></div>
-        <div class="table-scroll"><table class="nums" id="abc"></table></div>
+        <div class="table-scroll"><table class="nums split" id="abc"></table></div>
         <p style="margin-top:.8em">1번째 글자 M → O 는 <input data-q="도전1 첫째 칸 수" class="short" inputmode="numeric" maxlength="2">칸<button class="btn mini" data-check="도전1 첫째 칸 수" type="button">확인</button></p>
         <p>2번째 글자 E → H 는 <input data-q="도전1 둘째 칸 수" class="short" inputmode="numeric" maxlength="2">칸<button class="btn mini" data-check="도전1 둘째 칸 수" type="button">확인</button></p>
         <p class="hint">3번째, 4번째 글자도 세어 보세요.</p>
@@ -411,7 +415,7 @@
            0보다 작으니 26을 더하면 <input data-q="도전2 감기 번호" class="short" inputmode="numeric" maxlength="2"><button class="btn mini" data-check="도전2 감기 번호" type="button">확인</button></p>
         <label class="ans">원래 메시지<input data-q="도전2 메시지2" class="mono" maxlength="10" autocapitalize="characters" autocomplete="off"></label>
         <button class="btn mini" data-check="도전2 메시지2" type="button" style="margin-left:0">확인</button>
-        <div class="table-scroll" style="margin-top:12px"><table class="nums" id="abc2"></table></div>
+        <div class="table-scroll" style="margin-top:12px"><table class="nums split" id="abc2"></table></div>
       </div>
     </div>
   </section>
@@ -456,7 +460,7 @@
         <label class="ans">보낼 영어 단어 (3~8글자)<input data-q="도전4 내 단어" id="myWord" class="mono" maxlength="8" autocapitalize="characters" autocomplete="off"></label>
         <label class="ans">내가 계산한 암호문 (글자로)<input data-q="도전4 내 암호문" id="myCipher" class="mono" maxlength="8" autocapitalize="characters" autocomplete="off"></label>
         <p class="live" id="myLive" aria-live="polite"></p>
-        <div class="table-scroll"><table class="nums" id="abc3"></table></div>
+        <div class="table-scroll"><table class="nums split" id="abc3"></table></div>
       </div>
     </div>
     <div class="panel">
@@ -595,7 +599,7 @@
   starOnCheck("도전1 짝수 열쇠", 1); starOnCheck("도전2 메시지2", 2); starOnCheck("도전3 HELLO", 3); starOnCheck("도전5 메시지", 5);
 
   // 알파벳 번호표 (A = 0)
-  const abc = `<tr>${L.map(l => `<td>${l}</td>`).join("")}</tr><tr>${L.map((_, i) => `<td>${i}</td>`).join("")}</tr>`;
+  const abc = "<tr>" + L.slice(0, 13).map(l => `<td>${l}</td>`).join("") + "</tr><tr>" + L.slice(0, 13).map((_, i) => `<td>${i}</td>`).join("") + "</tr><tr>" + L.slice(13).map(l => `<td>${l}</td>`).join("") + "</tr><tr>" + L.slice(13).map((_, i) => `<td>${i + 13}</td>`).join("") + "</tr>";
   ["abc", "abc2", "abc3"].forEach(id => $(id).innerHTML = abc);
   // 도전 1: 자리별 카드 (칸 수는 보여 주지 않는다)
   $("posRow").innerHTML = [..."MEET"].map((p, i) => `<div class="pos${i % 2 ? " even" : ""}"><small>${i + 1}번째</small><div class="l">${p}</div><div class="arrow">↓ ?칸</div><div class="l">${"OHGW"[i]}</div></div>`).join("");
