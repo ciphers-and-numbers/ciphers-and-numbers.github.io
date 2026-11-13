@@ -320,6 +320,14 @@
   .stairs div{flex:1;background:#15171a;color:#fff;border-radius:8px 8px 0 0;text-align:center;font-family:ui-monospace,Consolas,monospace;font-weight:800;font-size:13px;padding-top:4px}
   .seq{font-family:ui-monospace,Consolas,monospace;font-weight:800;line-height:2;text-align:center}
   .seq b{background:var(--lime,#d9f24f);border-radius:6px;padding:2px 6px}
+  /* 어느 단계에서나 열 수 있는 번호표 (화면 아래 고정 바 바로 위) */
+  .ref-btn{position:fixed;right:12px;bottom:84px;z-index:21;border:1px solid #15171a;background:#15171a;color:#fff;border-radius:999px;padding:9px 14px;font:inherit;font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 6px 16px rgba(21,23,26,.22)}
+  .ref-btn[aria-expanded="true"]{background:#fff;color:#15171a}
+  .ref-sheet{position:fixed;left:50%;transform:translateX(-50%);bottom:132px;z-index:21;width:calc(100% - 24px);max-width:560px;max-height:46vh;overflow:auto;background:#fbf9f3;border:1px solid #15171a;border-radius:16px;padding:10px 12px;box-shadow:0 12px 30px rgba(21,23,26,.25)}
+  .ref-sheet[hidden]{display:none}
+  .ref-sheet .ref-title{font-size:12px;font-weight:800;color:var(--muted);margin:0 0 4px}
+  .ref-sheet .pad{margin:4px auto}
+  @media (max-width:520px){ .ref-btn{bottom:78px;right:8px} .ref-sheet{bottom:124px;width:calc(100% - 14px)} }
 </style>
 </head>
 <body>
@@ -432,6 +440,7 @@
       <div class="panel-head"><div class="panel-title">도전 3. 열쇠 없이 풀어라</div><div class="panel-desc">이번에는 더한 수를 알려 주지 않았어요.</div></div>
       <div class="panel-body">
         <div class="cipher">17, 18, 5, 26, 7</div>
+        <div class="jamoRef" style="margin-top:10px"></div>
         <p style="margin-top:12px">더한 수를 바꿔 가며 뜻이 통하는 낱말을 찾아보세요.</p>
         <div class="tryer"><span>더한 수</span><input id="kk" type="range" min="1" max="9" value="1" style="flex:1"><output id="kkOut" class="mono">1</output></div>
         <p class="pairshow" id="crackOut" style="margin-top:10px"></p>
@@ -467,6 +476,7 @@
       <div class="panel-body">
         <p>"나무"를 소수 계단 암호로 바꿔 보세요. (수 4개를 쉼표로 나눠 쓰기)</p>
         <p><input data-q="도전4 나무" class="mono" style="width:11em;padding:8px;border:1px solid var(--line);border-radius:9px" maxlength="16" autocomplete="off" placeholder="예) 1, 2, 3, 4"><button class="btn mini" data-check="도전4 나무" type="button">확인</button></p>
+        <div class="jamoRef"></div>
         <p>소수 계단 암호문을 풀어 보세요.</p>
         <div class="cipher">9, 22, 12, 28</div>
         <label class="ans" style="margin-top:12px">원래 낱말<input data-q="도전4 메시지" maxlength="6" autocomplete="off"></label>
@@ -498,6 +508,7 @@
     <div class="panel">
       <div class="panel-head"><div class="panel-title">짝의 암호 풀기</div><div class="panel-desc">짝에게 시작 소수와 암호문을 받아 풀어요.</div></div>
       <div class="panel-body">
+        <div class="jamoRef"></div>
         <label class="ans">짝의 시작 소수<input data-q="도전5 짝 시작 소수" id="frS" inputmode="numeric" maxlength="2" autocomplete="off"></label>
         <p><button class="btn mini" id="autoBtn" type="button" style="margin-left:0">짝이 없으면: 문제 받기</button> <span class="hint" id="autoNote"></span><input type="hidden" data-q="도전5 문제 출처" data-free id="frSrc" value=""></p>
         <label class="ans">받은 암호문<input data-q="도전5 받은 암호문" id="frCipher" class="mono" maxlength="40" autocomplete="off"></label>
@@ -700,6 +711,21 @@
     ["frCipher", "frWord"].forEach(id => $(id).dispatchEvent(new Event("input", { bubbles: true })));
     $("frCipher").focus();
   };
+
+  // 번호표 버튼: 어느 단계에서나 눌러서 볼 수 있게 (앞 단계로 넘겨 보지 않아도 됨)
+  {
+    const btn = document.createElement("button"), sheet = document.createElement("div");
+    btn.type = "button"; btn.className = "ref-btn"; btn.textContent = "번호표"; btn.setAttribute("aria-expanded", "false");
+    sheet.className = "ref-sheet"; sheet.hidden = true;
+    document.body.append(sheet, btn);
+    btn.addEventListener("click", () => {
+      if (sheet.hidden) {
+        sheet.innerHTML = '<p class="ref-title">자음 1~14번, 모음 15~24번</p>';
+        ".jamoRef".split(", ").map(q => document.querySelector(q)).filter(Boolean).forEach(el => { const c = el.cloneNode(true); c.removeAttribute("id"); c.querySelectorAll("[id]").forEach(x => x.removeAttribute("id")); c.querySelectorAll("button").forEach(x => { x.disabled = false; x.tabIndex = -1; }); sheet.append(c); });
+      }
+      sheet.hidden = !sheet.hidden; btn.setAttribute("aria-expanded", String(!sheet.hidden)); btn.textContent = sheet.hidden ? "번호표" : "닫기";
+    });
+  }
 
   CN.init({ lesson: "prime-stair-cipher", goto: n => { show(n); window.scrollTo(0, 0); }, onBadId: () => show(0) });
   show(Math.max(0, (parseInt(location.hash.slice(1), 10) || 1) - 1));

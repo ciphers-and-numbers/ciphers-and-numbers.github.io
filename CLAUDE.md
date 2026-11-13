@@ -17,6 +17,7 @@ Claude(또는 Claude Code)가 이 저장소를 수정할 때 따르는 규칙입
 | `index.html` | 메인 페이지 뼈대 | `data-site`, `id` 속성은 유지 |
 | `script.js` | 검색·주제 필터·카드·QR 동작 | 되도록 수정하지 않음 |
 | `style.css` | 메인 디자인 | 디자인 변경 시 `:root` 색상부터 수정 |
+| `gate.js` | 메인 화면 입구의 암호 문제 (한 번 풀면 그 기기에서는 다시 묻지 않음) | 문제 목록만 수정. 원하지 않으면 index.html에서 스크립트 줄과 `<section class="gate">`를 지움 |
 | `hero-reel.js` | 첫 화면 오른쪽 모션 그래픽 | 원하지 않으면 index.html에서 스크립트 줄을 지워도 됨 |
 | `app-template/` | 새 앱의 빈 틀 | 복사해서 사용, 원본은 남겨 둠 |
 | `<앱폴더>/index.html` | 각 수학 앱 | 앱마다 폴더 하나 |

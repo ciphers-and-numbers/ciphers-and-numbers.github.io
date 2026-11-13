@@ -318,6 +318,14 @@
   .maptable div small{display:block;color:var(--accent);font-size:13px}
   .maptable div.dup{background:#ffe9e2;border-color:#f2b3a1}
   @media (max-width:520px){ .maptable{gap:2px} .maptable div,.maptable div small{font-size:11px} }
+  /* 어느 단계에서나 열 수 있는 번호표 (화면 아래 고정 바 바로 위) */
+  .ref-btn{position:fixed;right:12px;bottom:84px;z-index:21;border:1px solid #15171a;background:#15171a;color:#fff;border-radius:999px;padding:9px 14px;font:inherit;font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 6px 16px rgba(21,23,26,.22)}
+  .ref-btn[aria-expanded="true"]{background:#fff;color:#15171a}
+  .ref-sheet{position:fixed;left:50%;transform:translateX(-50%);bottom:132px;z-index:21;width:calc(100% - 24px);max-width:560px;max-height:46vh;overflow:auto;background:#fbf9f3;border:1px solid #15171a;border-radius:16px;padding:10px 12px;box-shadow:0 12px 30px rgba(21,23,26,.25)}
+  .ref-sheet[hidden]{display:none}
+  .ref-sheet .ref-title{font-size:12px;font-weight:800;color:var(--muted);margin:0 0 4px}
+  .ref-sheet .pad{margin:4px auto}
+  @media (max-width:520px){ .ref-btn{bottom:78px;right:8px} .ref-sheet{bottom:124px;width:calc(100% - 14px)} }
 </style>
 </head>
 <body>
@@ -688,6 +696,21 @@
     ["frCipher", "frWord"].forEach(id => $(id).dispatchEvent(new Event("input", { bubbles: true })));
     $("frCipher").focus();
   };
+
+  // 번호표 버튼: 어느 단계에서나 눌러서 볼 수 있게 (앞 단계로 넘겨 보지 않아도 됨)
+  {
+    const btn = document.createElement("button"), sheet = document.createElement("div");
+    btn.type = "button"; btn.className = "ref-btn"; btn.textContent = "번호표"; btn.setAttribute("aria-expanded", "false");
+    sheet.className = "ref-sheet"; sheet.hidden = true;
+    document.body.append(sheet, btn);
+    btn.addEventListener("click", () => {
+      if (sheet.hidden) {
+        sheet.innerHTML = '<p class="ref-title">알파벳 번호 (A = 1)</p>';
+        "#abc".split(", ").map(q => document.querySelector(q)).filter(Boolean).forEach(el => { const c = el.cloneNode(true); c.removeAttribute("id"); c.querySelectorAll("[id]").forEach(x => x.removeAttribute("id")); c.querySelectorAll("button").forEach(x => { x.disabled = false; x.tabIndex = -1; }); sheet.append(c); });
+      }
+      sheet.hidden = !sheet.hidden; btn.setAttribute("aria-expanded", String(!sheet.hidden)); btn.textContent = sheet.hidden ? "번호표" : "닫기";
+    });
+  }
 
   CN.init({ lesson: "multiply-cipher", goto: n => { show(n); window.scrollTo(0, 0); }, onBadId: () => show(0) });
   show(Math.max(0, (parseInt(location.hash.slice(1), 10) || 1) - 1));

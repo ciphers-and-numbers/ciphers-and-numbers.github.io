@@ -10,10 +10,32 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./style.css?v=3">
+  <link rel="stylesheet" href="./style.css?v=4">
+  <!-- 입구의 암호 문제: 아직 풀지 않은 기기에서는 자료 목록을 가립니다 -->
+  <script>
+    try { if (localStorage.getItem("cn-gate") !== "ok") document.documentElement.classList.add("gate-locked"); }
+    catch (e) { document.documentElement.classList.add("gate-locked"); }
+  </script>
 </head>
 
 <body>
+  <section class="gate" id="gate" aria-labelledby="gateTitle">
+    <div class="gate-card">
+      <p class="gate-kicker">CIPHERS AND NUMBERS</p>
+      <h1 id="gateTitle">암호를 풀어야<br>들어갈 수 있어요</h1>
+      <div class="gate-cipher" id="gateCipher" aria-label="암호문"></div>
+      <p class="gate-rule" id="gateRule"></p>
+      <p class="gate-ex" id="gateEx"></p>
+      <div class="gate-alpha" id="gateAlpha" aria-label="알파벳 순서"></div>
+      <form id="gateForm" class="gate-form">
+        <input id="gateInput" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="12" placeholder="풀어낸 낱말" aria-label="풀어낸 낱말">
+        <button type="submit">열기</button>
+      </form>
+      <p class="gate-msg" id="gateMsg" aria-live="polite"></p>
+      <button type="button" class="gate-other" id="gateOther">다른 문제로 바꾸기</button>
+      <p class="gate-note">한 번 풀면 이 기기에서는 다시 묻지 않아요.</p>
+    </div>
+  </section>
   <header class="site-header">
     <div class="site-header-inner">
       <a class="brand" href="#top">
@@ -159,6 +181,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="./site-config.js?v=14"></script>
 <script src="./script.js?v=4"></script>
+  <script src="./gate.js?v=1"></script>
 <script src="./hero-reel.js?v=7"></script>
 </body>
 </html>
