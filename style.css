@@ -495,8 +495,9 @@ footer div{
   .hero-stats{gap:9px}
   .section-inner{width:calc(100% - 32px)}
   .tools-section{padding:56px 0 64px}
-  .finder{flex-direction:column}
-  .reset-btn{width:100%}
+  .finder{flex-wrap:nowrap}
+  .search-box{min-width:0}
+  .reset-btn{width:auto;flex:none}
   .subject-row{grid-template-columns:1fr;gap:8px}
   .subject-row>.row-label{padding-top:0}
   .how-layout{width:calc(100% - 32px)}
@@ -533,3 +534,7 @@ html.gate-locked .gate{
 .gate-msg.ok{color:#32724f}.gate-msg.no{color:#b44634}
 .gate-other{font:inherit;font-size:13px;font-weight:700;color:var(--muted);background:none;border:0;text-decoration:underline;cursor:pointer;padding:10px}
 .gate-note{margin:4px 0 0;font-size:12px;color:var(--muted)}
+
+/* 검색창: 누르면 테두리로 표시, 아래에 학번 검색 안내 */
+.search-box:focus-within{border-color:#15171a;box-shadow:0 0 0 3px rgba(217,242,79,.55)}
+.search-hint{margin:8px 2px 0;font-size:12.5px;line-height:1.6;color:var(--muted)}
