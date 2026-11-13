@@ -80,11 +80,28 @@ function setSubject(subject) {
   renderTools();
 }
 
+// 학생 작품을 만든 학생의 학번으로 찾기.
+// "10406", "104"(1학년 4반), "4반 6번", "1학년 4반", "1-4-6" 같은 검색어를 알아듣는다.
+function makerMatches(tool, query) {
+  if (!tool.maker) return false;
+  const m = String(tool.maker), grade = +m[0], cls = +m.slice(1, 3), no = +m.slice(3);
+  const q = query.replace(/\s+/g, "");
+  if (/^\d{2,5}$/.test(q)) return m.startsWith(q);
+  const dash = q.match(/^(\d)[-./](\d{1,2})(?:[-./](\d{1,2}))?$/);
+  if (dash) return +dash[1] === grade && +dash[2] === cls && (dash[3] == null || +dash[3] === no);
+  const g = q.match(/(\d)학년/), c = q.match(/(\d{1,2})반/), n = q.match(/(\d{1,2})번/);
+  if (!g && !c && !n) return false;
+  if (q.replace(/\d학년|\d{1,2}반|\d{1,2}번/g, "") !== "") return false;
+  return (!g || +g[1] === grade) && (!c || +c[1] === cls) && (!n || +n[1] === no);
+}
+
 function matchesQuery(tool, query) {
-  return [tool.title, tool.subject, tool.description, ...tool.tags]
-    .join(" ")
-    .toLowerCase()
-    .includes(query);
+  if (!query) return true;
+  if (makerMatches(tool, query)) return true;
+
+  // 띄어 쓴 낱말은 모두 들어 있어야 한다
+  const text = [tool.title, tool.subject, tool.description, tool.maker || "", ...tool.tags].join(" ").toLowerCase();
+  return query.split(/\s+/).filter(Boolean).every(word => text.includes(word));
 }
 
 function updateChips(query) {
@@ -193,6 +210,7 @@ function renderTools() {
 </div>
       <div class="card-body">
         <span class="subject-label">${escapeHtml(tool.subject)}</span>
+        ${tool.maker ? `<span class="subject-label maker-label">만든 학생 ${escapeHtml(String(tool.maker))}</span>` : ""}
         <h3>${escapeHtml(tool.title)}</h3>
         <p>${escapeHtml(tool.description)}</p>
         <div class="card-actions">

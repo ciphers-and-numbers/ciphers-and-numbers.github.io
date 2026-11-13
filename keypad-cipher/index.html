@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>10517 학생의 휴대폰 자판 암호 | 암호와 수</title>
+<style>
+  /* ===== 공통 테마 =====
+     이 :root 블록과 아래 "공통 셸" 영역은 모든 도구가 동일하게 유지합니다.
+     도구별 CSS는 파일 아래쪽 "도구 전용" 영역에만 추가하세요. */
+  :root{
+    --bg:#f2f0e9;
+    --panel:#fbf9f3;
+    --panel-2:#f4f1e9;
+    --line:#d8d2c7;
+    --border-soft:#eee9df;
+    --text:#15171a;
+    --muted:#6b6f74;
+    --faint:#9a958a;
+    --accent:#ff5a30;
+    --accent-weak:rgba(255,90,48,.14);
+    --lime:#d9f24f;
+    --shadow:0 10px 28px rgba(21,23,26,.055);
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:
+      linear-gradient(rgba(21,23,26,.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(21,23,26,.035) 1px, transparent 1px),
+      var(--bg);
+    background-size:34px 34px;
+    color:var(--text);
+    font-family:Pretendard,"Apple SD Gothic Neo","Noto Sans KR",-apple-system,BlinkMacSystemFont,sans-serif;
+    letter-spacing:-.015em;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  button,input,select{font:inherit;color:inherit}
+  .num{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+
+  .app{width:100%;max-width:1180px;margin:0 auto;padding:12px;display:flex;flex-direction:column;gap:10px}
+
+  /* ---- 공통 셸: 상단바 ---- */
+  .topbar{
+    min-height:72px;
+    display:flex;
+    gap:14px;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 14px;
+    background:rgba(242,240,233,.90);
+    border:1px solid var(--line);
+    border-radius:18px;
+    backdrop-filter:blur(14px);
+  }
+  .brand-area{display:flex;align-items:center;gap:18px;min-width:0}
+  .home-link{
+    display:flex;align-items:center;gap:10px;flex:none;
+    color:var(--text);text-decoration:none;
+    padding:7px 10px 7px 8px;border-radius:12px;
+    transition:background .18s ease;
+  }
+  .home-link:hover{background:#e7e3d9}
+  .home-arrow{
+    width:31px;height:31px;border:1px solid #c9c4b8;border-radius:50%;
+    display:grid;place-items:center;font-size:16px;line-height:1;background:#fbf9f3;
+  }
+  .brand-copy{display:block;line-height:1.15}
+  .brand-copy strong{display:block;font-size:14px;font-weight:800;letter-spacing:-.035em}
+  .brand-copy small{
+    display:block;margin-top:4px;color:#8a8d90;
+    font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+    font-size:7.5px;letter-spacing:.13em;white-space:nowrap;
+  }
+  .top-divider{width:1px;height:34px;background:#d3cec3;flex:none}
+  .title-row{display:block;min-width:0}
+  .eyebrow{
+    display:flex;align-items:center;gap:7px;margin-bottom:4px;
+    color:#7b7770;font-size:10px;font-weight:750;white-space:nowrap;
+  }
+  .eyebrow span{display:block;width:18px;height:2px;background:var(--accent)}
+  h1{
+    font-size:clamp(18px,1.25vw,24px);
+    margin:0;
+    font-weight:800;letter-spacing:-.04em;white-space:nowrap;
+  }
+  h1 em{
+    font-style:normal;font-weight:500;
+    background:linear-gradient(transparent 60%,var(--lime) 0);
+    padding:0 .04em;
+  }
+  .subtitle{margin:4px 0 0;color:#666b6f;font-size:11.5px}
+  .badge{
+    display:inline-flex;align-items:center;gap:7px;flex:none;
+    background:#15171a;color:#fff;border:0;
+    border-radius:999px;padding:8px 12px;font-weight:700;font-size:12px;white-space:nowrap;
+  }
+  .dot{width:9px;height:9px;border-radius:50%;background:#73c48f}
+
+  /* ---- 공통 셸: 패널 ----
+     기본은 "넓은 그림 영역 + 좁은 설정 영역" 2단입니다.
+     패널 수가 다르면 grid-template-columns만 바꾸고, 좁은 화면에서 1단으로
+     떨어지는 @media (max-width:900px) 규칙은 남겨 두세요. */
+  .workspace{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(300px,1fr);gap:10px}
+  .panel{
+    min-width:0;
+    display:flex;flex-direction:column;
+    background:rgba(251,249,243,.96);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+  .panel-head{
+    flex:0 0 auto;
+    padding:12px 14px;
+    border-bottom:1px solid var(--line);
+    background:rgba(247,244,236,.92);
+  }
+  .panel-title{
+    font-size:15px;font-weight:800;letter-spacing:-.025em;
+    position:relative;padding-left:10px;
+  }
+  .panel-title::before{
+    content:"";position:absolute;left:0;top:.15em;bottom:.15em;
+    width:3px;border-radius:3px;background:var(--accent);
+  }
+  .panel-desc{color:#74716b;font-size:11.5px;margin-top:5px;line-height:1.45}
+  .panel-body{flex:1;min-height:0;padding:14px}
+
+  /* ---- 공통 셸: 버튼 ---- */
+  .btn{
+    border:1px solid #c9c4b8;background:#fbf9f3;color:#15171a;
+    border-radius:999px;font-weight:700;font-size:12.5px;
+    padding:9px 14px;cursor:pointer;line-height:1;
+    transition:background .15s ease,border-color .15s ease,transform .15s ease;
+  }
+  .btn:hover:not(:disabled){transform:translateY(-1px);border-color:#15171a;background:#f2efe6}
+  .btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+  .btn.primary{background:#15171a;color:#fff;border-color:#15171a}
+  .btn.primary:hover:not(:disabled){background:#2b2e31}
+  .btn.danger{color:#a73b2c}
+  .btn.icon-btn{width:38px;height:38px;padding:0;border-radius:10px;font-size:18px;display:grid;place-items:center}
+
+  /* ---- 공통 셸: 그림 영역 (캔버스·SVG) ---- */
+  .chart-wrap{background:#fff;border:1px solid #e3ded4;border-radius:12px;overflow:hidden;position:relative}
+  .chart-wrap canvas,.chart-wrap svg{display:block;width:100%;height:100%}
+
+  /* ---- 공통 셸: 입력·지표·안내 (쓰지 않는 것은 지우세요) ---- */
+  .controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .control{display:flex;flex-direction:column;gap:5px}
+  .control label{font-size:11px;color:var(--muted);font-weight:800}
+  .control input{
+    width:100%;padding:9px 10px;font-weight:700;
+    border:1px solid #d3cec3;background:#fff;color:var(--text);border-radius:10px;
+  }
+  .control input:focus{outline:3px solid rgba(217,242,79,.42);border-color:#9aa64b}
+  .control input[type="range"]{
+    padding:0;height:22px;border:0;border-radius:0;background:transparent;
+    accent-color:#15171a;cursor:pointer;
+  }
+  .checkbox-control{
+    justify-content:center;min-height:58px;padding:8px 10px;
+    border:1px solid var(--line);background:var(--panel-2);border-radius:12px;
+  }
+  .checkbox-control label{display:flex;align-items:center;gap:8px;color:var(--text);cursor:pointer;font-size:11px}
+  .checkbox-control input{width:17px;height:17px;padding:0;accent-color:#15171a;cursor:pointer}
+
+  .metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+  .metric{background:var(--panel-2);border:1px solid #ddd7cc;border-radius:11px;padding:8px 9px;min-width:0}
+  .metric .label{color:#77736d;font-size:10px;font-weight:800;margin-bottom:3px}
+  .metric .value{
+    font-size:15px;font-weight:850;color:var(--text);
+    font-variant-numeric:tabular-nums;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+
+  .formula{
+    background:#15171a;color:#f6f2e9;border:1px solid #15171a;border-radius:12px;
+    padding:9px 10px;line-height:1.55;font-size:12px;
+    font-family:ui-monospace,SFMono-Regular,Consolas,monospace;overflow:auto;
+  }
+  .note{
+    padding:10px 12px;border-radius:10px;
+    background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;
+    font-size:11px;line-height:1.5;
+  }
+  .note b{color:#7c2d12;font-weight:800}
+  .status{min-height:19px;font-size:11px;line-height:1.4;font-weight:750;color:var(--muted)}
+  .status.ok{color:#32724f}
+  .status.error{color:#b44634}
+
+  .legend{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
+  .legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
+  .legend-item i{width:11px;height:11px;border-radius:3px;flex:none}
+
+  /* ---- 공통 셸: 반응형 (이 3개 블록은 그대로 유지) ----
+     주의: .topbar에 align-items:stretch를 쓰면 알약 모양 .badge가
+     줄바꿈된 제목 높이만큼 세로로 늘어나 거대한 원처럼 깨집니다. */
+  @media (max-width:1080px){
+    .brand-copy small{display:none}
+    .brand-copy strong{font-size:13px}
+    .top-divider{height:28px}
+  }
+  @media (max-width:900px){
+    .workspace{grid-template-columns:1fr}
+  }
+  @media (max-width:820px){
+    .topbar{align-items:flex-start}
+    .brand-area{align-items:flex-start}
+    .home-link{padding-left:2px}
+    .top-divider{display:none}
+    .brand-copy{display:none}
+    .title-row{display:block}
+    h1{white-space:normal}
+    .eyebrow{white-space:normal}
+    .badge{display:none}
+  }
+  @media (max-width:520px){
+    .app{padding:7px}
+    .topbar{border-radius:14px;padding:9px 10px}
+    .home-arrow{width:34px;height:34px}
+    h1{font-size:20px;line-height:1.25}
+    .subtitle{font-size:11px;white-space:normal}
+    .panel{border-radius:14px}
+    .panel-head{padding:12px}
+    .btn{min-height:40px}
+    .controls{grid-template-columns:1fr}
+  }
+
+
+  /* ===== 도구 전용 CSS는 여기부터 ===== */
+  .tabs{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 12px}
+  .tab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;font:inherit;font-size:13px;font-weight:800;cursor:pointer;color:var(--text)}
+  .tab.on{background:#15171a;color:#fff;border-color:#15171a}
+  .tab .star{margin-left:4px}
+  .stage{display:none}
+  .stage.on{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+  @media (max-width:900px){.stage.on{grid-template-columns:1fr}}
+  .panel-body p{line-height:1.7;margin:.3em 0 .7em}
+  .senior{display:flex;gap:14px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px}
+  .senior .face{width:56px;height:56px;border-radius:50%;background:var(--accent-weak);display:grid;place-items:center;font-size:26px;flex:none}
+  .senior b{font-size:1.05em}
+  .rule{font-family:ui-monospace,Consolas,monospace;font-size:1.5em;font-weight:800;text-align:center;padding:14px;background:#fff;border:2px dashed var(--line);border-radius:12px;margin:10px 0}
+  .ans{display:block;font-weight:700;margin:.4em 0 .9em}
+  .ans input,.ans textarea,.ans select{display:block;width:100%;margin-top:4px;font:inherit;font-weight:500;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:#fff}
+  .ans textarea{resize:vertical}
+  input.short{width:4.2em;text-align:center;font:inherit;padding:7px;border:1px solid var(--line);border-radius:9px;background:#fff}
+  .mono{font-family:ui-monospace,Consolas,monospace;letter-spacing:.06em}
+  .btn.mini{min-height:34px;padding:6px 12px;font-size:12px;margin-left:6px;vertical-align:middle}
+  .check-mark{margin-left:6px;font-size:.8em;font-weight:800;color:var(--muted)}
+  .check-mark.ok{color:#32724f}.check-mark.no{color:#b44634}
+  .live{font-size:.88em;font-weight:800;min-height:1.3em;margin:-.4em 0 .8em}
+  .live.ok{color:#32724f}.live.no{color:#b44634}.live.wait{color:var(--muted)}
+  .pairs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}
+  .pair{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 6px;text-align:center;font-weight:800}
+  .pair .l{font-size:1.4em}.pair .n{font-family:ui-monospace,Consolas,monospace;color:var(--accent);font-size:1.2em}
+  .pair.q .n{color:var(--muted)}
+  .table-scroll{overflow-x:auto}
+  table.nums{border-collapse:collapse;background:#fff;font-family:ui-monospace,Consolas,monospace;font-size:13px}
+  table.nums td{border:1px solid var(--border-soft);padding:4px 6px;text-align:center;min-width:1.9em}
+  table.nums tr:first-child td{font-weight:800}
+  table.nums tr:nth-child(2) td{color:var(--muted)}
+  table.nums.split{width:100%}
+  table.nums.split td{min-width:0;padding:4px 0}
+  table.nums.split tr:nth-child(3) td{font-weight:800;border-top:3px solid var(--line)}
+  table.nums.split tr:nth-child(4) td{color:var(--muted)}
+  .cipher{font-family:ui-monospace,Consolas,monospace;font-size:1.25em;font-weight:800;letter-spacing:.05em;text-align:center;background:#15171a;color:#fff;border-radius:12px;padding:14px;word-break:break-all}
+  .row2{display:flex;gap:10px;flex-wrap:wrap}.row2 .ans{flex:1;min-width:8em}
+  .tryer{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .tryer input{width:4em}
+  .tryer output{font-family:ui-monospace,Consolas,monospace;font-weight:800}
+  .note{background:#fff7ef;border:1px solid #f4d9bf;border-radius:12px;padding:10px 12px;font-size:.9em;line-height:1.7;color:#7a4a1c}
+  .hint{color:var(--muted);font-size:.85em}
+  /* 이전·다음 바는 화면 맨 아래에 고정 (차시 슬라이드와 같은 모양) */
+  .bottom-nav{
+    position:fixed;left:50%;bottom:10px;transform:translateX(-50%);z-index:20;
+    width:calc(100% - 24px);max-width:1156px;
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:8px 10px;background:rgba(251,249,243,.97);border:1px solid var(--line);border-radius:14px;
+    box-shadow:0 6px 20px rgba(21,23,26,.10);backdrop-filter:blur(10px);
+  }
+  .nav-mid{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0}
+  .deck-dots{display:flex;gap:6px;flex-wrap:wrap;row-gap:4px;justify-content:center;max-width:100%}
+  .dot-btn{flex:none;width:12px;height:12px;padding:0;border-radius:50%;border:2px solid #c9c4b8;background:transparent;cursor:pointer}
+  .dot-btn.none{border-color:#e3ded4;background:#e3ded4}
+  .dot-btn.empty{border-color:#b9b3a7}
+  .dot-btn.part{border-color:var(--accent);background:linear-gradient(90deg,var(--accent) 50%,transparent 0)}
+  .dot-btn.done{border-color:#32724f;background:#32724f}
+  .dot-btn.now{outline:2px solid #15171a;outline-offset:2px}
+  .bottom-nav .page{font-size:13px;font-weight:800;color:var(--muted);text-align:center}
+  .bottom-nav .page b{color:var(--text)}
+  .app{padding-bottom:96px}
+  @media (max-width:520px){
+    .bottom-nav{width:calc(100% - 14px);bottom:7px;padding:7px 8px}
+    .bottom-nav .btn{min-width:64px;padding:8px 10px}
+    .page-title{display:none}
+    .tabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-left:-2px;margin-right:-2px;padding:2px}
+    .tabs::-webkit-scrollbar{display:none}
+    .tab{flex:none}
+    .deck-dots{gap:4px}.dot-btn{width:10px;height:10px;border-width:1.5px}
+  }
+  .empty-row{font-size:.85em;font-weight:700;color:#b44634;margin:.4em 0}.empty-row.ok{color:#32724f}
+  .stars{font-size:1.1em;letter-spacing:.1em}
+  .posrow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}
+  .pos{background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 4px;text-align:center;font-weight:800}
+  .pos small{display:block;font-size:11px;color:var(--muted)}
+  .pos .l{font-family:ui-monospace,Consolas,monospace;font-size:1.5em}
+  .pos .arrow{color:var(--accent);font-size:.85em}
+  .pos.even{background:#f7fbe3}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-width:300px;margin:10px auto}
+  .pad div,.pad button{background:#fff;border:1px solid var(--line);border-radius:12px;text-align:center;padding:8px 0;font:inherit;font-weight:800;line-height:1.3;color:var(--text)}
+  .pad div b,.pad button b{display:block;font-family:ui-monospace,Consolas,monospace;font-size:1.3em}
+  .pad div small{color:var(--accent);font-size:.95em}
+  .pad .none{visibility:hidden}
+  .pad button{cursor:pointer;min-height:44px}
+  .pad button:active{background:var(--accent-weak)}
+  .seq{font-family:ui-monospace,Consolas,monospace;font-weight:800;line-height:2;text-align:center}
+  .seq b{background:var(--lime,#d9f24f);border-radius:6px;padding:2px 6px}
+  .coord{display:grid;grid-template-columns:auto repeat(10,1fr);gap:2px;margin:8px 0;font-size:13px}
+  .coord div{background:#fff;border:1px solid var(--border-soft,#e3ded4);border-radius:6px;text-align:center;padding:5px 0;font-weight:800;min-height:1.9em}
+  .coord div.ax{background:none;border:0;color:var(--muted);font-family:ui-monospace,Consolas,monospace;padding:5px 4px}
+  .coord div.vo{background:#f7fbe3}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="brand-area">
+      <!-- 홈으로 돌아가는 링크: ../#tools 를 바꾸지 마세요 -->
+      <a class="home-link" href="../#tools" aria-label="메인으로">
+        <span class="home-arrow">←</span>
+        <span class="brand-copy">
+          <strong data-site="name">암호와 수</strong>
+          <small data-site="englishName">CIPHERS AND NUMBERS</small>
+        </span>
+      </a>
+      <span class="top-divider" aria-hidden="true"></span>
+      <div class="title-row">
+        <div class="eyebrow"><span></span>주제선택 · 암호와 수 · 학생이 만든 암호</div>
+        <h1>10517 학생의 <em>휴대폰 자판 암호</em></h1>
+        <p class="subtitle">휴대폰 천지인 자판의 버튼 번호와 누르는 횟수로 한글을 숨기는 암호를 풀고, 순서쌍으로 정리해 업그레이드합니다.</p>
+      </div>
+    </div>
+    <div class="badge"><span class="dot"></span><span class="stars" id="starBadge">☆☆☆☆☆</span></div>
+  </div>
+
+  <nav class="tabs" id="tabs" aria-label="단계"></nav>
+
+  <!-- 0. 시작 -->
+  <section class="slide stage" data-title="시작">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">10517 학생의 암호를 만나요</div></div>
+      <div class="panel-body">
+        <div class="senior"><div class="face">📱</div><div><b>10517 학생</b>의 <b>"휴대폰 자판 암호"</b><br><span class="hint">「나만의 암호 설계」 수업에서 만든 암호예요.</span></div></div>
+        <p style="margin-top:12px">10517 학생은 휴대폰 <b>천지인 자판</b>에서 암호를 떠올렸어요. 글자를 치려고 누르는 <b>버튼의 번호</b>와 <b>누르는 횟수</b>를 그대로 적으면 암호가 된다는 생각이에요.</p>
+        <div class="pad"><div><b>1</b><small>ㅣ</small></div><div><b>2</b><small>ㆍ</small></div><div><b>3</b><small>ㅡ</small></div><div><b>4</b><small>ㄱㅋ</small></div><div><b>5</b><small>ㄴㄹ</small></div><div><b>6</b><small>ㄷㅌ</small></div><div><b>7</b><small>ㅂㅍ</small></div><div><b>8</b><small>ㅅㅎ</small></div><div><b>9</b><small>ㅈㅊ</small></div><div class="none"></div><div><b>0</b><small>ㅇㅁ</small></div><div class="none"></div></div>
+        <p>AI에게 규칙을 숨기고 보여 주었더니, 천지인 자판이라는 것은 알아챘지만 점이 무엇을 뜻하는지 몰라 풀지 못했어요. 짝도 "휴대폰 자판을 암호로 쓴다는 생각은 못 했다"고 평했어요.</p>
+        <div class="note">자음은 버튼 하나에 두세 개가 들어 있어요. 모음은 ㅣ(1번), ㆍ(2번), ㅡ(3번) 세 가지 획을 차례로 눌러 만들어요.</div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">학번 쓰고 시작하기</div></div>
+      <div class="panel-body">
+        <label class="ans">학번 5자리 <small class="hint">(학년 1자리 + 반 2자리 + 번호 2자리)</small>
+          <input id="studentId" inputmode="numeric" maxlength="5" placeholder="예) 1반 5번 → 10105" autocomplete="off"></label>
+        <p class="status" id="studentIdStatus" aria-live="polite"></p>
+        <p><b>오늘 할 일</b></p>
+        <ol>
+          <li>도전 1. 버튼과 점의 규칙 찾기</li>
+          <li>도전 2. 자판 메시지 풀기</li>
+          <li>도전 3. 순서쌍으로 정리하기 (점이 없으면?)</li>
+          <li>도전 4. 버튼 번호를 밀어 업그레이드</li>
+          <li>도전 5. 나만의 열쇠로 짝과 주고받기</li>
+          <li>마무리하고 제출하기</li>
+        </ol>
+        <p class="hint">별(★)은 도전을 해낼 때마다 하나씩 채워져요.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1. 규칙 찾기 -->
+  <section class="slide stage" data-title="도전 1 버튼과 점">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">도전 1. 버튼과 점의 규칙을 찾아라</div><div class="panel-desc">숫자는 버튼 번호, 점(•)의 개수는 누르는 횟수예요.</div></div>
+      <div class="panel-body">
+        <p class="seq">나 → ㄴ ㅏ → 5• 1• 2•<br>코 → ㅋ ㅗ → 4•• 2• 3•</p>
+        <div class="pad"><div><b>1</b><small>ㅣ</small></div><div><b>2</b><small>ㆍ</small></div><div><b>3</b><small>ㅡ</small></div><div><b>4</b><small>ㄱㅋ</small></div><div><b>5</b><small>ㄴㄹ</small></div><div><b>6</b><small>ㄷㅌ</small></div><div><b>7</b><small>ㅂㅍ</small></div><div><b>8</b><small>ㅅㅎ</small></div><div><b>9</b><small>ㅈㅊ</small></div><div class="none"></div><div><b>0</b><small>ㅇㅁ</small></div><div class="none"></div></div>
+        <p>ㄴ은 <input data-q="도전1 ㄴ 버튼" class="short" inputmode="numeric" maxlength="1">번 버튼을 한 번 눌러요.<button class="btn mini" data-check="도전1 ㄴ 버튼" type="button">확인</button></p>
+        <p>ㅋ은 4번 버튼을 <input data-q="도전1 ㅋ 횟수" class="short" inputmode="numeric" maxlength="1">번 눌러요.<button class="btn mini" data-check="도전1 ㅋ 횟수" type="button">확인</button></p>
+        <p>ㅎ은 <input data-q="도전1 ㅎ 버튼" class="short" inputmode="numeric" maxlength="1">번 버튼을<button class="btn mini" data-check="도전1 ㅎ 버튼" type="button">확인</button> <input data-q="도전1 ㅎ 횟수" class="short" inputmode="numeric" maxlength="1">번 눌러요.<button class="btn mini" data-check="도전1 ㅎ 횟수" type="button">확인</button></p>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">모음은 획을 차례로</div></div>
+      <div class="panel-body">
+        <p>ㅏ는 ㅣ(1번) 다음에 ㆍ(2번)을 눌러서 <b class="mono">1• 2•</b>, ㅗ는 ㆍ(2번) 다음에 ㅡ(3번)을 눌러서 <b class="mono">2• 3•</b>이에요.</p>
+        <p>ㅜ는 ㅡ 다음에 ㆍ을 눌러요. 버튼 번호를 차례로 쓰면 <input data-q="도전1 ㅜ" class="short" inputmode="numeric" maxlength="3"><button class="btn mini" data-check="도전1 ㅜ" type="button">확인</button></p>
+        <p>ㅑ는 ㅣ 다음에 ㆍ을 두 번 눌러요. 그래서 <b class="mono">1• 2••</b>이에요.</p>
+        <label class="ans">ㅓ와 ㅕ는 어떻게 쓸까요? 버튼 번호와 점으로 써 보세요.<textarea data-q="도전1 ㅓ와 ㅕ" rows="2"></textarea></label>
+        <label class="ans">이 암호에서 "점"이 없다면 어떤 일이 생길지 예상해 보세요.<textarea data-q="도전1 점이 없다면 예상" rows="2"></textarea></label>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. 메시지 -->
+  <section class="slide stage" data-title="도전 2 자판 메시지">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">도전 2. 자판 메시지를 풀어라</div><div class="panel-desc">빗금(/)은 한 글자가 끝났다는 표시예요.</div></div>
+      <div class="panel-body">
+        <div class="cipher">5• 2• 3• / 5•• 1• 2• 1•</div>
+        <label class="ans" style="margin-top:12px">원래 낱말<input data-q="도전2 메시지1" maxlength="6" autocomplete="off"></label>
+        <button class="btn mini" data-check="도전2 메시지1" type="button" style="margin-left:0">확인</button>
+        <label class="ans" style="margin-top:12px">둘째 글자의 모음은 버튼을 세 번 눌러 만들었어요. 어떤 획을 어떤 차례로 눌렀나요?<textarea data-q="도전2 세 획 모음" rows="2"></textarea></label>
+        <div class="pad"><div><b>1</b><small>ㅣ</small></div><div><b>2</b><small>ㆍ</small></div><div><b>3</b><small>ㅡ</small></div><div><b>4</b><small>ㄱㅋ</small></div><div><b>5</b><small>ㄴㄹ</small></div><div><b>6</b><small>ㄷㅌ</small></div><div><b>7</b><small>ㅂㅍ</small></div><div><b>8</b><small>ㅅㅎ</small></div><div><b>9</b><small>ㅈㅊ</small></div><div class="none"></div><div><b>0</b><small>ㅇㅁ</small></div><div class="none"></div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">받침이 있는 낱말</div></div>
+      <div class="panel-body">
+        <div class="cipher">9•• 1• 5• / 4• 3• 2•</div>
+        <label class="ans" style="margin-top:12px">원래 낱말<input data-q="도전2 메시지2" maxlength="6" autocomplete="off"></label>
+        <button class="btn mini" data-check="도전2 메시지2" type="button" style="margin-left:0">확인</button>
+        <label class="ans" style="margin-top:12px">빗금(/)이 없다면 첫 글자의 5•가 받침인지 다음 글자의 첫소리인지 어떻게 알 수 있을까요?<textarea data-q="도전2 빗금이 없다면" rows="3"></textarea></label>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. 순서쌍 -->
+  <section class="slide stage" data-title="도전 3 순서쌍">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">도전 3. 순서쌍으로 정리하기</div><div class="panel-desc">자음 하나는 (버튼, 횟수) 두 수로 정해져요.</div></div>
+      <div class="panel-body">
+        <p>ㅋ은 4번 버튼을 2번 누르니까 순서쌍 <b class="mono">(4, 2)</b>로 쓸 수 있어요. 쌍자음은 세 번 눌러요. ㄲ은 <b class="mono">(4, 3)</b>이에요.</p>
+        <p>순서쌍 (6, 2)가 나타내는 자음은 <input data-q="도전3 (6,2)" class="short" maxlength="1"><button class="btn mini" data-check="도전3 (6,2)" type="button">확인</button></p>
+        <p>ㅆ의 순서쌍은 ( <input data-q="도전3 ㅆ 버튼" class="short" inputmode="numeric" maxlength="1"> , <input data-q="도전3 ㅆ 횟수" class="short" inputmode="numeric" maxlength="1"> )<button class="btn mini" data-check="도전3 ㅆ 버튼" type="button">버튼 확인</button><button class="btn mini" data-check="도전3 ㅆ 횟수" type="button">횟수 확인</button></p>
+        <p>4, 6, 7, 8, 9번 버튼에는 자음이 3개씩(쌍자음 포함), 5번과 0번 버튼에는 2개씩 있어요. 자음은 모두 <input data-q="도전3 자음 가짓수" class="short" inputmode="numeric" maxlength="2">개예요.<button class="btn mini" data-check="도전3 자음 가짓수" type="button">확인</button></p>
+        <p class="hint" id="coordLock">자음의 개수를 맞히면 순서쌍 그림이 열려요.</p>
+        <div id="coordBox" hidden>
+          <div class="coord" id="coord"></div>
+          <p class="hint">가로는 버튼 번호, 세로는 누르는 횟수예요. 좌표평면 위의 점처럼 자리가 하나씩 정해져요.</p>
+        </div>
+        <div class="pad"><div><b>1</b><small>ㅣ</small></div><div><b>2</b><small>ㆍ</small></div><div><b>3</b><small>ㅡ</small></div><div><b>4</b><small>ㄱㅋ</small></div><div><b>5</b><small>ㄴㄹ</small></div><div><b>6</b><small>ㄷㅌ</small></div><div><b>7</b><small>ㅂㅍ</small></div><div><b>8</b><small>ㅅㅎ</small></div><div><b>9</b><small>ㅈㅊ</small></div><div class="none"></div><div><b>0</b><small>ㅇㅁ</small></div><div class="none"></div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">점이 없으면?</div></div>
+      <div class="panel-body">
+        <p>점을 쓰지 않고 누른 버튼 번호만 이어 쓴다고 해 봐요. ㅁ은 0번을 두 번 누르니까 <b class="mono">00</b>이에요.</p>
+        <p>그런데 <b class="mono">00</b>은 ㅁ 말고도 다르게 읽을 수 있어요. 읽는 방법은 모두 <input data-q="도전3 00 읽는 방법" class="short" inputmode="numeric" maxlength="1">가지예요.<button class="btn mini" data-check="도전3 00 읽는 방법" type="button">확인</button></p>
+        <label class="ans">00을 읽는 방법을 모두 써 보세요.<textarea data-q="도전3 00 읽기" rows="2"></textarea></label>
+        <label class="ans">10517 학생이 점으로 횟수를 나타낸 것은 어떤 문제를 막아 주나요? 「나만의 암호 설계」에서 배운 "답이 하나로 정해지는 규칙"과 관련지어 써 보세요.<textarea data-q="도전3 점의 역할" rows="3"></textarea></label>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. 업그레이드 -->
+  <section class="slide stage" data-title="도전 4 버튼 밀기">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">도전 4. 버튼 번호를 밀어 업그레이드</div><div class="panel-desc">10517 학생은 해독 대결에서 숫자마다 2를 더했어요.</div></div>
+      <div class="panel-body">
+        <p>점의 개수는 그대로 두고 버튼 번호에만 2를 더해요. 9를 넘으면 10을 빼요.</p>
+        <p class="seq">ㄱ: 4• → <b>6•</b> &nbsp; ㄹ: 5•• → <b>7••</b></p>
+        <p>8번 버튼은 8 + 2 = 10 → <input data-q="도전4 8번은" class="short" inputmode="numeric" maxlength="1"><button class="btn mini" data-check="도전4 8번은" type="button">확인</button></p>
+        <p>9번 버튼은 9 + 2 = 11 → <input data-q="도전4 9번은" class="short" inputmode="numeric" maxlength="1"><button class="btn mini" data-check="도전4 9번은" type="button">확인</button></p>
+        <p>이 방법으로 만든 암호문이에요. 2를 빼서 풀어 보세요. (0보다 작아지면 10을 더해요)</p>
+        <div class="cipher">2• 5• 4• / 1• 5• 4•</div>
+        <label class="ans" style="margin-top:12px">원래 낱말<input data-q="도전4 메시지" maxlength="6" autocomplete="off"></label>
+        <button class="btn mini" data-check="도전4 메시지" type="button" style="margin-left:0">확인</button>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">얼마나 강해졌을까?</div></div>
+      <div class="panel-body">
+        <p>이 암호를 받은 짝은 끝내 풀지 못했어요.</p>
+        <label class="ans">2를 더한 뒤에는 암호문만 보고 "천지인 자판"이라는 것을 알아채기가 왜 어려워질까요?<textarea data-q="도전4 알아채기 어려운 까닭" rows="3"></textarea></label>
+        <label class="ans">더하는 수(열쇠)는 몇 가지로 정할 수 있나요? 시저 암호와 비교해 보세요.<textarea data-q="도전4 열쇠 가짓수" rows="2"></textarea></label>
+        <p class="hint" id="convLock">왼쪽 암호문을 풀면 변환 도구가 열려요.</p>
+        <div id="convBox" hidden>
+          <div class="tryer"><span>낱말</span><input id="cvWord" style="width:6em;font:inherit;padding:7px 9px;border:1px solid var(--line);border-radius:9px;background:#fff" maxlength="4" value="학교"><span>더하는 수</span><input id="cvK" class="short" inputmode="numeric" maxlength="1" value="2"></div>
+          <p class="seq" id="cvOut"></p>
+        </div>
+        <div class="pad"><div><b>1</b><small>ㅣ</small></div><div><b>2</b><small>ㆍ</small></div><div><b>3</b><small>ㅡ</small></div><div><b>4</b><small>ㄱㅋ</small></div><div><b>5</b><small>ㄴㄹ</small></div><div><b>6</b><small>ㄷㅌ</small></div><div><b>7</b><small>ㅂㅍ</small></div><div><b>8</b><small>ㅅㅎ</small></div><div><b>9</b><small>ㅈㅊ</small></div><div class="none"></div><div><b>0</b><small>ㅇㅁ</small></div><div class="none"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. 나만의 열쇠 + 짝 -->
+  <section class="slide stage" data-title="도전 5 나만의 열쇠">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">도전 5. 나만의 열쇠</div><div class="panel-desc">버튼 번호에 더할 수를 정해 낱말을 암호로 바꿔요.</div></div>
+      <div class="panel-body">
+        <label class="ans">버튼 번호에 더할 수 (1~9)<select data-q="도전5 더할 수" id="myK"><option value="">고르기</option></select></label>
+        <label class="ans">보낼 한글 낱말 (2~3글자)<input data-q="도전5 내 낱말" id="myWord" maxlength="3" autocomplete="off"></label>
+        <label class="ans">내가 만든 암호문<input data-q="도전5 내 암호문" id="myCipher" class="mono" maxlength="80" autocomplete="off" placeholder="예) 6. 3. 4. / 7.. 3."></label>
+        <p class="hint">점은 마침표(.)로 써도 돼요. 아래 버튼으로 넣어도 됩니다. 글자가 끝나면 빗금(/)을 써요.</p>
+        <div class="pad" id="keys" style="grid-template-columns:repeat(5,1fr);max-width:none"></div>
+        <p class="pairshow" id="myShow"></p>
+        <p class="live" id="myLive" aria-live="polite"></p>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">짝의 암호 풀기</div><div class="panel-desc">짝에게 더한 수와 암호문을 받아 풀어요.</div></div>
+      <div class="panel-body">
+        <label class="ans">짝이 더한 수<input data-q="도전5 짝이 더한 수" id="frK" inputmode="numeric" maxlength="1" autocomplete="off"></label>
+        <p><button class="btn mini" id="autoBtn" type="button" style="margin-left:0">짝이 없으면: 문제 받기</button> <span class="hint" id="autoNote"></span><input type="hidden" data-q="도전5 문제 출처" data-free id="frSrc" value=""></p>
+        <label class="ans">받은 암호문<input data-q="도전5 받은 암호문" id="frCipher" class="mono" maxlength="80" autocomplete="off"></label>
+        <p class="pairshow" id="frShow"></p>
+        <label class="ans">해독한 낱말<input data-q="도전5 해독한 낱말" id="frWord" maxlength="4" autocomplete="off"></label>
+        <p class="live" id="frLive" aria-live="polite"></p>
+        <p><b>푼 문제 <span id="solvedCount">0개</span></b> <button class="btn mini" id="nextProb" type="button">다음 문제</button></p>
+        <p class="hint" id="solvedList">아직 푼 문제가 없어요.</p>
+        <input type="hidden" data-q="도전5 푼 문제 수" data-free id="solvedQ" value="">
+        <input type="hidden" data-q="도전5 푼 낱말들" data-free id="solvedW" value="">
+        <div class="pad"><div><b>1</b><small>ㅣ</small></div><div><b>2</b><small>ㆍ</small></div><div><b>3</b><small>ㅡ</small></div><div><b>4</b><small>ㄱㅋ</small></div><div><b>5</b><small>ㄴㄹ</small></div><div><b>6</b><small>ㄷㅌ</small></div><div><b>7</b><small>ㅂㅍ</small></div><div><b>8</b><small>ㅅㅎ</small></div><div><b>9</b><small>ㅈㅊ</small></div><div class="none"></div><div><b>0</b><small>ㅇㅁ</small></div><div class="none"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. 제출 -->
+  <section class="slide stage" data-title="마무리와 제출">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">마무리</div></div>
+      <div class="panel-body">
+        <label class="ans">이 암호에서 글자 하나를 나타내는 데 수가 몇 개 필요했나요? 순서쌍으로 나타내면 좋은 점은 무엇인가요?<textarea data-q="마무리 순서쌍의 좋은 점" rows="3"></textarea></label>
+        <label class="ans">주변의 다른 물건(자판, 시계, 달력, 좌석표 등)으로도 암호를 만들 수 있을까요? 하나 골라 규칙을 써 보세요.<textarea data-q="마무리 다른 물건으로" rows="3"></textarea></label>
+        <label class="ans">이 암호에 숨어 있는 수학을 써 보세요.<textarea data-q="마무리 숨어 있는 수학" rows="2"></textarea></label>
+        <label class="ans">10517 학생에게 한마디<textarea data-q="마무리 만든 학생에게 한마디" data-free rows="2"></textarea></label>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">제출하기</div></div>
+      <div class="panel-body">
+        <p>학번: <b id="studentIdView" class="mono"></b> <button class="btn mini" type="button" id="changeIdBtn">학번 바꾸기</button></p>
+        <button class="btn primary" id="submitBtn" type="button">제출하기</button>
+        <p class="status" id="submitStatus" aria-live="polite"></p>
+        <div id="emptyList"></div>
+        <ul class="hint">
+          <li>여러 번 제출해도 됩니다. 제출할 때마다 모두 저장됩니다.</li>
+          <li>쓰던 답은 이 기기에 저장되어, 새로고침해도 남아 있습니다.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <nav class="bottom-nav" aria-label="단계 이동">
+    <button class="btn" id="prevBtn" type="button">← 이전</button>
+    <div class="nav-mid">
+      <div id="deckDots" class="deck-dots" aria-label="단계별 진행 상황"></div>
+      <span class="page"><span class="stars" id="starNav">☆☆☆☆☆</span> <b id="pageNow">1</b> / <span id="pageAll">7</span><span class="page-title"> · <span id="pageTitle"></span></span></span>
+    </div>
+    <button class="btn primary" id="nextBtn" type="button">다음 →</button>
+  </nav>
+</div>
+
+<!-- 홈페이지 이름을 site-config.js에서 가져와 상단에 표시합니다 -->
+<script src="../site-config.js"></script>
+<script src="../common/submit.js?v=9"></script>
+<script>
+  if (typeof SITE !== "undefined") {
+    document.querySelectorAll("[data-site]").forEach(el => {
+      if (SITE[el.dataset.site]) el.textContent = SITE[el.dataset.site];
+    });
+  }
+</script>
+<script>
+  // ===== 도구 전용 JavaScript는 여기부터 =====
+  const $ = id => document.getElementById(id);
+  const stages = [...document.querySelectorAll(".stage")];
+  let now = 0;
+  const stars = { 1: false, 2: false, 3: false, 4: false, 5: false };
+  // 천지인 자판: 자음은 (버튼, 누르는 횟수), 모음은 ㅣ(1) ㆍ(2) ㅡ(3) 획을 차례로 누른다.
+  const CONS = { "ㄱ": [4, 1], "ㅋ": [4, 2], "ㄲ": [4, 3], "ㄴ": [5, 1], "ㄹ": [5, 2], "ㄷ": [6, 1], "ㅌ": [6, 2], "ㄸ": [6, 3], "ㅂ": [7, 1], "ㅍ": [7, 2], "ㅃ": [7, 3],
+    "ㅅ": [8, 1], "ㅎ": [8, 2], "ㅆ": [8, 3], "ㅈ": [9, 1], "ㅊ": [9, 2], "ㅉ": [9, 3], "ㅇ": [0, 1], "ㅁ": [0, 2] };
+  const VOW = { "ㅏ": "12", "ㅐ": "121", "ㅑ": "122", "ㅒ": "1221", "ㅓ": "21", "ㅔ": "211", "ㅕ": "221", "ㅖ": "2211", "ㅗ": "23", "ㅘ": "2312", "ㅙ": "23121", "ㅚ": "231",
+    "ㅛ": "223", "ㅜ": "32", "ㅝ": "3221", "ㅞ": "32211", "ㅟ": "321", "ㅠ": "322", "ㅡ": "3", "ㅢ": "31", "ㅣ": "1" };
+  const CHO = [..."ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ"], JUNG = [..."ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ"];
+  const JONG = ["", "ㄱ", "ㄲ", "ㄱㅅ", "ㄴ", "ㄴㅈ", "ㄴㅎ", "ㄷ", "ㄹ", "ㄹㄱ", "ㄹㅁ", "ㄹㅂ", "ㄹㅅ", "ㄹㅌ", "ㄹㅍ", "ㄹㅎ", "ㅁ", "ㅂ", "ㅂㅅ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ"];
+  // 낱말을 글자별 자모 묶음으로. 한글이 아니면 null
+  function syllables(w) {
+    const out = [];
+    for (const ch of w) {
+      const c = ch.charCodeAt(0) - 0xAC00; if (c < 0 || c > 11171) return null;
+      out.push([CHO[Math.floor(c / 588)], JUNG[Math.floor(c / 28) % 21], ...JONG[c % 28]]);
+    }
+    return out;
+  }
+  // 자모 하나 → [버튼, 횟수] 토큰들
+  function tokensOf(j) {
+    if (CONS[j]) return [CONS[j].slice()];
+    const t = []; for (const s of VOW[j]) { const b = +s; if (t.length && t[t.length - 1][0] === b) t[t.length - 1][1]++; else t.push([b, 1]); }
+    return t;
+  }
+  // 낱말 → 글자별 토큰 (버튼 번호에 k를 더함)
+  const enc = (w, k) => syllables(w).map(js => js.flatMap(tokensOf).map(([b, n]) => [(b + k) % 10, n]));
+  const flat = code => code.flat().map(t => t.join(":")).join(" ");
+  const showCode = code => code.map(s => s.map(([b, n]) => b + "•".repeat(n)).join(" ")).join(" / ");
+  // 글로 쓴 암호문 읽기: 숫자 뒤의 점(. · •) 개수가 횟수. 빗금은 글자 구분(없어도 됨)
+  function parse(text) {
+    const toks = []; const re = /(\d)\s*([.·•]{1,3})/g; let m;
+    const clean = text.replace(/[\s/,]/g, "");
+    if (clean && !/^(\d[.·•]{1,3})+$/.test(clean)) return null;
+    while ((m = re.exec(text))) toks.push([+m[1], m[2].length]);
+    return toks;
+  }
+  // 토큰 → 자모 (버튼 번호에서 k를 뺀 뒤). 읽을 수 없으면 null
+  function decode(toks, k) {
+    const t = toks.map(([b, n]) => [(b - k + 10) % 10, n]), out = []; let i = 0;
+    const consOf = (b, n) => Object.keys(CONS).find(j => CONS[j][0] === b && CONS[j][1] === n);
+    const vowOf = s => Object.keys(VOW).find(j => VOW[j] === s);
+    while (i < t.length) {
+      if (t[i][0] >= 1 && t[i][0] <= 3) { let s = ""; while (i < t.length && t[i][0] >= 1 && t[i][0] <= 3) { s += String(t[i][0]).repeat(t[i][1]); i++; } const v = vowOf(s); if (!v) return null; out.push(v); }
+      else { const c = consOf(t[i][0], t[i][1]); if (!c) return null; out.push(c); i++; }
+    }
+    return out;
+  }
+
+  // 단계 탭
+  $("tabs").innerHTML = stages.map((s, i) => `<button class="tab" type="button" data-i="${i}">${s.dataset.title}<span class="star" id="star${i}"></span></button>`).join("");
+  function show(n) {
+    now = Math.max(0, Math.min(stages.length - 1, n));
+    stages.forEach((s, i) => s.classList.toggle("on", i === now));
+    [...$("tabs").children].forEach((t, i) => { t.classList.toggle("on", i === now); if (i === now) t.scrollIntoView({ block: "nearest", inline: "center" }); });
+    $("prevBtn").disabled = now === 0; $("nextBtn").disabled = now === stages.length - 1;
+    $("pageNow").textContent = now + 1; $("pageAll").textContent = stages.length; $("pageTitle").textContent = stages[now].dataset.title;
+    history.replaceState(null, "", "#" + (now + 1));
+    if (typeof CN !== "undefined") CN.refresh(now);
+  }
+  $("tabs").addEventListener("click", e => { const b = e.target.closest(".tab"); if (b) { show(+b.dataset.i); window.scrollTo(0, 0); } });
+  $("prevBtn").onclick = () => { show(now - 1); window.scrollTo(0, 0); };
+  $("nextBtn").onclick = () => { show(now + 1); window.scrollTo(0, 0); };
+  $("changeIdBtn").onclick = () => { show(0); $("studentId").focus(); };
+  function star(i, on) {
+    stars[i] = on; $("star" + i).textContent = on ? " ★" : "";
+    if (on && i === 4) { $("convBox").hidden = false; $("convLock").hidden = true; }
+    const n = Object.values(stars).filter(Boolean).length;
+    $("starBadge").textContent = $("starNav").textContent = "★".repeat(n) + "☆".repeat(5 - n);
+  }
+  function live(id, cls, msg) { const e = $(id); e.className = "live " + cls; e.textContent = msg; }
+  function onOk(q, fn) {
+    const btn = document.querySelector(`[data-check="${q}"]`);
+    let was = false;   // 맞음으로 바뀌는 순간에만 한 번 실행
+    new MutationObserver(() => { const m = btn.nextElementSibling, ok = !!(m && m.classList.contains("check-mark") && m.classList.contains("ok")); if (ok && !was) { was = true; fn(); } else if (!ok) was = false; })
+      .observe(btn.parentElement, { subtree: true, childList: true, attributes: true });
+  }
+  onOk("도전1 ㅜ", () => star(1, true)); onOk("도전2 메시지2", () => star(2, true)); onOk("도전3 00 읽는 방법", () => star(3, true)); onOk("도전4 메시지", () => star(4, true));
+  onOk("도전3 자음 가짓수", () => { $("coordBox").hidden = false; $("coordLock").hidden = true; });
+
+  // 도전 3: 순서쌍 그림 (가로: 버튼, 세로: 횟수)
+  { let h = ""; const at = (b, n) => Object.keys(CONS).find(j => CONS[j][0] === b && CONS[j][1] === n) || "";
+    for (let n = 3; n >= 1; n--) { h += `<div class="ax">${n}번</div>`; for (let b = 0; b <= 9; b++) h += `<div class="${b >= 1 && b <= 3 ? "vo" : ""}">${b >= 1 && b <= 3 ? (n === 1 ? "ㅣㆍㅡ"[b - 1] : "") : at(b, n)}</div>`; }
+    h += `<div class="ax"></div>` + Array.from({ length: 10 }, (_, b) => `<div class="ax">${b}</div>`).join("");
+    $("coord").innerHTML = h; }
+
+  // 도전 4: 변환 도구
+  function conv() {
+    const w = $("cvWord").value.trim(), k = parseInt($("cvK").value, 10), s = syllables(w);
+    $("cvOut").innerHTML = !w ? "" : !s ? "한글 낱말만 넣을 수 있어요." : isNaN(k) ? "더하는 수를 넣어 주세요." : `그대로: ${showCode(enc(w, 0))}<br>${k}를 더하면: <b>${showCode(enc(w, k))}</b>`;
+  }
+  ["cvWord", "cvK"].forEach(id => $(id).addEventListener("input", conv));
+
+  // 도전 5: 입력 버튼 (마지막으로 누른 암호문 칸에 넣음)
+  let target = $("myCipher");
+  ["myCipher", "frCipher"].forEach(id => $(id).addEventListener("focus", () => { target = $(id); }));
+  $("keys").innerHTML = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "•", "띄움", "/", "지움"].map(k => `<button type="button" data-k="${k}"><b>${k}</b></button>`).join("");
+  $("keys").addEventListener("click", e => {
+    const b = e.target.closest("button"); if (!b) return; const k = b.dataset.k; let v = target.value;
+    if (k === "지움") v = v.replace(/\s*\S$/, ""); else if (k === "띄움") v += " "; else if (k === "/") v = v.trimEnd() + " / "; else if (k === "•") v += "•"; else v += (v && !/[\s]$/.test(v) ? " " : "") + k;
+    target.value = v; target.dispatchEvent(new Event("input", { bubbles: true }));
+  });
+  $("myK").innerHTML += Array.from({ length: 9 }, (_, i) => `<option>${i + 1}</option>`).join("");
+  function checkMine() {
+    const k = parseInt($("myK").value, 10), w = $("myWord").value.trim(), s = syllables(w), raw = $("myCipher").value, toks = parse(raw);
+    $("myShow").textContent = toks && toks.length ? "읽은 암호문: " + toks.map(([b, n]) => b + "•".repeat(n)).join(" ") : "";
+    if (!k) return live("myLive", "wait", w || raw.trim() ? "먼저 더할 수를 골라 주세요." : ""), star(5, false);
+    if (!w) return live("myLive", "wait", ""), star(5, false);
+    if (!s) return live("myLive", "no", "한글 낱말만 쓸 수 있어요."), star(5, false);
+    if (s.length < 2) return live("myLive", "wait", "2글자 이상으로 써 주세요."), star(5, false);
+    if (!raw.trim()) return live("myLive", "wait", ""), star(5, false);
+    if (!toks) return live("myLive", "no", "버튼 번호 뒤에 점을 1~3개 붙여 써 주세요. 예) 6. 3. 4."), star(5, false);
+    const want = enc(w, k).flat();
+    if (toks.length < want.length && toks.every((t, i) => t[0] === want[i][0] && t[1] === want[i][1])) return live("myLive", "wait", "여기까지 맞아요. 계속 써 보세요."), star(5, false);
+    const bad = want.findIndex((t, i) => !toks[i] || toks[i][0] !== t[0] || toks[i][1] !== t[1]);
+    if (bad < 0 && toks.length === want.length) { live("myLive", "ok", "맞아요! 짝에게 더한 수와 암호문을 알려 주세요."); star(5, true); }
+    else { live("myLive", "no", bad < 0 ? "필요한 것보다 많이 썼어요." : `${bad + 1}번째 버튼부터 다시 확인해 보세요.`); star(5, false); }
+  }
+  ["myK", "myWord", "myCipher"].forEach(id => { $(id).addEventListener("input", checkMine); $(id).addEventListener("change", checkMine); });
+
+  // 도전 5: 짝의 암호 + 푼 문제 수
+  const solved = new Map();
+  function showSolved() {
+    $("solvedCount").textContent = solved.size + "개";
+    $("solvedList").textContent = solved.size ? "푼 낱말: " + [...solved.values()].join(", ") : "아직 푼 문제가 없어요.";
+    $("solvedQ").value = solved.size || ""; $("solvedW").value = [...solved.values()].join(", ");
+    ["solvedQ", "solvedW"].forEach(id => $(id).dispatchEvent(new Event("input", { bubbles: true })));
+  }
+  function checkFriend() {
+    const k = parseInt($("frK").value, 10), raw = $("frCipher").value, toks = parse(raw), w = $("frWord").value.trim();
+    $("frShow").textContent = toks && toks.length ? "읽은 암호문: " + toks.map(([b, n]) => b + "•".repeat(n)).join(" ") : "";
+    if (isNaN(k) || !raw.trim() || !w) return live("frLive", "wait", "");
+    if (!toks) return live("frLive", "no", "암호문은 버튼 번호 뒤에 점을 1~3개 붙여 써 주세요.");
+    const js = decode(toks, k), s = syllables(w);
+    if (!js) return live("frLive", "no", "이 암호문과 더한 수로는 글자가 만들어지지 않아요. 짝에게 다시 확인해 보세요.");
+    if (s && s.flat().join("") === js.join("")) { const key = k + ":" + flat([toks]); live("frLive", "ok", "바르게 풀었어요! '다음 문제'로 더 풀어 봐요."); if (!solved.has(key)) { solved.set(key, w); showSolved(); } }
+    else live("frLive", "no", "아직 아니에요. 버튼 번호에서 더한 수를 뺐는지 확인해 보세요.");
+  }
+  ["frK", "frCipher", "frWord"].forEach(id => $(id).addEventListener("input", checkFriend));
+  const WORDS = ["바나나", "구름", "수박", "여름", "기차", "지구", "노을", "파도", "나비", "김밥", "축구", "사탕", "별빛", "토끼", "떡국", "학교"];
+  $("autoBtn").onclick = () => {
+    const k = 1 + Math.floor(Math.random() * 9), w = WORDS[Math.floor(Math.random() * WORDS.length)];
+    $("frK").value = k; $("frCipher").value = showCode(enc(w, k)); $("frWord").value = "";
+    ["frK", "frCipher", "frWord"].forEach(id => $(id).dispatchEvent(new Event("input", { bubbles: true })));
+    $("frSrc").value = "컴퓨터 문제"; $("frSrc").dispatchEvent(new Event("input", { bubbles: true }));
+    $("autoNote").textContent = "새 문제가 나왔어요.";
+  };
+  $("nextProb").onclick = () => {
+    if ($("frSrc").value === "컴퓨터 문제") { $("autoBtn").click(); return; }
+    $("frCipher").value = ""; $("frWord").value = "";
+    ["frCipher", "frWord"].forEach(id => $(id).dispatchEvent(new Event("input", { bubbles: true })));
+    $("frCipher").focus();
+  };
+
+  CN.init({ lesson: "keypad-cipher", goto: n => { show(n); window.scrollTo(0, 0); }, onBadId: () => show(0) });
+  show(Math.max(0, (parseInt(location.hash.slice(1), 10) || 1) - 1));
+  { const w = $("solvedW").value; if (w) w.split(", ").forEach((x, i) => solved.set("saved" + i, x)); }
+  conv(); checkMine(); checkFriend(); showSolved();
+</script>
+</body>
+</html>

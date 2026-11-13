@@ -88,6 +88,12 @@ const CN = (() => {
           if (e.key === "Enter" && !e.isComposing) { e.preventDefault(); btn.click(); }
         });
       }
+      // 새로고침해도, 맞힌 답이 그대로면 "맞음" 표시를 되살린다
+      const prev = attempts[name];
+      if (input && prev && prev.solved && prev.answer != null && prev.answer === input.value.trim()) {
+        checked = prev.answer;
+        setTimeout(() => { if (input.value.trim() === prev.answer) { mark.textContent = "맞음 ✓"; mark.className = "check-mark ok"; } }, 0);
+      }
       btn.addEventListener("click", () => {
         if (!input || !input.value.trim()) { mark.textContent = "답을 먼저 쓰세요"; mark.className = "check-mark"; return; }
         if (!WEB_APP_URL) { mark.textContent = "채점 준비 중"; mark.className = "check-mark"; return; }
@@ -101,7 +107,7 @@ const CN = (() => {
           .then(res => {
             checked = sent;
             if (!res.ok) { mark.textContent = "확인할 수 없음"; return; }
-            if (res.correct) { a.solved = true; mark.textContent = "맞음 ✓"; mark.className = "check-mark ok"; }
+            if (res.correct) { a.solved = true; a.answer = sent; mark.textContent = "맞음 ✓"; mark.className = "check-mark ok"; }
             else { mark.textContent = "다시 생각해 봐요"; mark.className = "check-mark no"; }
           })
           .catch(() => { mark.textContent = "연결 오류, 다시 눌러 주세요"; })

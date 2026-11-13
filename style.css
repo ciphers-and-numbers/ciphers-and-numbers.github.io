@@ -502,3 +502,6 @@ footer div{
   .how-layout{width:calc(100% - 32px)}
   footer div{width:calc(100% - 32px)}
 }
+
+/* 학생 작품 카드의 "만든 학생" 표시 */
+.maker-label{margin-left:6px;background:#15171a;color:#fff;border-color:#15171a}
