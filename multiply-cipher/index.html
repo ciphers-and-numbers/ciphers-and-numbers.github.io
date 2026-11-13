@@ -554,7 +554,7 @@
 
 <!-- 홈페이지 이름을 site-config.js에서 가져와 상단에 표시합니다 -->
 <script src="../site-config.js"></script>
-<script src="../common/submit.js?v=7"></script>
+<script src="../common/submit.js?v=8"></script>
 <script>
   if (typeof SITE !== "undefined") {
     document.querySelectorAll("[data-site]").forEach(el => {
@@ -604,7 +604,8 @@
   // 서버 채점이 맞으면 fn 실행
   function onOk(q, fn) {
     const btn = document.querySelector(`[data-check="${q}"]`);
-    new MutationObserver(() => { const m = btn.nextElementSibling; if (m && m.classList.contains("check-mark") && m.classList.contains("ok")) fn(); })
+    let was = false;   // 맞음으로 바뀌는 순간에만 한 번 실행 (fn이 화면을 바꿔도 되풀이되지 않게)
+    new MutationObserver(() => { const m = btn.nextElementSibling, ok = !!(m && m.classList.contains("check-mark") && m.classList.contains("ok")); if (ok && !was) { was = true; fn(); } else if (!ok) was = false; })
       .observe(btn.parentElement, { subtree: true, childList: true, attributes: true });
   }
   onOk("도전1 짝수 곱", () => star(1, true)); onOk("도전2 HI", () => star(2, true)); onOk("도전3 메시지", () => star(3, true));

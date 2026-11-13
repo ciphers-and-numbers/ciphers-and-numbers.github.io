@@ -77,6 +77,17 @@ const CN = (() => {
         mark.className = "check-mark";
         btn.after(mark);
       }
+      let checked = null;   // 마지막으로 채점한 답
+      if (input) {
+        // 답을 고치면 예전 채점 표시는 지운다 (고친 답이 채점된 것처럼 보이지 않게)
+        input.addEventListener("input", () => {
+          if (checked !== null && input.value.trim() !== checked) { mark.textContent = ""; mark.className = "check-mark"; checked = null; }
+        });
+        // 한 줄 입력칸에서 엔터를 누르면 확인
+        if (input.tagName === "INPUT") input.addEventListener("keydown", e => {
+          if (e.key === "Enter" && !e.isComposing) { e.preventDefault(); btn.click(); }
+        });
+      }
       btn.addEventListener("click", () => {
         if (!input || !input.value.trim()) { mark.textContent = "답을 먼저 쓰세요"; mark.className = "check-mark"; return; }
         if (!WEB_APP_URL) { mark.textContent = "채점 준비 중"; mark.className = "check-mark"; return; }
@@ -85,8 +96,10 @@ const CN = (() => {
         attempts[name] = a;
         btn.disabled = true;
         mark.textContent = "확인 중…"; mark.className = "check-mark";
-        post({ action: "check", lesson, item: name, answer: input.value.trim() })
+        const sent = input.value.trim();
+        post({ action: "check", lesson, item: name, answer: sent })
           .then(res => {
+            checked = sent;
             if (!res.ok) { mark.textContent = "확인할 수 없음"; return; }
             if (res.correct) { a.solved = true; mark.textContent = "맞음 ✓"; mark.className = "check-mark ok"; }
             else { mark.textContent = "다시 생각해 봐요"; mark.className = "check-mark no"; }
