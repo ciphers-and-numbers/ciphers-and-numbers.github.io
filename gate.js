@@ -28,7 +28,12 @@
     if (shift(v, k) === c) {
       try { localStorage.setItem(KEY, "ok"); } catch (e) {}
       $("gateMsg").textContent = "풀었어요! 문이 열립니다."; $("gateMsg").className = "gate-msg ok";
-      setTimeout(() => { root.classList.remove("gate-locked"); gate.hidden = true; if (location.hash) { const t = document.querySelector(location.hash); if (t) t.scrollIntoView(); } }, 600);
+      setTimeout(() => { root.classList.remove("gate-locked"); gate.hidden = true;
+        // 문이 열리면 맨 위(첫 화면 그림)부터 보이게 한다. 주소에 #tools가 붙어 있어도 아래로 내려가지 않는다.
+        if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+        root.style.scrollBehavior = "auto"; window.scrollTo(0, 0);
+        requestAnimationFrame(() => { window.scrollTo(0, 0); root.style.scrollBehavior = ""; });
+      }, 600);
       return;
     }
     const first = shift(c[0], -k);

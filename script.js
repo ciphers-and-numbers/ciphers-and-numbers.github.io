@@ -209,8 +209,10 @@ function renderTools() {
   </div>
 </div>
       <div class="card-body">
-        <span class="subject-label">${escapeHtml(tool.subject)}</span>
-        ${tool.maker ? `<span class="subject-label maker-label">만든 학생 ${escapeHtml(String(tool.maker))}</span>` : ""}
+        <div class="label-row">
+          <span class="subject-label">${escapeHtml(tool.subject)}</span>
+          ${tool.maker ? `<span class="subject-label maker-label">만든 학생 ${escapeHtml(String(tool.maker))}</span>` : ""}
+        </div>
         <h3>${escapeHtml(tool.title)}</h3>
         <p>${escapeHtml(tool.description)}</p>
         <div class="card-actions">
