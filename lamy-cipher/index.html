@@ -330,6 +330,10 @@
   .machine span{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 10px}
   .machine span.op{background:#15171a;color:#fff;border-color:#15171a}
   .machine i{font-style:normal;color:var(--muted)}
+  .clue-table { width:100%; border-collapse:collapse; margin:8px 0; font-size:.88em; }
+  .clue-table caption { text-align:left; font-weight:800; margin-bottom:5px; }
+  .clue-table th,.clue-table td { text-align:left; padding:5px; border-bottom:1px solid var(--line); overflow-wrap:anywhere; }
+  .share-message { margin-top:6px; }
 </style>
 </head>
 <body>
@@ -415,7 +419,7 @@
     <div class="panel">
       <div class="panel-head"><div class="panel-title">1과 26 사이에서 되돌리기</div></div>
       <div class="panel-body">
-        <p>끝 글자를 계산한 수가 1보다 작으면 26을 더하고, 26을 넘으면 26을 빼요.</p>
+        <p>글자 번호는 1부터 26까지예요. 계산 결과가 1보다 작으면 26을 더하고, 26을 넘으면 26을 빼요. 해독할 때도 같은 범위로 돌아와요.</p>
         <p>암호문 맨 끝 수가 <b>26</b>일 때 원래 번호는 무엇인가요?</p>
         <div class="ans"><label for="q-edge">끝 글자의 원래 번호</label><input id="q-edge" data-q="도전2 경계에서 되돌린 수" maxlength="16" autocomplete="off" spellcheck="false"><button class="btn mini" type="button" data-check="도전2 경계에서 되돌린 수" aria-label="끝 글자의 원래 번호 확인">확인</button></div>
         <label class="ans">경계를 지나 되돌아가는 과정을 식으로 써 보세요.<textarea data-q="도전2 경계 계산 과정" rows="3"></textarea></label>
@@ -438,7 +442,14 @@
       <div class="panel-body">
         <div class="ans"><label for="q-same">원래 번호와 같은 자리는 모두 몇 개인가요?</label><input id="q-same" data-q="도전3 그대로인 수 개수" maxlength="16" autocomplete="off" spellcheck="false"><button class="btn mini" type="button" data-check="도전3 그대로인 수 개수" aria-label="원래 번호와 같은 자리는 모두 몇 개인가요? 확인">확인</button></div>
         <label class="ans">낱말 길이, 숫자 위치, 바뀌지 않은 수 중 해독에 쓸 수 있는 단서를 설명해 보세요.<textarea data-q="도전3 AI가 이용할 수 있는 단서" rows="3"></textarea></label>
-        <div id="clueBox" class="note" hidden>낱말의 경계와 길이가 남으면 후보 낱말을 좁힐 수 있어요. 한 글자 낱말은 그 한 자리가 바뀌고, 긴 낱말은 그대로 남는 수가 더 많아요.</div>
+        <div id="clueBox" class="note" hidden>
+          <table class="clue-table">
+            <caption>낱말별로 남은 단서</caption>
+            <thead><tr><th scope="col">낱말</th><th scope="col">그대로인 자리 수</th><th scope="col">바뀐 자리 수</th></tr></thead>
+            <tbody id="clueRows"></tbody>
+          </table>
+          <p>쉼표가 남아 낱말 수와 길이를 알 수 있어요. 그대로인 번호는 글자로 바로 바꿀 수 있어요.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -455,11 +466,11 @@
     <div class="panel">
       <div class="panel-head"><div class="panel-title">순서까지 거꾸로</div></div>
       <div class="panel-body">
-        <p>같은 약속으로 만든 다음 암호문을 되돌려 보세요.</p>
+        <p>같은 약속으로 만든 암호문이에요. 쉼표로 낱말을 나누고 어느 수에 손을 대야 할지 먼저 찾아보세요. 뺄셈 결과가 1보다 작으면 26을 더해요.</p>
         <div class="cipher" id="d4cipher"></div>
         <div class="ans"><label for="q-reverse">원래 문장 (영어 두 낱말)</label><input id="q-reverse" data-q="도전4 해독 문장" maxlength="48" autocomplete="off" spellcheck="false"><button class="btn mini" type="button" data-check="도전4 해독 문장" aria-label="원래 문장 (영어 두 낱말) 확인">확인</button></div>
         <label class="ans">해독할 때 숫자를 빼는 일과 순서를 뒤집는 일 중 무엇을 먼저 했나요?<textarea data-q="도전4 되돌리는 순서" rows="3"></textarea></label>
-        <div id="undoBox" class="note" hidden>암호화할 때 뒤집은 다음 더했으니, 해독할 때는 더한 수를 먼저 빼고 낱말 안의 순서를 다시 뒤집어요.</div>
+        <div id="undoBox" class="note" hidden>암호화할 때 뒤집은 다음 더했으니, 해독할 때는 더한 수를 먼저 빼고 낱말 안의 순서를 다시 뒤집어요. 먼저 뒤집으면 뺄셈을 적용할 자리가 달라져요.</div>
       </div>
     </div>
   </section>
@@ -468,14 +479,19 @@
     <div class="panel">
       <div class="panel-head"><div class="panel-title">나만의 두 값으로 암호 만들기</div></div>
       <div class="panel-body">
-        <p>2~4개의 영어 낱말을 고르고, 서로 다른 두 수를 더하는 열쇠로 정해요. 쉼표 앞에는 첫째 값을, 문장 끝에만 둘째 값을 더해요.</p>
+        <p>영어 낱말을 2~4개 쓰세요. 낱말마다 1~8글자예요. 낱말 안 숫자 순서를 뒤집고, 쉼표 앞과 문장 끝에 각각 정한 값을 더해요. 26을 넘으면 26을 빼요.</p>
         <div class="row2">
-          <label class="ans">도전5 내 쉼표 앞 값<select id="mineComma" data-q="도전5 내 쉼표 앞 값"><option value="">고르기</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option></select></label>
-          <label class="ans">도전5 내 문장 끝 값<select id="mineLast" data-q="도전5 내 문장 끝 값"><option value="">고르기</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option></select></label>
+          <label class="ans">쉼표 앞에 더할 값<select id="mineComma" data-q="도전5 내 쉼표 앞 값"><option value="">고르기</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option></select></label>
+          <label class="ans">문장 끝에 더할 값<select id="mineLast" data-q="도전5 내 문장 끝 값"><option value="">고르기</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option></select></label>
         </div>
         <label class="ans">내 평문<input id="minePlain" data-q="도전5 내 평문" maxlength="48" placeholder="영어 2~4낱말" autocomplete="off"></label>
         <label class="ans">내가 계산한 암호문<input id="mineCipher" data-q="도전5 내 암호문" maxlength="132" placeholder="낱말 안은 하이픈, 낱말 사이는 쉼표" autocomplete="off"></label>
         <p class="live" id="mineMark" aria-live="polite"></p>
+        <div id="shareBox" class="share-message" hidden>
+          <label class="ans">짝에게 보낼 내용<textarea id="shareText" rows="3" readonly></textarea></label>
+          <button id="copyShare" class="btn" type="button">보낼 내용 복사</button>
+          <p class="live" id="shareStatus" aria-live="polite"></p>
+        </div>
       </div>
     </div>
     <div class="panel">
@@ -484,8 +500,8 @@
         <p>짝에게 열쇠 두 값과 암호문만 받아요. 짝이 없으면 문제를 받아 풀어요.</p>
         <button class="btn" id="autoBtn" type="button">짝이 없으면 문제 받기</button>
         <div class="row2">
-          <label class="ans">도전5 받은 쉼표 앞 값<select id="theirComma" data-q="도전5 받은 쉼표 앞 값"><option value="">고르기</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option></select></label>
-          <label class="ans">도전5 받은 문장 끝 값<select id="theirLast" data-q="도전5 받은 문장 끝 값"><option value="">고르기</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option></select></label>
+          <label class="ans">쉼표 앞에 더한 값<select id="theirComma" data-q="도전5 받은 쉼표 앞 값"><option value="">고르기</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option></select></label>
+          <label class="ans">문장 끝에 더한 값<select id="theirLast" data-q="도전5 받은 문장 끝 값"><option value="">고르기</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option></select></label>
         </div>
         <label class="ans">받은 암호문<input id="theirCipher" data-q="도전5 받은 암호문" maxlength="132" autocomplete="off"></label>
         <label class="ans">해독한 문장<input id="theirPlain" data-q="도전5 해독 문장" maxlength="48" autocomplete="off"></label>
@@ -577,7 +593,13 @@
   $("sunPlain").textContent = format(plainGroups("SUN"));
   $("d2cipher").textContent = basic("SEA");
   $("d3cipher").textContent = basic("I CAN SWIM");
-  $("d3plain").textContent = format(plainGroups("I CAN SWIM"));
+  const clueGroups = plainGroups("I CAN SWIM");
+  $("d3plain").textContent = format(clueGroups);
+  const clueCipherGroups = readCipher($("d3cipher").textContent);
+  $("clueRows").innerHTML = ["I", "CAN", "SWIM"].map((word, i) => {
+    const same = clueGroups[i].filter((number, j) => number === clueCipherGroups[i][j]).length;
+    return '<tr><th scope="row">' + word + "</th><td>" + same + "</td><td>" + (word.length - same) + "</td></tr>";
+  }).join("");
   $("d4cipher").textContent = upgraded("TRY IT", 2, 4);
 
   const questions = {
@@ -646,18 +668,41 @@
     else if (!$("mineCipher").value.trim()) live("mineMark", "wait", "직접 계산한 암호문을 쓰세요.");
     else live("mineMark", mineOk ? "ok" : "no", mineOk ? "맞아요. 두 값과 암호문을 짝에게 보내세요." : "하이픈과 쉼표, 뒤집는 순서와 더한 값을 다시 확인해요.");
 
+    const share = mineOk ? "쉼표 앞에 더한 값: " + mine.comma + "\n문장 끝에 더한 값: " + mine.last + "\n암호문: " + format(ownCipher) : "";
+    $("shareBox").hidden = !mineOk;
+    if ($("shareText").value !== share) {
+      $("shareText").value = share;
+      $("shareStatus").textContent = "";
+    }
+
     const theirs = readKeys("theirComma", "theirLast");
     const received = readCipher($("theirCipher").value);
     const result = cleanPlain($("theirPlain").value);
     const usable = received && received.length >= 2 && received.length <= 4 && received.every(group => group.length <= 8);
     const theirOk = theirs.ready && usable && validPlain(result) &&
       result === unupgrade(received, theirs.comma, theirs.last);
-    if (!theirs.ready || !$("theirCipher").value.trim()) live("theirMark", "wait", "받은 두 값과 암호문을 넣으세요.");
+    if (theirs.comma && theirs.comma === theirs.last) live("theirMark", "no", "받은 두 값은 서로 달라야 해요. 짝에게 다시 확인하세요.");
+    else if (!theirs.ready || !$("theirCipher").value.trim()) live("theirMark", "wait", "받은 두 값과 암호문을 넣으세요.");
     else if (!usable) live("theirMark", "no", "1~26을 하이픈으로, 낱말을 쉼표로 나누어 2~4낱말을 쓰세요.");
     else if (!result) live("theirMark", "wait", "해독한 영어 문장을 써 보세요.");
     else live("theirMark", theirOk ? "ok" : "no", theirOk ? "맞아요. 짝의 암호를 풀었어요." : "먼저 수를 빼고, 그다음 낱말 안의 순서를 되돌려 보세요.");
     star(5, Boolean(mineOk && theirOk));
   }
+
+  $("copyShare").onclick = async () => {
+    const field = $("shareText");
+    const message = field.value;
+    if (!message) return;
+    try {
+      await navigator.clipboard.writeText(message);
+      if (field.value === message) live("shareStatus", "ok", "짝에게 보낼 내용을 복사했어요.");
+    } catch {
+      if (field.value !== message) return;
+      field.focus();
+      field.select();
+      live("shareStatus", "wait", "선택된 내용을 직접 복사해 주세요.");
+    }
+  };
 
   const exchangeIds = ["mineComma", "mineLast", "minePlain", "mineCipher", "theirComma", "theirLast", "theirCipher", "theirPlain"];
   exchangeIds.forEach(id => $(id).addEventListener("input", exchange));
