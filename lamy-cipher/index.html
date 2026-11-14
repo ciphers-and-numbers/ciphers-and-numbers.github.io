@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>10601 학생의 LAMY 암호 | 암호와 수</title>
+<style>
+  /* ===== 공통 테마 =====
+     이 :root 블록과 아래 "공통 셸" 영역은 모든 도구가 동일하게 유지합니다.
+     도구별 CSS는 파일 아래쪽 "도구 전용" 영역에만 추가하세요. */
+  :root{
+    --bg:#f2f0e9;
+    --panel:#fbf9f3;
+    --panel-2:#f4f1e9;
+    --line:#d8d2c7;
+    --border-soft:#eee9df;
+    --text:#15171a;
+    --muted:#6b6f74;
+    --faint:#9a958a;
+    --accent:#ff5a30;
+    --accent-weak:rgba(255,90,48,.14);
+    --lime:#d9f24f;
+    --shadow:0 10px 28px rgba(21,23,26,.055);
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:
+      linear-gradient(rgba(21,23,26,.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(21,23,26,.035) 1px, transparent 1px),
+      var(--bg);
+    background-size:34px 34px;
+    color:var(--text);
+    font-family:Pretendard,"Apple SD Gothic Neo","Noto Sans KR",-apple-system,BlinkMacSystemFont,sans-serif;
+    letter-spacing:-.015em;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  button,input,select{font:inherit;color:inherit}
+  .num{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+
+  .app{width:100%;max-width:1180px;margin:0 auto;padding:12px;display:flex;flex-direction:column;gap:10px}
+
+  /* ---- 공통 셸: 상단바 ---- */
+  .topbar{
+    min-height:72px;
+    display:flex;
+    gap:14px;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 14px;
+    background:rgba(242,240,233,.90);
+    border:1px solid var(--line);
+    border-radius:18px;
+    backdrop-filter:blur(14px);
+  }
+  .brand-area{display:flex;align-items:center;gap:18px;min-width:0}
+  .home-link{
+    display:flex;align-items:center;gap:10px;flex:none;
+    color:var(--text);text-decoration:none;
+    padding:7px 10px 7px 8px;border-radius:12px;
+    transition:background .18s ease;
+  }
+  .home-link:hover{background:#e7e3d9}
+  .home-arrow{
+    width:31px;height:31px;border:1px solid #c9c4b8;border-radius:50%;
+    display:grid;place-items:center;font-size:16px;line-height:1;background:#fbf9f3;
+  }
+  .brand-copy{display:block;line-height:1.15}
+  .brand-copy strong{display:block;font-size:14px;font-weight:800;letter-spacing:-.035em}
+  .brand-copy small{
+    display:block;margin-top:4px;color:#8a8d90;
+    font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+    font-size:7.5px;letter-spacing:.13em;white-space:nowrap;
+  }
+  .top-divider{width:1px;height:34px;background:#d3cec3;flex:none}
+  .title-row{display:block;min-width:0}
+  .eyebrow{
+    display:flex;align-items:center;gap:7px;margin-bottom:4px;
+    color:#7b7770;font-size:10px;font-weight:750;white-space:nowrap;
+  }
+  .eyebrow span{display:block;width:18px;height:2px;background:var(--accent)}
+  h1{
+    font-size:clamp(18px,1.25vw,24px);
+    margin:0;
+    font-weight:800;letter-spacing:-.04em;white-space:nowrap;
+  }
+  h1 em{
+    font-style:normal;font-weight:500;
+    background:linear-gradient(transparent 60%,var(--lime) 0);
+    padding:0 .04em;
+  }
+  .subtitle{margin:4px 0 0;color:#666b6f;font-size:11.5px}
+  .badge{
+    display:inline-flex;align-items:center;gap:7px;flex:none;
+    background:#15171a;color:#fff;border:0;
+    border-radius:999px;padding:8px 12px;font-weight:700;font-size:12px;white-space:nowrap;
+  }
+  .dot{width:9px;height:9px;border-radius:50%;background:#73c48f}
+
+  /* ---- 공통 셸: 패널 ----
+     기본은 "넓은 그림 영역 + 좁은 설정 영역" 2단입니다.
+     패널 수가 다르면 grid-template-columns만 바꾸고, 좁은 화면에서 1단으로
+     떨어지는 @media (max-width:900px) 규칙은 남겨 두세요. */
+  .workspace{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(300px,1fr);gap:10px}
+  .panel{
+    min-width:0;
+    display:flex;flex-direction:column;
+    background:rgba(251,249,243,.96);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+  .panel-head{
+    flex:0 0 auto;
+    padding:12px 14px;
+    border-bottom:1px solid var(--line);
+    background:rgba(247,244,236,.92);
+  }
+  .panel-title{
+    font-size:15px;font-weight:800;letter-spacing:-.025em;
+    position:relative;padding-left:10px;
+  }
+  .panel-title::before{
+    content:"";position:absolute;left:0;top:.15em;bottom:.15em;
+    width:3px;border-radius:3px;background:var(--accent);
+  }
+  .panel-desc{color:#74716b;font-size:11.5px;margin-top:5px;line-height:1.45}
+  .panel-body{flex:1;min-height:0;padding:14px}
+
+  /* ---- 공통 셸: 버튼 ---- */
+  .btn{
+    border:1px solid #c9c4b8;background:#fbf9f3;color:#15171a;
+    border-radius:999px;font-weight:700;font-size:12.5px;
+    padding:9px 14px;cursor:pointer;line-height:1;
+    transition:background .15s ease,border-color .15s ease,transform .15s ease;
+  }
+  .btn:hover:not(:disabled){transform:translateY(-1px);border-color:#15171a;background:#f2efe6}
+  .btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+  .btn.primary{background:#15171a;color:#fff;border-color:#15171a}
+  .btn.primary:hover:not(:disabled){background:#2b2e31}
+  .btn.danger{color:#a73b2c}
+  .btn.icon-btn{width:38px;height:38px;padding:0;border-radius:10px;font-size:18px;display:grid;place-items:center}
+
+  /* ---- 공통 셸: 그림 영역 (캔버스·SVG) ---- */
+  .chart-wrap{background:#fff;border:1px solid #e3ded4;border-radius:12px;overflow:hidden;position:relative}
+  .chart-wrap canvas,.chart-wrap svg{display:block;width:100%;height:100%}
+
+  /* ---- 공통 셸: 입력·지표·안내 (쓰지 않는 것은 지우세요) ---- */
+  .controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .control{display:flex;flex-direction:column;gap:5px}
+  .control label{font-size:11px;color:var(--muted);font-weight:800}
+  .control input{
+    width:100%;padding:9px 10px;font-weight:700;
+    border:1px solid #d3cec3;background:#fff;color:var(--text);border-radius:10px;
+  }
+  .control input:focus{outline:3px solid rgba(217,242,79,.42);border-color:#9aa64b}
+  .control input[type="range"]{
+    padding:0;height:22px;border:0;border-radius:0;background:transparent;
+    accent-color:#15171a;cursor:pointer;
+  }
+  .checkbox-control{
+    justify-content:center;min-height:58px;padding:8px 10px;
+    border:1px solid var(--line);background:var(--panel-2);border-radius:12px;
+  }
+  .checkbox-control label{display:flex;align-items:center;gap:8px;color:var(--text);cursor:pointer;font-size:11px}
+  .checkbox-control input{width:17px;height:17px;padding:0;accent-color:#15171a;cursor:pointer}
+
+  .metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+  .metric{background:var(--panel-2);border:1px solid #ddd7cc;border-radius:11px;padding:8px 9px;min-width:0}
+  .metric .label{color:#77736d;font-size:10px;font-weight:800;margin-bottom:3px}
+  .metric .value{
+    font-size:15px;font-weight:850;color:var(--text);
+    font-variant-numeric:tabular-nums;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+
+  .formula{
+    background:#15171a;color:#f6f2e9;border:1px solid #15171a;border-radius:12px;
+    padding:9px 10px;line-height:1.55;font-size:12px;
+    font-family:ui-monospace,SFMono-Regular,Consolas,monospace;overflow:auto;
+  }
+  .note{
+    padding:10px 12px;border-radius:10px;
+    background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;
+    font-size:11px;line-height:1.5;
+  }
+  .note b{color:#7c2d12;font-weight:800}
+  .status{min-height:19px;font-size:11px;line-height:1.4;font-weight:750;color:var(--muted)}
+  .status.ok{color:#32724f}
+  .status.error{color:#b44634}
+
+  .legend{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
+  .legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
+  .legend-item i{width:11px;height:11px;border-radius:3px;flex:none}
+
+  /* ---- 공통 셸: 반응형 (이 3개 블록은 그대로 유지) ----
+     주의: .topbar에 align-items:stretch를 쓰면 알약 모양 .badge가
+     줄바꿈된 제목 높이만큼 세로로 늘어나 거대한 원처럼 깨집니다. */
+  @media (max-width:1080px){
+    .brand-copy small{display:none}
+    .brand-copy strong{font-size:13px}
+    .top-divider{height:28px}
+  }
+  @media (max-width:900px){
+    .workspace{grid-template-columns:1fr}
+  }
+  @media (max-width:820px){
+    .topbar{align-items:flex-start}
+    .brand-area{align-items:flex-start}
+    .home-link{padding-left:2px}
+    .top-divider{display:none}
+    .brand-copy{display:none}
+    .title-row{display:block}
+    h1{white-space:normal}
+    .eyebrow{white-space:normal}
+    .badge{display:none}
+  }
+  @media (max-width:520px){
+    .app{padding:7px}
+    .topbar{border-radius:14px;padding:9px 10px}
+    .home-arrow{width:34px;height:34px}
+    h1{font-size:20px;line-height:1.25}
+    .subtitle{font-size:11px;white-space:normal}
+    .panel{border-radius:14px}
+    .panel-head{padding:12px}
+    .btn{min-height:40px}
+    .controls{grid-template-columns:1fr}
+  }
+
+
+  /* ===== 도구 전용 CSS는 여기부터 ===== */
+  .tabs{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 12px}
+  .tab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;font:inherit;font-size:13px;font-weight:800;cursor:pointer;color:var(--text)}
+  .tab.on{background:#15171a;color:#fff;border-color:#15171a}
+  .tab .star{margin-left:4px}
+  .stage{display:none}
+  .stage.on{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+  @media (max-width:900px){.stage.on{grid-template-columns:1fr}}
+  .panel-body p{line-height:1.7;margin:.3em 0 .7em}
+  .senior{display:flex;gap:14px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px}
+  .senior .face{width:56px;height:56px;border-radius:50%;background:var(--accent-weak);display:grid;place-items:center;font-size:26px;flex:none}
+  .senior b{font-size:1.05em}
+  .rule{font-family:ui-monospace,Consolas,monospace;font-size:1.5em;font-weight:800;text-align:center;padding:14px;background:#fff;border:2px dashed var(--line);border-radius:12px;margin:10px 0}
+  .ans{display:block;font-weight:700;margin:.4em 0 .9em}
+  .ans input,.ans textarea,.ans select{display:block;width:100%;margin-top:4px;font:inherit;font-weight:500;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:#fff}
+  .ans textarea{resize:vertical}
+  input.short{width:4.2em;text-align:center;font:inherit;padding:7px;border:1px solid var(--line);border-radius:9px;background:#fff}
+  .mono{font-family:ui-monospace,Consolas,monospace;letter-spacing:.06em}
+  .btn.mini{min-height:34px;padding:6px 12px;font-size:12px;margin-left:6px;vertical-align:middle}
+  .check-mark{margin-left:6px;font-size:.8em;font-weight:800;color:var(--muted)}
+  .check-mark.ok{color:#32724f}.check-mark.no{color:#b44634}
+  .live{font-size:.88em;font-weight:800;min-height:1.3em;margin:-.4em 0 .8em}
+  .live.ok{color:#32724f}.live.no{color:#b44634}.live.wait{color:var(--muted)}
+  .pairs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}
+  .pair{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 6px;text-align:center;font-weight:800}
+  .pair .l{font-size:1.4em}.pair .n{font-family:ui-monospace,Consolas,monospace;color:var(--accent);font-size:1.2em}
+  .pair.q .n{color:var(--muted)}
+  .table-scroll{overflow-x:auto}
+  table.nums{border-collapse:collapse;background:#fff;font-family:ui-monospace,Consolas,monospace;font-size:13px}
+  table.nums td{border:1px solid var(--border-soft);padding:4px 6px;text-align:center;min-width:1.9em}
+  table.nums tr:first-child td{font-weight:800}
+  table.nums tr:nth-child(2) td{color:var(--muted)}
+  table.nums.split{width:100%}
+  table.nums.split td{min-width:0;padding:4px 0}
+  table.nums.split tr:nth-child(3) td{font-weight:800;border-top:3px solid var(--line)}
+  table.nums.split tr:nth-child(4) td{color:var(--muted)}
+  .cipher{font-family:ui-monospace,Consolas,monospace;font-size:1.25em;font-weight:800;letter-spacing:.05em;text-align:center;background:#15171a;color:#fff;border-radius:12px;padding:14px;word-break:break-all}
+  .row2{display:flex;gap:10px;flex-wrap:wrap}.row2 .ans{flex:1;min-width:8em}
+  .tryer{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .tryer input{width:4em}
+  .tryer output{font-family:ui-monospace,Consolas,monospace;font-weight:800}
+  .note{background:#fff7ef;border:1px solid #f4d9bf;border-radius:12px;padding:10px 12px;font-size:.9em;line-height:1.7;color:#7a4a1c}
+  .hint{color:var(--muted);font-size:.85em}
+  /* 이전·다음 바는 화면 맨 아래에 고정 (차시 슬라이드와 같은 모양) */
+  .bottom-nav{
+    position:fixed;left:50%;bottom:10px;transform:translateX(-50%);z-index:20;
+    width:calc(100% - 24px);max-width:1156px;
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:8px 10px;background:rgba(251,249,243,.97);border:1px solid var(--line);border-radius:14px;
+    box-shadow:0 6px 20px rgba(21,23,26,.10);backdrop-filter:blur(10px);
+  }
+  .nav-mid{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0}
+  .deck-dots{display:flex;gap:6px;flex-wrap:wrap;row-gap:4px;justify-content:center;max-width:100%}
+  .dot-btn{flex:none;width:12px;height:12px;padding:0;border-radius:50%;border:2px solid #c9c4b8;background:transparent;cursor:pointer}
+  .dot-btn.none{border-color:#e3ded4;background:#e3ded4}
+  .dot-btn.empty{border-color:#b9b3a7}
+  .dot-btn.part{border-color:var(--accent);background:linear-gradient(90deg,var(--accent) 50%,transparent 0)}
+  .dot-btn.done{border-color:#32724f;background:#32724f}
+  .dot-btn.now{outline:2px solid #15171a;outline-offset:2px}
+  .bottom-nav .page{font-size:13px;font-weight:800;color:var(--muted);text-align:center}
+  .bottom-nav .page b{color:var(--text)}
+  .app{padding-bottom:96px}
+  @media (max-width:520px){
+    .bottom-nav{width:calc(100% - 14px);bottom:7px;padding:7px 8px}
+    .bottom-nav .btn{min-width:64px;padding:8px 10px}
+    .page-title{display:none}
+    .tabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-left:-2px;margin-right:-2px;padding:2px}
+    .tabs::-webkit-scrollbar{display:none}
+    .tab{flex:none}
+    .deck-dots{gap:4px}.dot-btn{width:10px;height:10px;border-width:1.5px}
+  }
+  .empty-row{font-size:.85em;font-weight:700;color:#b44634;margin:.4em 0}.empty-row.ok{color:#32724f}
+  .stars{font-size:1.1em;letter-spacing:.1em}
+  .posrow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}
+  .pos{background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 4px;text-align:center;font-weight:800}
+  .pos small{display:block;font-size:11px;color:var(--muted)}
+  .pos .l{font-family:ui-monospace,Consolas,monospace;font-size:1.5em}
+  .pos .arrow{color:var(--accent);font-size:.85em}
+  .pos.even{background:#f7fbe3}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .seq{font-family:ui-monospace,Consolas,monospace;font-weight:800;line-height:2;text-align:center}
+  .seq b{background:var(--lime,#d9f24f);border-radius:6px;padding:2px 6px}
+  .maptable{display:grid;grid-template-columns:repeat(13,1fr);gap:3px;margin:8px 0}
+  .maptable div{background:#fff;border:1px solid var(--line);border-radius:7px;text-align:center;font-family:ui-monospace,Consolas,monospace;font-weight:800;font-size:13px;line-height:1.3;padding:3px 0}
+  .maptable div small{display:block;color:var(--accent);font-size:13px}
+  .maptable div.dup{background:#ffe9e2;border-color:#f2b3a1}
+  @media (max-width:520px){ .maptable{gap:2px} .maptable div,.maptable div small{font-size:11px} }
+  /* 어느 단계에서나 열 수 있는 번호표 (화면 아래 고정 바 바로 위) */
+  .ref-btn{position:fixed;right:12px;bottom:84px;z-index:21;border:1px solid #15171a;background:#15171a;color:#fff;border-radius:999px;padding:9px 14px;font:inherit;font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 6px 16px rgba(21,23,26,.22)}
+  .ref-btn[aria-expanded="true"]{background:#fff;color:#15171a}
+  .ref-sheet{position:fixed;left:50%;transform:translateX(-50%);bottom:132px;z-index:21;width:calc(100% - 24px);max-width:560px;max-height:46vh;overflow:auto;background:#fbf9f3;border:1px solid #15171a;border-radius:16px;padding:10px 12px;box-shadow:0 12px 30px rgba(21,23,26,.25)}
+  .ref-sheet[hidden]{display:none}
+  .ref-sheet .ref-title{font-size:12px;font-weight:800;color:var(--muted);margin:0 0 4px}
+  .ref-sheet .pad{margin:4px auto}
+  @media (max-width:520px){ .ref-btn{bottom:78px;right:8px} .ref-sheet{bottom:124px;width:calc(100% - 14px)} }
+  .machine{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;margin:10px 0;font-family:ui-monospace,Consolas,monospace;font-weight:800}
+  .machine span{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+  .machine span.op{background:#15171a;color:#fff;border-color:#15171a}
+  .machine i{font-style:normal;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="brand-area">
+      <!-- 홈으로 돌아가는 링크: ../#tools 를 바꾸지 마세요 -->
+      <a class="home-link" href="../#tools" aria-label="메인으로">
+        <span class="home-arrow">←</span>
+        <span class="brand-copy">
+          <strong data-site="name">암호와 수</strong>
+          <small data-site="englishName">CIPHERS AND NUMBERS</small>
+        </span>
+      </a>
+      <span class="top-divider" aria-hidden="true"></span>
+      <div class="title-row">
+        <div class="eyebrow"><span></span>주제선택 · 암호와 수 · 학생이 만든 암호</div>
+        <h1>10601 학생의 <em>LAMY 암호</em></h1>
+        <p class="subtitle">낱말의 끝자리만 바꾸는 암호를 풀고, 숫자의 순서를 뒤집는 규칙으로 짝과 비밀 메시지를 주고받습니다.</p>
+      </div>
+    </div>
+    <div class="badge"><span class="dot"></span><span class="stars" id="starBadge">☆☆☆☆☆</span></div>
+  </div>
+
+  <nav class="tabs" id="tabs" aria-label="단계"></nav>
+
+  <section class="slide stage" data-title="시작">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">10601 학생의 암호를 만나요</div></div>
+      <div class="panel-body">
+        <div class="senior"><div class="face" aria-hidden="true">⇄</div><div><b>10601 학생의 LAMY 암호</b><br><span class="hint">알파벳에 A = 1, B = 2, …, Z = 26으로 번호를 붙여요.</span></div></div>
+        <p>어떤 수는 그대로 두고, 어떤 수만 바꾸는 암호예요. 먼저 어느 수가 달라졌는지 찾아보세요.</p>
+        <details class="note"><summary><b>웹앱을 만들며 정한 것</b></summary>
+          <p>낱말 안에서는 수를 하이픈으로, 낱말 사이는 쉼표로 구분해요. 계산 결과가 1보다 작으면 26을 더하고, 26을 넘으면 26을 빼서 1~26으로 돌아와요.</p>
+          <p>해독 대결에서 쓴 ‘거꾸로 쓰기’는 낱말의 순서를 그대로 두고 낱말 안의 수 순서만 뒤집는 것으로 정했어요. 뒤집은 뒤 쉼표 앞과 문장 맨 끝에 서로 다른 수를 한 번씩 더해요.</p>
+        </details>
+        <table class="nums split" id="abc" aria-label="알파벳 번호표"></table>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">학번 쓰고 시작하기</div></div>
+      <div class="panel-body">
+        <label class="ans">학번 5자리 <small class="hint">(학년 1자리 + 반 2자리 + 번호 2자리)</small>
+          <input id="studentId" inputmode="numeric" maxlength="5" placeholder="예) 1반 5번 → 10105" autocomplete="off"></label>
+        <p class="status" id="studentIdStatus" aria-live="polite"></p>
+        <ol>
+          <li>어느 자리가 달라졌을까</li><li>거꾸로 되돌리기</li><li>AI는 어떻게 알아냈을까</li><li>뒤집고 더한 암호 풀기</li><li>나만의 두 값과 짝의 암호</li>
+        </ol>
+        <p class="hint">도전을 마칠 때마다 별이 하나씩 채워져요.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide stage" data-title="도전 1 바뀐 자리">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">어느 자리가 달라졌을까</div></div>
+      <div class="panel-body">
+        <p>원래 낱말의 번호와 암호문을 비교해요.</p>
+        <div class="cipher">MAP <span aria-hidden="true">→</span> <span id="d1a"></span><br>SUN <span aria-hidden="true">→</span> <span id="d1b"></span></div>
+        <p class="seq">MAP의 원래 번호 <span id="mapPlain"></span><br>SUN의 원래 번호 <span id="sunPlain"></span></p>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">두 예에 모두 들어맞는 규칙</div></div>
+      <div class="panel-body">
+        <div class="ans"><label for="q-position">맨 앞, 가운데, 맨 끝 중 바뀐 자리는 어디인가요?</label><input id="q-position" data-q="도전1 바뀐 자리" maxlength="32" autocomplete="off" spellcheck="false"><button class="btn mini" type="button" data-check="도전1 바뀐 자리" aria-label="맨 앞, 가운데, 맨 끝 중 바뀐 자리는 어디인가요? 확인">확인</button></div>
+        <div class="ans"><label for="q-shift">바뀐 수에서 원래 수를 빼면 얼마인가요?</label><input id="q-shift" data-q="도전1 달라진 값" maxlength="16" autocomplete="off" spellcheck="false"><button class="btn mini" type="button" data-check="도전1 달라진 값" aria-label="바뀐 수에서 원래 수를 빼면 얼마인가요? 확인">확인</button></div>
+        <p class="hint">부호까지 써 보세요. 예를 들어 9가 11이 됐다면 +2예요.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide stage" data-title="도전 2 거꾸로 되돌리기">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">규칙을 새 낱말에 적용하기</div></div>
+      <div class="panel-body">
+        <p><b>CODE</b>를 도전 1에서 찾은 규칙으로 암호화해요. 수 사이는 하이픈으로 이어 쓰세요.</p>
+        <div class="ans"><label for="q-basic">CODE의 암호문</label><input id="q-basic" data-q="도전2 낱말 암호" maxlength="80" autocomplete="off" spellcheck="false"><button class="btn mini" type="button" data-check="도전2 낱말 암호" aria-label="CODE의 암호문 확인">확인</button></div>
+        <p>암호문 <b class="mono" id="d2cipher"></b>을 보고 원래 낱말을 찾으세요.</p>
+        <div class="ans"><label for="q-decode">원래 낱말을 영어로 쓰기</label><input id="q-decode" data-q="도전2 해독 낱말" maxlength="32" autocomplete="off" spellcheck="false"><button class="btn mini" type="button" data-check="도전2 해독 낱말" aria-label="원래 낱말을 영어로 쓰기 확인">확인</button></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">1과 26 사이에서 되돌리기</div></div>
+      <div class="panel-body">
+        <p>끝 글자를 계산한 수가 1보다 작으면 26을 더하고, 26을 넘으면 26을 빼요.</p>
+        <p>암호문 맨 끝 수가 <b>26</b>일 때 원래 번호는 무엇인가요?</p>
+        <div class="ans"><label for="q-edge">끝 글자의 원래 번호</label><input id="q-edge" data-q="도전2 경계에서 되돌린 수" maxlength="16" autocomplete="off" spellcheck="false"><button class="btn mini" type="button" data-check="도전2 경계에서 되돌린 수" aria-label="끝 글자의 원래 번호 확인">확인</button></div>
+        <label class="ans">경계를 지나 되돌아가는 과정을 식으로 써 보세요.<textarea data-q="도전2 경계 계산 과정" rows="3"></textarea></label>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide stage" data-title="도전 3 남는 단서">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">AI는 어떻게 알아냈을까</div></div>
+      <div class="panel-body">
+        <p>10601 학생이 만든 첫 암호를 AI에게 규칙 없이 보여 줬어요. AI는 마지막 수에 적용한 연산을 찾아 해독했어요. 학생도 AI의 답장을 직접 해독했어요.</p>
+        <p>한 글자 낱말과 여러 글자 낱말을 함께 암호화했어요. 앞에서부터 번호를 나란히 비교하세요.</p>
+        <div class="cipher">I CAN SWIM <span aria-hidden="true">→</span> <span id="d3cipher"></span></div>
+        <p class="seq">원래 번호 <span id="d3plain"></span></p>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">암호에도 남는 정보</div></div>
+      <div class="panel-body">
+        <div class="ans"><label for="q-same">원래 번호와 같은 자리는 모두 몇 개인가요?</label><input id="q-same" data-q="도전3 그대로인 수 개수" maxlength="16" autocomplete="off" spellcheck="false"><button class="btn mini" type="button" data-check="도전3 그대로인 수 개수" aria-label="원래 번호와 같은 자리는 모두 몇 개인가요? 확인">확인</button></div>
+        <label class="ans">낱말 길이, 숫자 위치, 바뀌지 않은 수 중 해독에 쓸 수 있는 단서를 설명해 보세요.<textarea data-q="도전3 AI가 이용할 수 있는 단서" rows="3"></textarea></label>
+        <div id="clueBox" class="note" hidden>낱말의 경계와 길이가 남으면 후보 낱말을 좁힐 수 있어요. 한 글자 낱말은 그 한 자리가 바뀌고, 긴 낱말은 그대로 남는 수가 더 많아요.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide stage" data-title="도전 4 뒤집고 더하기">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">낱말 안의 수를 뒤집기</div></div>
+      <div class="panel-body">
+        <p>해독 대결에서 10601 학생은 숫자를 거꾸로 쓰고 끝에 수를 더하는 방식으로 바꿨어요. AI의 제안을 받아 경계에 따라 더하는 수도 달리했어요.</p>
+        <p>이 문제의 약속은 <b>낱말 안 숫자의 순서를 먼저 뒤집기</b>, 그다음 <b>쉼표 바로 앞에는 2, 문장 끝에는 4 더하기</b>예요. 26을 넘으면 26을 빼요.</p>
+        <div class="ans"><label for="q-upgrade">GO UP을 위 약속으로 바꾼 암호문</label><input id="q-upgrade" data-q="도전4 암호문" maxlength="80" autocomplete="off" spellcheck="false"><button class="btn mini" type="button" data-check="도전4 암호문" aria-label="GO UP을 위 약속으로 바꾼 암호문 확인">확인</button></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">순서까지 거꾸로</div></div>
+      <div class="panel-body">
+        <p>같은 약속으로 만든 다음 암호문을 되돌려 보세요.</p>
+        <div class="cipher" id="d4cipher"></div>
+        <div class="ans"><label for="q-reverse">원래 문장 (영어 두 낱말)</label><input id="q-reverse" data-q="도전4 해독 문장" maxlength="48" autocomplete="off" spellcheck="false"><button class="btn mini" type="button" data-check="도전4 해독 문장" aria-label="원래 문장 (영어 두 낱말) 확인">확인</button></div>
+        <label class="ans">해독할 때 숫자를 빼는 일과 순서를 뒤집는 일 중 무엇을 먼저 했나요?<textarea data-q="도전4 되돌리는 순서" rows="3"></textarea></label>
+        <div id="undoBox" class="note" hidden>암호화할 때 뒤집은 다음 더했으니, 해독할 때는 더한 수를 먼저 빼고 낱말 안의 순서를 다시 뒤집어요.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide stage" data-title="도전 5 짝의 암호">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">나만의 두 값으로 암호 만들기</div></div>
+      <div class="panel-body">
+        <p>2~4개의 영어 낱말을 고르고, 서로 다른 두 수를 더하는 열쇠로 정해요. 쉼표 앞에는 첫째 값을, 문장 끝에만 둘째 값을 더해요.</p>
+        <div class="row2">
+          <label class="ans">도전5 내 쉼표 앞 값<select id="mineComma" data-q="도전5 내 쉼표 앞 값"><option value="">고르기</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option></select></label>
+          <label class="ans">도전5 내 문장 끝 값<select id="mineLast" data-q="도전5 내 문장 끝 값"><option value="">고르기</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option></select></label>
+        </div>
+        <label class="ans">내 평문<input id="minePlain" data-q="도전5 내 평문" maxlength="48" placeholder="영어 2~4낱말" autocomplete="off"></label>
+        <label class="ans">내가 계산한 암호문<input id="mineCipher" data-q="도전5 내 암호문" maxlength="132" placeholder="낱말 안은 하이픈, 낱말 사이는 쉼표" autocomplete="off"></label>
+        <p class="live" id="mineMark" aria-live="polite"></p>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">짝의 암호 풀기</div></div>
+      <div class="panel-body">
+        <p>짝에게 열쇠 두 값과 암호문만 받아요. 짝이 없으면 문제를 받아 풀어요.</p>
+        <button class="btn" id="autoBtn" type="button">짝이 없으면 문제 받기</button>
+        <div class="row2">
+          <label class="ans">도전5 받은 쉼표 앞 값<select id="theirComma" data-q="도전5 받은 쉼표 앞 값"><option value="">고르기</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option></select></label>
+          <label class="ans">도전5 받은 문장 끝 값<select id="theirLast" data-q="도전5 받은 문장 끝 값"><option value="">고르기</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option></select></label>
+        </div>
+        <label class="ans">받은 암호문<input id="theirCipher" data-q="도전5 받은 암호문" maxlength="132" autocomplete="off"></label>
+        <label class="ans">해독한 문장<input id="theirPlain" data-q="도전5 해독 문장" maxlength="48" autocomplete="off"></label>
+        <p class="live" id="theirMark" aria-live="polite"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide stage" data-title="마무리와 제출">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">마무리</div></div>
+      <div class="panel-body">
+        <p>10601 학생은 규칙을 알면 암호가 단순한 자물쇠처럼 느껴진다고 돌아봤어요.</p>
+        <label class="ans">처음 암호와 바꾼 암호를 비교해 보세요. 새로 숨긴 정보와 여전히 남는 단서는 무엇인가요?<textarea data-q="마무리 처음과 바꾼 암호" rows="3"></textarea></label>
+        <label class="ans">10601 학생에게 한마디<textarea data-q="마무리 만든 학생에게 한마디" rows="3" data-free></textarea></label>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title">제출하기</div></div>
+      <div class="panel-body">
+        <p>학번: <b id="studentIdView" class="mono"></b> <button class="btn mini" type="button" id="changeIdBtn">학번 바꾸기</button></p>
+        <button class="btn primary" id="submitBtn" type="button">제출하기</button>
+        <p class="status" id="submitStatus" aria-live="polite"></p>
+        <div id="emptyList"></div>
+        <ul class="hint"><li>여러 번 제출하면 제출할 때마다 저장됩니다.</li><li>쓰던 답은 이 기기에 저장되어 새로고침해도 남아 있습니다.</li></ul>
+      </div>
+    </div>
+  </section>
+
+  <nav class="bottom-nav" aria-label="단계 이동">
+    <button class="btn" id="prevBtn" type="button">← 이전</button>
+    <div class="nav-mid">
+      <div id="deckDots" class="deck-dots" aria-label="단계별 진행 상황"></div>
+      <span class="page"><span class="stars" id="starNav">☆☆☆☆☆</span> <b id="pageNow">1</b> / <span id="pageAll">7</span><span class="page-title"> · <span id="pageTitle"></span></span></span>
+    </div>
+    <button class="btn primary" id="nextBtn" type="button">다음 →</button>
+  </nav>
+</div>
+
+<!-- 홈페이지 이름을 site-config.js에서 가져와 상단에 표시합니다 -->
+<script src="../site-config.js"></script>
+<script src="../common/submit.js?v=9"></script>
+<script>
+  if (typeof SITE !== "undefined") {
+    document.querySelectorAll("[data-site]").forEach(el => {
+      if (SITE[el.dataset.site]) el.textContent = SITE[el.dataset.site];
+    });
+  }
+</script>
+<script>
+  // ===== 도구 전용 JavaScript는 여기부터 =====
+  const L = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+  const $ = id => document.getElementById(id);
+  const stages = [...document.querySelectorAll(".stage")];
+  const stars = { 1: false, 2: false, 3: false, 4: false, 5: false };
+  let now = 0;
+
+  const wrap = n => ((n - 1) % 26 + 26) % 26 + 1;
+  const format = groups => groups.map(group => group.join("-")).join(", ");
+  function plainGroups(text) {
+    return text.trim().toUpperCase().split(/\s+/).map(word => [...word].map(letter => L.indexOf(letter) + 1));
+  }
+
+  function readCipher(text) {
+    const normalized = text.trim().replace(/[−–—]/g, "-");
+    if (!/^\d{1,2}(?:\s*[-,]\s*\d{1,2})*$/.test(normalized)) return null;
+    const groups = normalized.split(",").map(group => group.split("-").map(Number));
+    return groups.flat().every(n => n >= 1 && n <= 26) ? groups : null;
+  }
+
+  function changeEnds(groups, change, flipBefore = false, flipAfter = false) {
+    return groups.map((group, i) => {
+      const values = flipBefore ? [...group].reverse() : [...group];
+      const end = values.length - 1;
+      values[end] = wrap(values[end] + change(i === groups.length - 1));
+      return flipAfter ? values.reverse() : values;
+    });
+  }
+
+  const basic = text => format(changeEnds(plainGroups(text), () => -1));
+  const asPlain = groups => groups.map(word => word.map(n => L[n - 1]).join("")).join(" ");
+  const unbasic = groups => asPlain(changeEnds(groups, () => 1));
+  const upgraded = (text, comma, last) => format(changeEnds(plainGroups(text), final => final ? last : comma, true));
+  const unupgrade = (groups, comma, last) => asPlain(changeEnds(groups, final => -(final ? last : comma), false, true));
+
+  $("d1a").textContent = basic("MAP");
+  $("d1b").textContent = basic("SUN");
+  $("mapPlain").textContent = format(plainGroups("MAP"));
+  $("sunPlain").textContent = format(plainGroups("SUN"));
+  $("d2cipher").textContent = basic("SEA");
+  $("d3cipher").textContent = basic("I CAN SWIM");
+  $("d3plain").textContent = format(plainGroups("I CAN SWIM"));
+  $("d4cipher").textContent = upgraded("TRY IT", 2, 4);
+
+  const questions = {
+  "position": "도전1 바뀐 자리",
+  "shift": "도전1 달라진 값",
+  "basic": "도전2 낱말 암호",
+  "decode": "도전2 해독 낱말",
+  "edge": "도전2 경계에서 되돌린 수",
+  "same": "도전3 그대로인 수 개수",
+  "upgrade": "도전4 암호문",
+  "reverse": "도전4 해독 문장"
+};
+
+  // 단계 탭
+  $("tabs").innerHTML = stages.map((s, i) => `<button class="tab" type="button" data-i="${i}">${s.dataset.title}<span class="star" id="star${i}"></span></button>`).join("");
+  function show(n) {
+    now = Math.max(0, Math.min(stages.length - 1, n));
+    stages.forEach((s, i) => s.classList.toggle("on", i === now));
+    [...$("tabs").children].forEach((t, i) => { t.classList.toggle("on", i === now); if (i === now) t.scrollIntoView({ block: "nearest", inline: "center" }); });
+    $("prevBtn").disabled = now === 0; $("nextBtn").disabled = now === stages.length - 1;
+    $("pageNow").textContent = now + 1; $("pageAll").textContent = stages.length; $("pageTitle").textContent = stages[now].dataset.title;
+    history.replaceState(null, "", "#" + (now + 1));
+    if (typeof CN !== "undefined") CN.refresh(now);
+  }
+  $("tabs").addEventListener("click", e => { const b = e.target.closest(".tab"); if (b) { show(+b.dataset.i); window.scrollTo(0, 0); } });
+  $("prevBtn").onclick = () => { show(now - 1); window.scrollTo(0, 0); };
+  $("nextBtn").onclick = () => { show(now + 1); window.scrollTo(0, 0); };
+  $("changeIdBtn").onclick = () => { show(0); $("studentId").focus(); };
+  function star(i, on) {
+    stars[i] = on; $("star" + i).textContent = on ? " ★" : "";
+    const n = Object.values(stars).filter(Boolean).length;
+    $("starBadge").textContent = $("starNav").textContent = "★".repeat(n) + "☆".repeat(5 - n);
+  }
+  function live(id, cls, msg) { const e = $(id); e.className = "live " + cls; e.textContent = msg; }
+  const checkNames = Object.keys(questions);
+  function checkMark(name) {
+    return document.querySelector('[data-check="' + questions[name] + '"]').nextElementSibling?.classList.contains("ok");
+  }
+  function updateStars() {
+    star(1, checkMark("position") && checkMark("shift"));
+    star(2, checkMark("basic") && checkMark("decode") && checkMark("edge"));
+    star(3, checkMark("same"));
+    star(4, checkMark("upgrade") && checkMark("reverse"));
+    $("clueBox").hidden = !checkMark("same");
+    $("undoBox").hidden = !checkMark("reverse");
+  }
+
+  const half = (first, last) => "<tr>" + L.slice(first, last).map(letter => "<td>" + letter + "</td>").join("") + "</tr><tr>" + L.slice(first, last).map((_, i) => "<td>" + (first + i + 1) + "</td>").join("") + "</tr>";
+  $("abc").innerHTML = half(0, 13) + half(13, 26);
+
+  const cleanPlain = value => value.trim().toUpperCase().replace(/\s+/g, " ");
+  const validPlain = text => /^[A-Z]{1,8}( [A-Z]{1,8}){1,3}$/.test(text);
+  function readKeys(commaId, lastId) {
+    const comma = Number($(commaId).value);
+    const last = Number($(lastId).value);
+    return { comma, last, ready: comma >= 1 && last >= 1 && comma !== last };
+  }
+  function exchange() {
+    const mine = readKeys("mineComma", "mineLast");
+    const ownPlain = cleanPlain($("minePlain").value);
+    const ownCipher = readCipher($("mineCipher").value);
+    const mineOk = mine.ready && validPlain(ownPlain) && ownCipher &&
+      format(ownCipher) === upgraded(ownPlain, mine.comma, mine.last);
+    if (!mine.ready) live("mineMark", "wait", "서로 다른 두 값을 골라요.");
+    else if (!validPlain(ownPlain)) live("mineMark", "wait", "영어 낱말을 2~4개 쓰세요. 낱말마다 1~8글자예요.");
+    else if (!$("mineCipher").value.trim()) live("mineMark", "wait", "직접 계산한 암호문을 쓰세요.");
+    else live("mineMark", mineOk ? "ok" : "no", mineOk ? "맞아요. 두 값과 암호문을 짝에게 보내세요." : "하이픈과 쉼표, 뒤집는 순서와 더한 값을 다시 확인해요.");
+
+    const theirs = readKeys("theirComma", "theirLast");
+    const received = readCipher($("theirCipher").value);
+    const result = cleanPlain($("theirPlain").value);
+    const usable = received && received.length >= 2 && received.length <= 4 && received.every(group => group.length <= 8);
+    const theirOk = theirs.ready && usable && validPlain(result) &&
+      result === unupgrade(received, theirs.comma, theirs.last);
+    if (!theirs.ready || !$("theirCipher").value.trim()) live("theirMark", "wait", "받은 두 값과 암호문을 넣으세요.");
+    else if (!usable) live("theirMark", "no", "1~26을 하이픈으로, 낱말을 쉼표로 나누어 2~4낱말을 쓰세요.");
+    else if (!result) live("theirMark", "wait", "해독한 영어 문장을 써 보세요.");
+    else live("theirMark", theirOk ? "ok" : "no", theirOk ? "맞아요. 짝의 암호를 풀었어요." : "먼저 수를 빼고, 그다음 낱말 안의 순서를 되돌려 보세요.");
+    star(5, Boolean(mineOk && theirOk));
+  }
+
+  const exchangeIds = ["mineComma", "mineLast", "minePlain", "mineCipher", "theirComma", "theirLast", "theirCipher", "theirPlain"];
+  exchangeIds.forEach(id => $(id).addEventListener("input", exchange));
+  const practicePhrases = ["READ ON", "KEEP GOING", "TRY AGAIN", "GOOD DAY", "WELL DONE", "FIND OUT"];
+  $("autoBtn").onclick = () => {
+    const comma = 1 + Math.floor(Math.random() * 9);
+    const last = (comma - 1 + 1 + Math.floor(Math.random() * 8)) % 9 + 1;
+    const phrase = practicePhrases[Math.floor(Math.random() * practicePhrases.length)];
+    const values = { theirComma: comma, theirLast: last, theirCipher: upgraded(phrase, comma, last), theirPlain: "" };
+    Object.entries(values).forEach(([id, value]) => {
+      $(id).value = value;
+      $(id).dispatchEvent(new Event("input", { bubbles: true }));
+    });
+    $("theirPlain").focus();
+  };
+
+  // 번호표 버튼: 어느 단계에서나 눌러서 볼 수 있게
+  {
+    const btn = document.createElement("button"), sheet = document.createElement("div");
+    btn.type = "button"; btn.className = "ref-btn"; btn.textContent = "번호표"; btn.setAttribute("aria-expanded", "false");
+    sheet.className = "ref-sheet"; sheet.hidden = true;
+    document.body.append(sheet, btn);
+    btn.addEventListener("click", () => {
+      if (sheet.hidden) {
+        sheet.innerHTML = '<p class="ref-title">알파벳 번호 (A = 1)</p>';
+        const c = $("abc").cloneNode(true); c.removeAttribute("id"); sheet.append(c);
+      }
+      sheet.hidden = !sheet.hidden; btn.setAttribute("aria-expanded", String(!sheet.hidden)); btn.textContent = sheet.hidden ? "번호표" : "닫기";
+    });
+  }
+
+  CN.init({ lesson: "lamy-cipher", goto: n => { show(n); window.scrollTo(0, 0); }, onBadId: () => show(0) });
+  checkNames.forEach(name => {
+    const mark = document.querySelector('[data-check="' + questions[name] + '"]').nextElementSibling;
+    if (mark) new MutationObserver(updateStars).observe(mark, { attributes: true, childList: true, subtree: true });
+  });
+  show(Math.max(0, (parseInt(location.hash.slice(1), 10) || 1) - 1));
+  updateStars();
+  exchange();
+</script>
+</body>
+</html>
