@@ -105,12 +105,16 @@ const CN = (() => {
         const sent = input.value.trim();
         post({ action: "check", lesson, item: name, answer: sent })
           .then(res => {
+            if (input.value.trim() !== sent) {
+              mark.textContent = "";
+              return;
+            }
             checked = sent;
             if (!res.ok) { mark.textContent = "확인할 수 없음"; return; }
             if (res.correct) { a.solved = true; a.answer = sent; mark.textContent = "맞음 ✓"; mark.className = "check-mark ok"; }
             else { mark.textContent = "다시 생각해 봐요"; mark.className = "check-mark no"; }
           })
-          .catch(() => { mark.textContent = "연결 오류, 다시 눌러 주세요"; })
+          .catch(() => { mark.textContent = input.value.trim() === sent ? "연결 오류, 다시 눌러 주세요" : ""; })
           .finally(() => { btn.disabled = false; saveDraft(); });
       });
     });

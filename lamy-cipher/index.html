@@ -334,6 +334,12 @@
   .clue-table caption { text-align:left; font-weight:800; margin-bottom:5px; }
   .clue-table th,.clue-table td { text-align:left; padding:5px; border-bottom:1px solid var(--line); overflow-wrap:anywhere; }
   .share-message { margin-top:6px; }
+  .receive-message { margin:10px 0; }
+  .receive-message summary { cursor:pointer; font-weight:700; }
+  .app { padding-bottom:135px; }
+  @media (pointer:coarse) {
+    .stage .btn.mini { min-height:44px; margin:4px 0 0; }
+  }
 </style>
 </head>
 <body>
@@ -400,7 +406,7 @@
       <div class="panel-head"><div class="panel-title">두 예에 모두 들어맞는 규칙</div></div>
       <div class="panel-body">
         <div class="ans"><label for="q-position">맨 앞, 가운데, 맨 끝 중 바뀐 자리는 어디인가요?</label><input id="q-position" data-q="도전1 바뀐 자리" maxlength="32" autocomplete="off" spellcheck="false"><button class="btn mini" type="button" data-check="도전1 바뀐 자리" aria-label="맨 앞, 가운데, 맨 끝 중 바뀐 자리는 어디인가요? 확인">확인</button></div>
-        <div class="ans"><label for="q-shift">바뀐 수에서 원래 수를 빼면 얼마인가요?</label><input id="q-shift" data-q="도전1 달라진 값" maxlength="16" autocomplete="off" spellcheck="false"><button class="btn mini" type="button" data-check="도전1 달라진 값" aria-label="바뀐 수에서 원래 수를 빼면 얼마인가요? 확인">확인</button></div>
+        <div class="ans"><label for="q-shift">암호문에 적힌 수에서 원래 번호를 빼면 얼마인가요?</label><input id="q-shift" data-q="도전1 달라진 값" maxlength="16" autocomplete="off" spellcheck="false"><button class="btn mini" type="button" data-check="도전1 달라진 값" aria-label="암호문에 적힌 수에서 원래 번호를 빼면 얼마인가요? 확인">확인</button></div>
         <p class="hint">부호까지 써 보세요. 예를 들어 9가 11이 됐다면 +2예요.</p>
       </div>
     </div>
@@ -479,7 +485,7 @@
     <div class="panel">
       <div class="panel-head"><div class="panel-title">나만의 두 값으로 암호 만들기</div></div>
       <div class="panel-body">
-        <p>영어 낱말을 2~4개 쓰세요. 낱말마다 1~8글자예요. 낱말 안 숫자 순서를 뒤집고, 쉼표 앞과 문장 끝에 각각 정한 값을 더해요. 26을 넘으면 26을 빼요.</p>
+        <p>영어 낱말을 2~4개 쓰세요. 낱말마다 1~8글자예요. 1~9에서 서로 다른 두 값을 고르세요. 낱말 안 숫자 순서를 뒤집고, 쉼표 앞과 문장 끝에 각각 정한 값을 더해요. 26을 넘으면 26을 빼요.</p>
         <div class="row2">
           <label class="ans">쉼표 앞에 더할 값<select id="mineComma" data-q="도전5 내 쉼표 앞 값"><option value="">고르기</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option></select></label>
           <label class="ans">문장 끝에 더할 값<select id="mineLast" data-q="도전5 내 문장 끝 값"><option value="">고르기</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option></select></label>
@@ -497,7 +503,13 @@
     <div class="panel">
       <div class="panel-head"><div class="panel-title">짝의 암호 풀기</div></div>
       <div class="panel-body">
-        <p>짝에게 열쇠 두 값과 암호문만 받아요. 짝이 없으면 문제를 받아 풀어요.</p>
+        <p>짝에게 두 값과 암호문을 받으면 붙여 넣거나 아래 칸에 직접 적으세요.</p>
+        <details class="receive-message">
+          <summary>받은 내용 붙여 넣기</summary>
+          <label class="ans">짝이 보낸 세 줄<textarea id="receiveText" rows="3" maxlength="280"></textarea></label>
+          <button class="btn" id="applyReceived" type="button">받은 값과 암호문 넣기</button>
+          <p class="live" id="receiveStatus" aria-live="polite"></p>
+        </details>
         <button class="btn" id="autoBtn" type="button">짝이 없으면 문제 받기</button>
         <div class="row2">
           <label class="ans">쉼표 앞에 더한 값<select id="theirComma" data-q="도전5 받은 쉼표 앞 값"><option value="">고르기</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option></select></label>
@@ -543,7 +555,7 @@
 
 <!-- 홈페이지 이름을 site-config.js에서 가져와 상단에 표시합니다 -->
 <script src="../site-config.js"></script>
-<script src="../common/submit.js?v=9"></script>
+<script src="../common/submit.js?v=10"></script>
 <script>
   if (typeof SITE !== "undefined") {
     document.querySelectorAll("[data-site]").forEach(el => {
@@ -650,6 +662,8 @@
   const half = (first, last) => "<tr>" + L.slice(first, last).map(letter => "<td>" + letter + "</td>").join("") + "</tr><tr>" + L.slice(first, last).map((_, i) => "<td>" + (first + i + 1) + "</td>").join("") + "</tr>";
   $("abc").innerHTML = half(0, 13) + half(13, 26);
 
+  const validCipherGroups = groups => groups && groups.length >= 2 && groups.length <= 4 &&
+    groups.every(group => group.length <= 8);
   const cleanPlain = value => value.trim().toUpperCase().replace(/\s+/g, " ");
   const validPlain = text => /^[A-Z]{1,8}( [A-Z]{1,8}){1,3}$/.test(text);
   function readKeys(commaId, lastId) {
@@ -663,7 +677,8 @@
     const ownCipher = readCipher($("mineCipher").value);
     const mineOk = mine.ready && validPlain(ownPlain) && ownCipher &&
       format(ownCipher) === upgraded(ownPlain, mine.comma, mine.last);
-    if (!mine.ready) live("mineMark", "wait", "서로 다른 두 값을 골라요.");
+    if (mine.comma && mine.comma === mine.last) live("mineMark", "no", "두 값이 같아요. 서로 다른 값을 골라요.");
+    else if (!mine.ready) live("mineMark", "wait", "서로 다른 두 값을 골라요.");
     else if (!validPlain(ownPlain)) live("mineMark", "wait", "영어 낱말을 2~4개 쓰세요. 낱말마다 1~8글자예요.");
     else if (!$("mineCipher").value.trim()) live("mineMark", "wait", "직접 계산한 암호문을 쓰세요.");
     else live("mineMark", mineOk ? "ok" : "no", mineOk ? "맞아요. 두 값과 암호문을 짝에게 보내세요." : "하이픈과 쉼표, 뒤집는 순서와 더한 값을 다시 확인해요.");
@@ -678,14 +693,14 @@
     const theirs = readKeys("theirComma", "theirLast");
     const received = readCipher($("theirCipher").value);
     const result = cleanPlain($("theirPlain").value);
-    const usable = received && received.length >= 2 && received.length <= 4 && received.every(group => group.length <= 8);
+    const usable = validCipherGroups(received);
     const theirOk = theirs.ready && usable && validPlain(result) &&
       result === unupgrade(received, theirs.comma, theirs.last);
     if (theirs.comma && theirs.comma === theirs.last) live("theirMark", "no", "받은 두 값은 서로 달라야 해요. 짝에게 다시 확인하세요.");
     else if (!theirs.ready || !$("theirCipher").value.trim()) live("theirMark", "wait", "받은 두 값과 암호문을 넣으세요.");
     else if (!usable) live("theirMark", "no", "1~26을 하이픈으로, 낱말을 쉼표로 나누어 2~4낱말을 쓰세요.");
     else if (!result) live("theirMark", "wait", "해독한 영어 문장을 써 보세요.");
-    else live("theirMark", theirOk ? "ok" : "no", theirOk ? "맞아요. 짝의 암호를 풀었어요." : "먼저 수를 빼고, 그다음 낱말 안의 순서를 되돌려 보세요.");
+    else live("theirMark", theirOk ? "ok" : "no", theirOk ? "맞아요. 받은 암호를 풀었어요." : "먼저 수를 빼고, 그다음 낱말 안의 순서를 되돌려 보세요.");
     star(5, Boolean(mineOk && theirOk));
   }
 
@@ -707,23 +722,44 @@
   const exchangeIds = ["mineComma", "mineLast", "minePlain", "mineCipher", "theirComma", "theirLast", "theirCipher", "theirPlain"];
   exchangeIds.forEach(id => $(id).addEventListener("input", exchange));
   const practicePhrases = ["READ ON", "KEEP GOING", "TRY AGAIN", "GOOD DAY", "WELL DONE", "FIND OUT"];
+  function fillReceived(comma, last, cipher) {
+    const values = { theirComma: comma, theirLast: last, theirCipher: cipher, theirPlain: "" };
+    Object.entries(values).forEach(([id, value]) => { $(id).value = value; });
+    $("theirCipher").dispatchEvent(new Event("input", { bubbles: true }));
+    $("theirPlain").focus();
+  }
+  $("receiveText").addEventListener("input", () => { $("receiveStatus").textContent = ""; });
+  $("applyReceived").onclick = () => {
+    const match = $("receiveText").value.trim().match(/^쉼표 앞에 더한 값:[ \t]*([1-9])[ \t]*\r?\n문장 끝에 더한 값:[ \t]*([1-9])[ \t]*\r?\n암호문:[ \t]*(.+)$/u);
+    const groups = match && readCipher(match[3]);
+    if (!match || match[1] === match[2] || !validCipherGroups(groups)) {
+      live("receiveStatus", "no", "짝이 보낸 세 줄을 그대로 붙여 넣거나 아래 칸에 직접 적으세요.");
+      return;
+    }
+    fillReceived(match[1], match[2], format(groups));
+    $("receiveText").value = "";
+    live("receiveStatus", "ok", "받은 두 값과 암호문을 넣었어요.");
+  };
   $("autoBtn").onclick = () => {
     const comma = 1 + Math.floor(Math.random() * 9);
     const last = (comma - 1 + 1 + Math.floor(Math.random() * 8)) % 9 + 1;
     const phrase = practicePhrases[Math.floor(Math.random() * practicePhrases.length)];
-    const values = { theirComma: comma, theirLast: last, theirCipher: upgraded(phrase, comma, last), theirPlain: "" };
-    Object.entries(values).forEach(([id, value]) => {
-      $(id).value = value;
-      $(id).dispatchEvent(new Event("input", { bubbles: true }));
-    });
-    $("theirPlain").focus();
+    $("receiveStatus").textContent = "";
+    fillReceived(comma, last, upgraded(phrase, comma, last));
   };
 
   // 번호표 버튼: 어느 단계에서나 눌러서 볼 수 있게
   {
     const btn = document.createElement("button"), sheet = document.createElement("div");
     btn.type = "button"; btn.className = "ref-btn"; btn.textContent = "번호표"; btn.setAttribute("aria-expanded", "false");
-    sheet.className = "ref-sheet"; sheet.hidden = true;
+    sheet.className = "ref-sheet"; sheet.id = "numberReference"; sheet.hidden = true;
+    btn.setAttribute("aria-controls", sheet.id);
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && !sheet.hidden) {
+        btn.click();
+        btn.focus();
+      }
+    });
     document.body.append(sheet, btn);
     btn.addEventListener("click", () => {
       if (sheet.hidden) {
