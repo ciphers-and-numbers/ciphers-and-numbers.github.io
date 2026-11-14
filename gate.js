@@ -17,8 +17,8 @@
     cur = n; wrong = 0;
     const [c, k] = PUZZLES[cur];
     $("gateCipher").textContent = c.split("").join(" ");
-    $("gateRule").innerHTML = `알파벳을 <b>${k}칸씩 뒤로</b> 밀어 만든 암호예요. 글자마다 <b>${k}칸씩 앞으로</b> 되돌려 보세요.`;
-    $("gateEx").textContent = `예) ${shift("A", k)} → A,  ${shift("B", k)} → B`;
+    $("gateRule").innerHTML = `원래 글자를 알파벳 표의 오른쪽으로 ${k}칸 옮겨 만든 암호예요. 암호문 글자에서 알파벳 표의 <b>왼쪽으로 ${k}칸</b> 이동하세요.`;
+    $("gateEx").textContent = `예) ${shift("A", k)} → A,  ${shift("B", k)} → B · A보다 왼쪽은 Z로 이어져요. (A → ${shift("A", -k)})`;
     $("gateInput").value = ""; $("gateMsg").textContent = ""; $("gateMsg").className = "gate-msg";
   }
   function check() {
@@ -41,8 +41,8 @@
     if (v.length !== c.length) { $("gateMsg").textContent = `글자 수가 달라요. 암호문은 ${c.length}글자예요.`; return; }
     wrong += 1;
     $("gateMsg").textContent = wrong >= 4 ? `힌트: ${c[0]} → ${first}, ${c[1]} → ${shift(c[1], -k)}. 나머지도 같은 방법으로 되돌려요.`
-      : wrong >= 2 ? `힌트: 첫 글자 ${c[0]}는 ${k}칸 앞의 ${first}예요.`
-      : "아직 아니에요. 아래 알파벳 줄에서 칸을 세어 보세요.";
+      : wrong >= 2 ? `힌트: 첫 글자 ${c[0]}에서 왼쪽으로 ${k}칸 이동하면 ${first}예요.`
+      : `아직 아니에요. 아래 알파벳 표에서 왼쪽으로 ${k}칸씩 세어 보세요.`;
   }
 
   $("gateAlpha").innerHTML = [...A].map(l => `<span>${l}</span>`).join("");

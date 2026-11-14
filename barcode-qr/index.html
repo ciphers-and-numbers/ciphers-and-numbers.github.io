@@ -383,8 +383,12 @@
         <p>홀수합 = <input data-q="사건2 홀수합" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="사건2 홀수합" type="button">확인</button>, 짝수합 = <input data-q="사건2 짝수합" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="사건2 짝수합" type="button">확인</button>, 체크숫자 = 2</p>
         <p>총합 = <input data-q="사건2 총합" class="short" maxlength="4" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="사건2 총합" type="button">확인</button></p>
         <label class="ans block">이 바코드는?
-          <select data-q="사건2 판정"><option value="">고르기</option><option>정상</option><option>오류</option></select></label>
+          <select data-q="사건2 판정"><option value="">고르기</option><option>검사 통과</option><option>오류</option></select></label>
         <button class="btn mini" data-check="사건2 판정" type="button">확인</button>
+        <div class="note"><b>비교해 보기</b> 가중치가 1, 3인 이웃한 두 자리에 1과 6이 있으면 1 × 1 + 6 × 3 = 19예요.<br>
+          · 숫자 하나를 바꾸면(1 → 2): 2 × 1 + 6 × 3 = 20. 합이 1만큼 달라져 검사에서 <b>찾아내요</b>.<br>
+          · 두 숫자의 순서를 바꾸면(6, 1): 6 × 1 + 1 × 3 = 9. 두 합의 차이가 19 − 9 = 10이라 나머지 자리가 같으면 <b>검사를 통과해요</b>.<br>
+          그래서 검사를 통과해도 바코드가 꼭 맞다고 단정할 수는 없어요.</div>
         <label class="ans block">짝수 번째 자리에 3을 곱하는 이유는 무엇일까요? (AI에게 "바코드에서 3을 곱하지 않으면 어떤 오류를 놓쳐?"라고 물어보세요.)<textarea data-q="사건2 3을 곱하는 이유" rows="3"></textarea></label>
       </div>
     </div>
@@ -396,7 +400,7 @@
         <p>주변 물건(과자 봉지, 공책 뒷면, 음료수 병)에서 <b>13자리 바코드</b>를 찾아 체크숫자가 맞는지 검산해요. 책 뒷면의 13자리 책 번호(ISBN)도 같은 규칙이라 책으로 해도 돼요.</p>
         <label class="ans block">어떤 물건인가요?<input data-q="실생활 물건" maxlength="20" autocomplete="off"></label>
         <label class="ans block">바코드 아래 13자리 숫자<input data-q="실생활 13자리" id="rDigits" maxlength="13" inputmode="numeric" autocomplete="off"></label>
-        <div class="note">13자리 전체로 검산해요: 홀수 번째(1, 3, …, 13번째) 숫자의 합 + 짝수 번째(2, 4, …, 12번째) 숫자의 합 × 3 이 <b>10의 배수</b>이면 올바른 바코드예요.</div>
+        <div class="note">13자리 전체로 검산해요: 홀수 번째(1, 3, …, 13번째) 숫자의 합 + 짝수 번째(2, 4, …, 12번째) 숫자의 합 × 3 이 <b>10의 배수</b>이면 체크숫자 검사를 통과했어요. (통과해도 이웃한 두 숫자의 순서가 바뀐 실수는 놓칠 수 있어요.)</div>
       </div>
     </div>
     <div class="panel">
@@ -405,7 +409,7 @@
         <p>홀수 번째 숫자의 합 = <input data-q="실생활 홀수합" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> <span class="live" id="rOdd"></span></p>
         <p>짝수 번째 숫자의 합 = <input data-q="실생활 짝수합" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> <span class="live" id="rEven"></span></p>
         <p>홀수합 + 짝수합 × 3 = <input data-q="실생활 총합" class="short" maxlength="4" inputmode="numeric" autocomplete="off"> <span class="live" id="rTot"></span></p>
-        <label class="ans block">10의 배수인가요?<select data-q="실생활 판정"><option value="">고르기</option><option>예, 올바른 바코드</option><option>아니요, 어딘가 틀렸어요</option></select></label>
+        <label class="ans block">10의 배수인가요?<select data-q="실생활 판정"><option value="">고르기</option><option>예, 체크숫자 검사를 통과했어요</option><option>아니요, 어딘가 틀렸어요</option></select></label>
         <label class="ans block">결과가 10의 배수가 아니었다면 무엇을 의심해야 할까요? (내 계산? 숫자를 잘못 옮겨 적음? 바코드 오류?)<textarea data-q="실생활 생각" rows="3"></textarea></label>
       </div>
     </div>
@@ -418,7 +422,7 @@
         <ol>
           <li>12자리 숫자를 정하고 체크숫자를 계산해요.</li>
           <li>숫자 하나를 몰래 바꾸거나(사건 2), 하나를 지워(사건 1) 짝에게 보여 줘요.</li>
-          <li>짝은 정상인지, 오류인지, 지워진 숫자는 무엇인지 맞혀요.</li>
+          <li>짝은 검사를 통과하는지, 오류인지, 지워진 숫자는 무엇인지 맞혀요.</li>
         </ol>
         <div class="barcode-box"><svg id="barSvg" viewBox="0 0 230 90" role="img" aria-label="내가 만든 바코드 모양"></svg><p class="hint">13자리를 다 쓰면 바코드 모양이 그려져요. (모양 보기용이라 실제 계산대에서는 읽히지 않아요)</p></div>
       </div>
@@ -441,7 +445,7 @@
         <label class="ans block">받은 바코드 (13자리)<input data-q="활동4 받은 바코드" maxlength="13" autocomplete="off"></label>
         <label class="ans block">계산 과정<textarea data-q="활동4 짝 문제 계산 과정" rows="3"></textarea></label>
         <label class="ans block">결과
-          <select data-q="활동4 짝 문제 결과"><option value="">고르기</option><option>정상</option><option>오류</option><option>지워진 숫자를 찾음</option></select></label>
+          <select data-q="활동4 짝 문제 결과"><option value="">고르기</option><option>검사 통과</option><option>오류</option><option>지워진 숫자를 찾음</option></select></label>
         <label class="ans block">지워진 숫자는? (지워진 문제일 때)<input data-q="활동4 찾은 숫자" maxlength="2" inputmode="numeric" data-free autocomplete="off"></label>
         <label class="ans block">맞혔나요?<select data-q="활동4 맞혔나"><option value="">고르기</option><option>O</option><option>X</option></select></label>
       </div>

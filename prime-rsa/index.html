@@ -283,7 +283,7 @@
           <li>소수 찾기 게임: 선생님의 소수 암호를 풀어라! <span class="time">20분</span></li>
           <li>곱하기는 쉽고, 쪼개기는 어렵다 <span class="time">10분</span></li>
           <li>영상: 비밀키와 공개키 <span class="time">2분</span></li>
-          <li>짝 활동: 비밀 자물쇠 N = p × q <span class="time">15분</span></li>
+          <li>짝 활동: 공개하는 수 N = p × q <span class="time">15분</span></li>
           <li>세 자리 자물쇠 2라운드 <span class="time">10분</span></li>
           <li>영상: 곱하기는 쉽고 거꾸로 찾기는 어렵다 <span class="time">2분</span></li>
           <li>AI 탐구와 오늘의 성찰 일지 <span class="time">15분</span></li>
@@ -368,19 +368,39 @@
   </section>
   <section class="slide workspace" data-title="활동 2">
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">활동 2. 곱하기는 쉽고, 쪼개기는 어렵다 <span class="time">10분</span></div></div>
+      <div class="panel-head"><div class="panel-title">활동 2. 곱하기는 쉽고, 쪼개기는 어렵다 <span class="time">10분</span></div><div class="panel-desc">짝과 역할을 나눠 같은 순간에 시작해요.</div></div>
       <div class="panel-body">
-        <p>① 곱하기: 17 × 23 = <input data-q="활동2 17곱하기23" class="short" maxlength="4" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="활동2 17곱하기23" type="button">확인</button></p>
-        <p>걸린 시간: 약 <input data-q="활동2 곱하기 걸린 시간(초)" class="short" maxlength="4" inputmode="numeric" autocomplete="off">초</p>
-        <p>② 쪼개기: 323 = <input data-q="활동2 323 작은 소수" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> × <input data-q="활동2 323 큰 소수" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="활동2 323 작은 소수" type="button">확인</button> <button class="btn mini" data-check="활동2 323 큰 소수" type="button">확인</button></p>
-        <p>걸린 시간: 약 <input data-q="활동2 쪼개기 걸린 시간(초)" class="short" maxlength="4" inputmode="numeric" autocomplete="off">초</p>
-        <p class="hint">작은 소수부터 나누어 보기: 2 → 3 → 5 → 7 → 11 → 13 → 17 …</p>
+        <ol>
+          <li>짝과 역할을 나눠요. 한 사람은 <b>곱하기</b>, 다른 사람은 <b>쪼개기</b>(소인수분해)를 맡아요.</li>
+          <li>"시작!" 하고 동시에 <b>시작</b>을 누르고, 다 풀면 <b>멈춤</b>을 눌러요.</li>
+          <li>두 사람이 모두 멈춘 뒤에 답과 시간을 서로 보여 줘요. 그 전에는 짝의 화면을 보지 않아요.</li>
+        </ol>
+        <p class="hint">혼자 하는 학생은 곱하기를 한 뒤, 곱한 결과와 <b>다른 수</b>를 쪼개요.</p>
+        <label class="ans block">내 역할<select data-q="활동2 내 역할" id="r2Role"><option value="">고르기</option><option>곱하기 (짝 활동)</option><option>쪼개기 (짝 활동)</option><option>혼자 (곱하기와 쪼개기)</option></select></label>
       </div>
     </div>
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">비교하기</div></div>
+      <div class="panel-head"><div class="panel-title">내 문제</div></div>
       <div class="panel-body">
-        <label class="ans block">두 시간을 비교해 보고, 왜 차이가 나는지 써 보세요.<textarea data-q="활동2 곱하기와 쪼개기 비교" rows="5"></textarea></label>
+        <p class="hint" data-role-none>먼저 왼쪽에서 내 역할을 고르세요.</p>
+        <div data-role="mul solo" hidden>
+          <p><b>① 곱하기</b> 17 × 23 = <input data-q="활동2 17곱하기23" class="short" maxlength="4" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="활동2 17곱하기23" type="button">확인</button></p>
+          <p><button class="btn mini" type="button" data-sw="활동2 곱하기 걸린 시간(초)" style="margin-left:0">시작</button> 걸린 시간: 약 <input data-q="활동2 곱하기 걸린 시간(초)" class="short" maxlength="4" inputmode="numeric" autocomplete="off">초</p>
+        </div>
+        <div data-role="fac" hidden>
+          <p><b>② 쪼개기</b> 짝이 곱하는 동안, 두 소수의 곱인 이 수를 쪼개요.<br><b class="num">391</b> = <input data-q="활동2 391 작은 소수" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="활동2 391 작은 소수" type="button">확인</button> × <input data-q="활동2 391 큰 소수" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="활동2 391 큰 소수" type="button">확인</button></p>
+        </div>
+        <div data-role="solo" hidden>
+          <p><b>② 쪼개기</b> 앞에서 곱한 결과와 다른 수예요. 두 소수의 곱으로 쪼개요.<br><b class="num">377</b> = <input data-q="활동2 377 작은 소수" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="활동2 377 작은 소수" type="button">확인</button> × <input data-q="활동2 377 큰 소수" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="활동2 377 큰 소수" type="button">확인</button></p>
+        </div>
+        <div data-role="fac solo" hidden>
+          <p><button class="btn mini" type="button" data-sw="활동2 쪼개기 걸린 시간(초)" style="margin-left:0">시작</button> 걸린 시간: 약 <input data-q="활동2 쪼개기 걸린 시간(초)" class="short" maxlength="4" inputmode="numeric" autocomplete="off">초</p>
+          <p class="hint">작은 소수부터 차례로 나누어 보기: 2 → 3 → 5 → 7 → 11 → 13 → …</p>
+        </div>
+        <div data-role="mul fac" hidden>
+          <p>두 사람이 모두 멈춘 뒤 → 짝이 <span id="r2PartnerTask">푸는</span> 데 걸린 시간: 약 <input data-q="활동2 짝이 걸린 시간(초)" class="short" maxlength="4" inputmode="numeric" autocomplete="off">초</p>
+        </div>
+        <label class="ans block">곱하기와 쪼개기에 걸린 시간을 비교해 보고, 왜 차이가 나는지 써 보세요.<textarea data-q="활동2 곱하기와 쪼개기 비교" rows="4"></textarea></label>
       </div>
     </div>
   </section>
@@ -401,31 +421,32 @@
       </div>
     </div>
   </section>
-  <section class="slide workspace" data-title="활동 3 ① 내 공개 열쇠">
+  <section class="slide workspace" data-title="활동 3 ① 내가 공개하는 수">
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">활동 3. 짝 활동: 비밀 자물쇠 (공개 열쇠 N = p × q) <span class="time">15분</span></div></div>
+      <div class="panel-head"><div class="panel-title">활동 3. 짝 활동: 비밀 자물쇠 (공개하는 수 N = p × q) <span class="time">15분</span></div></div>
       <div class="panel-body">
         <ol>
           <li>나만 아는 두 소수 p, q를 골라요. (활동 1의 수판에서!)</li>
-          <li>곱 N만 짝에게 알려 줘요.</li>
+          <li>곱 N만 짝에게 알려 줘요. 이 N이 <b>공개하는 수</b>예요.</li>
           <li>짝의 N을 소인수분해해 p, q를 찾아요.</li>
         </ol>
+        <div class="note">이 활동은 RSA 암호에 쓰이는 "큰 수를 소인수분해하기는 어렵다"는 성질을 체험하는 <b>모형</b>이에요. 실제 RSA는 수백 자리 소수와 더 많은 계산을 써요.</div>
       </div>
     </div>
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">내가 짝에게 준 공개 열쇠</div></div>
+      <div class="panel-head"><div class="panel-title">내가 짝에게 공개한 수</div></div>
       <div class="panel-body">
         <p>나만 아는 비밀 소수: p = <input data-q="활동3 내 p" class="short" maxlength="3" inputmode="numeric" autocomplete="off">, q = <input data-q="활동3 내 q" class="short" maxlength="3" inputmode="numeric" autocomplete="off"></p>
-        <p>공개 열쇠: N = p × q = <input data-q="활동3 내 N" class="short" maxlength="6" inputmode="numeric" autocomplete="off"></p>
+        <p>공개하는 수: N = p × q = <input data-q="활동3 내 N" class="short" maxlength="6" inputmode="numeric" autocomplete="off"></p>
         <p>짝이 푸는 데 걸린 시간: 약 <input data-q="활동3 짝이 걸린 시간(분)" class="short" maxlength="3" inputmode="numeric" autocomplete="off">분</p>
       </div>
     </div>
   </section>
-  <section class="slide workspace" data-title="활동 3 ② 짝의 공개 열쇠 풀기">
+  <section class="slide workspace" data-title="활동 3 ② 짝이 공개한 수 쪼개기">
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">짝의 공개 열쇠 풀기</div></div>
+      <div class="panel-head"><div class="panel-title">짝이 공개한 수 쪼개기</div></div>
       <div class="panel-body">
-        <p>짝의 공개 열쇠: N = <input data-q="활동3 짝의 N" class="short" maxlength="6" inputmode="numeric" autocomplete="off"></p>
+        <p>짝이 공개한 수: N = <input data-q="활동3 짝의 N" class="short" maxlength="6" inputmode="numeric" autocomplete="off"></p>
         <label class="ans block">나누어 본 과정<textarea data-q="활동3 나누어 본 과정" rows="3"></textarea></label>
         <p>찾은 소수: p = <input data-q="활동3 찾은 p" class="short" maxlength="3" inputmode="numeric" autocomplete="off">, q = <input data-q="활동3 찾은 q" class="short" maxlength="3" inputmode="numeric" autocomplete="off"></p>
         <label class="ans block">맞았나요?<select data-q="활동3 맞았나"><option value="">고르기</option><option>O</option><option>X</option></select></label>
@@ -559,6 +580,38 @@
   Deck.init({ lesson: "prime-rsa" });
   sieveLoad();
 
+</script>
+<script>
+  // 활동 2: 역할에 맞는 문제만 보이기. 숨긴 칸은 빈칸 안내에서 세지 않는다.
+  (() => {
+    const sel = document.getElementById("r2Role"), slide = sel.closest(".slide");
+    const KEY = { "곱하기 (짝 활동)": "mul", "쪼개기 (짝 활동)": "fac", "혼자 (곱하기와 쪼개기)": "solo" };
+    function apply() {
+      const r = KEY[sel.value] || "";
+      slide.querySelector("[data-role-none]").hidden = !!r;
+      slide.querySelectorAll("[data-role]").forEach(box => {
+        const on = !!r && box.dataset.role.split(" ").includes(r);
+        box.hidden = !on;
+        box.querySelectorAll("[data-q]").forEach(el => el.toggleAttribute("data-free", !on));
+      });
+      document.getElementById("r2PartnerTask").textContent = r === "mul" ? "쪼개는" : r === "fac" ? "곱하는" : "푸는";
+    }
+    // 공통 파일이 진행 점을 다시 그리기 전에 칸을 바꾸도록 캡처 단계에서 먼저 처리한다.
+    document.addEventListener("change", e => { if (e.target === sel) apply(); }, true); apply();
+    // 시작을 누르면 멈춤으로 바뀌고, 멈추면 걸린 시간(초)이 옆 칸에 들어간다.
+    document.querySelectorAll("[data-sw]").forEach(btn => {
+      const box = document.querySelector(`[data-q="${btn.dataset.sw}"]`); let t0 = 0, timer = null;
+      btn.addEventListener("click", () => {
+        if (!timer) {
+          t0 = Date.now(); btn.textContent = "멈춤 (0초)";
+          timer = setInterval(() => { btn.textContent = `멈춤 (${Math.round((Date.now() - t0) / 1000)}초)`; }, 500);
+          return;
+        }
+        clearInterval(timer); timer = null; btn.textContent = "다시 시작";
+        box.value = Math.round((Date.now() - t0) / 1000); box.dispatchEvent(new Event("input", { bubbles: true }));
+      });
+    });
+  })();
 </script>
 <script>
   // 2라운드 초시계

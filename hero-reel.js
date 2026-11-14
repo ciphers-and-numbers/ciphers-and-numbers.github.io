@@ -123,7 +123,7 @@
 
   /* ---------- 02 시저 원판: 안쪽 원이 k칸 돌아간다 ---------- */
   function caesar(g, u) {
-    header(g, "02", "시저 암호", "C = P + k · 25를 넘으면 26을 빼요");
+    header(g, "02", "시저 암호", "C = P + k · 26 이상이면 26을 빼요");
     const k = 3 * span(u, 0.22, 0.6), cy = 290;
     g.save(); g.strokeStyle = FAINT; g.lineWidth = 1.5;
     [178, 132, 86].forEach(r => { g.beginPath(); g.arc(CX, cy, r, 0, Math.PI * 2); g.stroke(); });

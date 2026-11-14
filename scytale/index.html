@@ -290,7 +290,7 @@
           <li>AI와 함께하는 암호의 역사 탐험 <span class="time">10분</span></li>
           <li>스키테일의 비밀: 배수 규칙 찾기 <span class="time">15분</span></li>
           <li>짝 활동: 격자로 스키테일 암호 만들기 <span class="time">25분</span></li>
-          <li>2라운드: 면 수를 모르는 암호 <span class="time">10분</span></li>
+          <li>2라운드: 행 수를 모르는 암호 <span class="time">10분</span></li>
           <li>오늘의 성찰 일지 <span class="time">10분</span></li>
         </ol>
       </div>
@@ -373,15 +373,15 @@
     <div class="panel">
       <div class="panel-head"><div class="panel-title">활동 2. 스키테일의 비밀: 배수 규칙 찾기 <span class="time">15분</span></div></div>
       <div class="panel-body">
-        <p>사각기둥(면 4개) 막대에 띠를 감고, 면을 따라 한 줄씩 메시지를 쓴 뒤 띠를 풀었더니 아래 암호문이 되었어요. (같은 색 = 같은 면)</p>
+        <p>사각기둥(옆면 4개) 막대에 띠를 감고, 면을 따라 한 줄씩 메시지를 쓴 뒤 띠를 풀었더니 아래 암호문이 되었어요. (같은 색 = 같은 옆면)</p>
         <div class="cells"><div class="cell c0"><small>1</small>A</div><div class="cell c1"><small>2</small>A</div><div class="cell c2"><small>3</small>A</div><div class="cell c3"><small>4</small>A</div><div class="cell c0"><small>5</small>T</div><div class="cell c1"><small>6</small>C</div><div class="cell c2"><small>7</small>T</div><div class="cell c3"><small>8</small>W</div><div class="cell c0"><small>9</small>T</div><div class="cell c1"><small>10</small>K</div><div class="cell c2"><small>11</small>D</div><div class="cell c3"><small>12</small>N</div></div>
       </div>
     </div>
     <div class="panel">
       <div class="panel-head"><div class="panel-title">칸 번호 찾기</div></div>
       <div class="panel-body">
-        <p>① 첫 번째 면(빨강)의 글자는 몇 번째 칸에 있나요?<br>( 1, <input data-q="활동2 빨강 둘째 칸" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="활동2 빨강 둘째 칸" type="button">확인</button>, <input data-q="활동2 빨강 셋째 칸" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="활동2 빨강 셋째 칸" type="button">확인</button> )</p>
-        <p>② 네 번째 면(노랑)의 칸 번호는?<br><input data-q="활동2 노랑 칸 번호" class="mid" maxlength="12" autocomplete="off"> <button class="btn mini" data-check="활동2 노랑 칸 번호" type="button">확인</button><br><small class='hint'>쉼표로 나눠 쓰세요. 예) 1, 2, 3</small></p>
+        <p>① 첫 번째 옆면(빨강)의 글자는 몇 번째 칸에 있나요?<br>( 1, <input data-q="활동2 빨강 둘째 칸" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="활동2 빨강 둘째 칸" type="button">확인</button>, <input data-q="활동2 빨강 셋째 칸" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="활동2 빨강 셋째 칸" type="button">확인</button> )</p>
+        <p>② 네 번째 옆면(노랑)의 칸 번호는?<br><input data-q="활동2 노랑 칸 번호" class="mid" maxlength="12" autocomplete="off"> <button class="btn mini" data-check="활동2 노랑 칸 번호" type="button">확인</button><br><small class='hint'>쉼표로 나눠 쓰세요. 예) 1, 2, 3</small></p>
         <p>→ 모두 <input data-q="활동2 배수" class="short" maxlength="3" inputmode="numeric" autocomplete="off">의 배수! <button class="btn mini" data-check="활동2 배수" type="button">확인</button></p>
         <label class="ans block">③ 원래 메시지<input data-q="활동2 원래 메시지" maxlength="14" autocapitalize="characters" autocomplete="off"></label>
         <button class="btn mini" data-check="활동2 원래 메시지" type="button">확인</button>
@@ -392,9 +392,9 @@
     <div class="panel">
       <div class="panel-head"><div class="panel-title">규칙 정리</div></div>
       <div class="panel-body">
-        <p>면이 <b>n개</b>인 막대라면, 같은 면의 글자는 띠에서 <input data-q="규칙 몇 칸 간격" class="short" maxlength="3" autocomplete="off">칸 간격으로 놓인다. <button class="btn mini" data-check="규칙 몇 칸 간격" type="button">확인</button></p>
-        <p>그래서 띠의 전체 글자 수는 항상 <input data-q="규칙 전체 글자 수의 배수" class="short" maxlength="3" autocomplete="off">의 배수가 된다. <button class="btn mini" data-check="규칙 전체 글자 수의 배수" type="button">확인</button></p>
-        <div class="note">모든 칸을 채웠을 때의 이야기예요. 메시지가 짧으면 남은 칸을 X로 채워요.</div>
+        <p>옆면이 <b>n개</b>인 막대라면, 같은 옆면의 글자는 띠에서 <input data-q="규칙 몇 칸 간격" class="short" maxlength="6" autocomplete="off">칸 간격으로 놓인다. <button class="btn mini" data-check="규칙 몇 칸 간격" type="button">확인</button></p>
+        <p>그래서 <b>마지막 바퀴의 빈칸까지 X로 채우면</b> 띠의 전체 글자 수는 항상 <input data-q="규칙 전체 글자 수의 배수" class="short" maxlength="6" autocomplete="off">의 배수가 된다. <button class="btn mini" data-check="규칙 전체 글자 수의 배수" type="button">확인</button></p>
+        <div class="note">빈칸을 채우지 않으면 마지막 바퀴가 덜 차서 전체 글자 수가 n의 배수가 아닐 수 있어요. 메시지가 짧으면 남은 칸을 X로 채워요.</div>
       </div>
     </div>
     <div class="panel">
@@ -408,9 +408,9 @@
     <div class="panel">
       <div class="panel-head"><div class="panel-title">활동 3. 짝 활동: 격자로 스키테일 암호 만들기 <span class="time">25분</span></div></div>
       <div class="panel-body">
-        <p>아래 격자는 <b>면이 6개</b>인 막대에 띠를 <b>4바퀴</b> 감은 모습을 펼친 거예요.</p>
+        <p>아래 격자는 <b>옆면이 6개</b>인 막대(육각기둥)에 띠를 <b>4바퀴</b> 감은 모습을 펼친 거예요.</p>
         <ol>
-          <li>메시지를 면1부터 한 줄(가로)씩 써요. 빈칸은 X로 채워요.</li>
+          <li>격자의 한 행이 막대의 옆면 하나예요. 메시지를 면1부터 한 줄(가로)씩 써요. 마지막 바퀴의 빈칸까지 X로 채워요.</li>
           <li>1바퀴부터 세로로 위에서 아래로 읽으면 암호문!</li>
         </ol>
         <p class="hint">칸에 글자를 쓰면 다음 칸(오른쪽)으로 넘어가요.</p>
@@ -451,38 +451,40 @@
     <div class="panel">
       <div class="panel-head"><div class="panel-title">배수 규칙으로 확인</div></div>
       <div class="panel-body">
-        <p>면이 6개일 때, 면1의 글자는 암호문의<br>1, 7, <input data-q="면1 셋째 위치" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="면1 셋째 위치" type="button">확인</button>, <input data-q="면1 넷째 위치" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="면1 넷째 위치" type="button">확인</button>번째</p>
+        <p>옆면이 6개일 때, 면1의 글자는 암호문의<br>1, 7, <input data-q="면1 셋째 위치" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="면1 셋째 위치" type="button">확인</button>, <input data-q="면1 넷째 위치" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="면1 넷째 위치" type="button">확인</button>번째</p>
         <div class="note">한 바퀴를 지날 때마다 칸 번호가 어떻게 달라지는지 떠올려 보세요.</div>
       </div>
     </div>
     <div class="panel">
       <div class="panel-head"><div class="panel-title">막대가 없다면?</div></div>
       <div class="panel-body">
-        <p>짝의 암호문을 받았는데 막대의 면 수를 모른다고 해 봐요. 글자 수가 12개라면?</p>
-        <p>면 수가 될 수 있는 수: <input data-q="면 수 후보" class="mid" maxlength="20" autocomplete="off"> <button class="btn mini" data-check="면 수 후보" type="button">확인</button><br><small class='hint'>작은 수부터 쉼표로 나눠 쓰세요.</small></p>
+        <p>짝의 암호문을 받았는데 막대의 옆면 수를 모른다고 해 봐요. 이제 막대 대신 <b>격자</b>로 풀어요. 격자의 한 행이 옆면 하나예요.</p>
+        <p>글자 수가 12개라면 격자의 행 수는 몇일 수 있을까요? (빈칸까지 X로 채워 12칸을 꼭 맞게 채운 격자예요)</p>
+        <div class="note">실제 각기둥은 옆면이 3개 이상이지만, 격자로 풀 때는 <b>행이 2개</b>인 격자도 후보로 넣어요. 행이 1개이거나 12개이면 암호문이 원래 메시지와 똑같아서 뺍니다.</div>
+        <p>격자의 행 수가 될 수 있는 수: <input data-q="면 수 후보" class="mid" maxlength="20" autocomplete="off"> <button class="btn mini" data-check="면 수 후보" type="button">확인</button><br><small class='hint'>작은 수부터 쉼표로 나눠 쓰세요.</small></p>
         <p>→ 이 수들은 12의 <input data-q="면 수 후보는 12의" class="short" maxlength="4" autocomplete="off">! <button class="btn mini" data-check="면 수 후보는 12의" type="button">확인</button></p>
       </div>
     </div>
   </section>
-  <section class="slide workspace" data-title="활동 3 ④ 2라운드: 면 수를 모르는 암호">
+  <section class="slide workspace" data-title="활동 3 ④ 2라운드: 행 수를 모르는 암호">
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">활동 3 ④ 2라운드: 면 수를 모르는 암호 <span class="time">10분</span></div><div class="panel-desc">약수로 후보를 좁혀 풀어 봅니다.</div></div>
+      <div class="panel-head"><div class="panel-title">활동 3 ④ 2라운드: 행 수를 모르는 암호 <span class="time">10분</span></div><div class="panel-desc">약수로 후보를 좁혀 풀어 봅니다.</div></div>
       <div class="panel-body">
-        <p>누군가 스키테일로 만든 암호문을 가로챘어요. 그런데 <b>막대의 면 수</b>를 몰라요.</p>
+        <p>누군가 스키테일로 만든 암호문을 가로챘어요. 그런데 <b>막대의 옆면 수</b>를 몰라요. 그래서 격자의 행 수를 바꿔 가며 풀어요.</p>
         <div class="question cipher-big" style="letter-spacing:.12em;overflow-wrap:anywhere;word-break:break-all">WAIAETBTMTRNEHAOEEROTLYN</div>
-        <p>글자 수는 <input data-q="2라운드 글자 수" class="short" maxlength="2" inputmode="numeric" autocomplete="off"><button class="btn mini" data-check="2라운드 글자 수" type="button">확인</button>개. 면 수는 글자 수의 <b>약수</b> 가운데 하나예요.</p>
-        <label class="ans block">면 수가 될 수 있는 수를 모두 써 보세요.<textarea data-q="2라운드 면 수 후보" rows="2"></textarea></label>
+        <p>글자 수는 <input data-q="2라운드 글자 수" class="short" maxlength="2" inputmode="numeric" autocomplete="off"><button class="btn mini" data-check="2라운드 글자 수" type="button">확인</button>개. 빈칸까지 X로 채운 암호문이라면 격자의 행 수는 글자 수의 <b>약수</b> 가운데 하나예요.</p>
+        <label class="ans block">격자의 행 수가 될 수 있는 수를 모두 써 보세요. (1과 글자 수 자신은 빼요. 2는 넣어요.)<textarea data-q="2라운드 면 수 후보" rows="2"></textarea></label>
       </div>
     </div>
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">면 수를 바꿔 풀어 보기</div></div>
+      <div class="panel-head"><div class="panel-title">행 수를 바꿔 풀어 보기</div></div>
       <div class="panel-body">
-        <div class="tryer" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span>면 수</span><select id="faceSel"></select></div>
+        <div class="tryer" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span>격자의 행 수</span><select id="faceSel" aria-label="격자의 행 수"></select></div>
         <p style="margin-top:.6em">되돌린 결과: <b class="num" id="faceOut" style="overflow-wrap:anywhere;word-break:break-all"></b></p>
-        <p>뜻이 통하는 면 수 = <input data-q="2라운드 면 수" class="short" maxlength="2" inputmode="numeric" autocomplete="off"><button class="btn mini" data-check="2라운드 면 수" type="button">확인</button></p>
+        <p>뜻이 통하는 행 수 = <input data-q="2라운드 면 수" class="short" maxlength="2" inputmode="numeric" autocomplete="off"><button class="btn mini" data-check="2라운드 면 수" type="button">확인</button></p>
         <label class="ans block">원래 메시지 (띄어쓰기 없이)<input data-q="2라운드 메시지" maxlength="30" autocapitalize="characters" autocomplete="off"></label>
         <button class="btn mini" data-check="2라운드 메시지" type="button">확인</button>
-        <label class="ans block">몇 번 만에 찾았나요? 면 수를 모르면 스키테일은 얼마나 안전할까요?<textarea data-q="2라운드 몇 번 만에" rows="3"></textarea></label>
+        <label class="ans block">몇 번 만에 찾았나요? 막대의 옆면 수를 모르면 스키테일은 얼마나 안전할까요?<textarea data-q="2라운드 몇 번 만에" rows="3"></textarea></label>
       </div>
     </div>
   </section>
@@ -589,7 +591,7 @@
 
 </script>
 <script>
-  // 2라운드: 면 수를 바꿔 되돌려 보기 (띠를 면 수만큼 건너뛰며 읽음)
+  // 2라운드: 격자의 행 수를 바꿔 되돌려 보기 (띠를 행 수만큼 건너뛰며 읽음)
   (() => {
     const C = "WAIAETBTMTRNEHAOEEROTLYN", sel = document.getElementById("faceSel"), out = document.getElementById("faceOut");
     sel.innerHTML = [2, 3, 4, 6, 8, 12].map(n => `<option>${n}</option>`).join("");

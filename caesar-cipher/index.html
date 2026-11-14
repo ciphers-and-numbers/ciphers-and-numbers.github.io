@@ -352,7 +352,7 @@
       <div class="panel-head"><div class="panel-title">약속</div></div>
       <div class="panel-body">
         <p>원래 글자 번호 = <b>P</b><br>암호 글자 번호 = <b>C</b><br>미는 칸 수(열쇠) = <b>k</b></p>
-        <div class="formula">암호화: C = P + k<br>&nbsp;&nbsp;(25를 넘으면 26 빼기)<br><br>복호화: P = C − k<br>&nbsp;&nbsp;(0보다 작으면 26 더하기)</div>
+        <div class="formula">암호화: C = P + k<br>&nbsp;&nbsp;(합이 26 이상이면 26 빼기)<br><br>복호화: P = C − k<br>&nbsp;&nbsp;(0보다 작으면 26 더하기)</div>
         <div class="note" style="margin-top:12px"><b>알파벳은 원처럼 돌아요.</b><br>Z(25)에서 오른쪽으로 3칸 → 25 + 3 = 28 → 28 − 26 = 2 → C<br>26을 빼는 것은 26으로 나눈 나머지를 구하는 것과 같아요. (28 ÷ 26 = 1 … 나머지 2)</div>
         <label class="ans block" style="margin-top:12px">Z(25)에서 오른쪽으로 3칸 밀면 C(2)가 되는 까닭을 식으로 정리해 보세요.
           <textarea data-q="순환 원리 정리" rows="2" placeholder="AI에게 '나머지 연산(Modulo)'을 중학생 수준으로 물어봐도 좋아요."></textarea></label>
