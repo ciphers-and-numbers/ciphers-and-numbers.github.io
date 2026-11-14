@@ -320,6 +320,7 @@
   @media (max-width:520px){ .maptable{gap:2px} .maptable div,.maptable div small{font-size:11px} }
   /* 어느 단계에서나 열 수 있는 번호표 (화면 아래 고정 바 바로 위) */
   .ref-btn{position:fixed;right:12px;bottom:84px;z-index:21;border:1px solid #15171a;background:#15171a;color:#fff;border-radius:999px;padding:9px 14px;font:inherit;font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 6px 16px rgba(21,23,26,.22)}
+  .ref-btn[hidden]{display:none}
   .ref-btn[aria-expanded="true"]{background:#fff;color:#15171a}
   .ref-sheet{position:fixed;left:50%;transform:translateX(-50%);bottom:132px;z-index:21;width:calc(100% - 24px);max-width:560px;max-height:46vh;overflow:auto;background:#fbf9f3;border:1px solid #15171a;border-radius:16px;padding:10px 12px;box-shadow:0 12px 30px rgba(21,23,26,.25)}
   .ref-sheet[hidden]{display:none}
@@ -384,12 +385,12 @@
 
   <!-- 0. 시작 -->
   <section class="slide stage" data-title="시작">
-    <div class="panel"><div class="panel-head"><div class="panel-title">10203 학생의 TPTP 암호</div></div><div class="panel-body"><p>기호표를 보고 한글로 된 비밀 메시지를 풀어 보세요. 구분점을 지우면 같은 암호문을 어떻게 다르게 읽을 수 있는지도 살펴봐요.</p></div></div>
-    <div class="panel"><div class="panel-head"><div class="panel-title">학번을 쓰고 시작하기</div></div><div class="panel-body"><label class="ans">학번 5자리<input id="studentId" inputmode="numeric" maxlength="5" placeholder="예) 1반 5번 → 10105" autocomplete="off"></label><p class="status" id="studentIdStatus" aria-live="polite"></p><ol><li>자음 대응표 읽기</li><li>모음을 조합해 암호 만들기</li><li>구분점이 하는 일 찾기</li><li>같은 암호를 두 가지로 읽기</li><li>구분을 살려 짝과 교환하기</li></ol></div></div>
+    <div class="panel"><div class="panel-head"><div class="panel-title">10203 학생의 TPTP 암호</div></div><div class="panel-body"><p>한글 낱말과 암호문을 비교해 숨은 규칙을 찾아보세요. 구분점을 지우면 같은 암호문을 어떻게 다르게 읽을 수 있는지도 살펴봐요.</p></div></div>
+    <div class="panel"><div class="panel-head"><div class="panel-title">학번을 쓰고 시작하기</div></div><div class="panel-body"><label class="ans">학번 5자리<input id="studentId" inputmode="numeric" maxlength="5" placeholder="예) 1반 5번 → 10105" autocomplete="off"></label><p class="status" id="studentIdStatus" aria-live="polite"></p><ol><li>암호문에서 자음 기호 찾기</li><li>모음을 조합해 암호 만들기</li><li>구분점이 하는 일 찾기</li><li>같은 암호를 두 가지로 읽기</li><li>구분을 살려 짝과 교환하기</li></ol></div></div>
   </section>
-  <section class="slide stage" data-title="도전 1 자음과 기호">
-    <div class="panel"><div class="panel-head"><div class="panel-title">원본에 적힌 기호표</div></div><div class="panel-body"><p>학생은 원소의 한글 이름 첫소리를 이용했어요. 원소 기호는 외우지 않고 표에서 찾으면 돼요.</p><div id="abc"></div></div></div>
-    <div class="panel"><div class="panel-head"><div class="panel-title">기호표 읽기</div></div><div class="panel-body"><div class="ans"><label for="gold">금의 원소 기호</label><input id="gold" data-q="원본 도전1 금의 기호" aria-label="금의 원소 기호" maxlength="160" autocomplete="off" spellcheck="false"><button class="btn mini" data-check="원본 도전1 금의 기호" type="button" aria-label="금의 원소 기호 확인">확인</button></div><div class="ans"><label for="d">기호표에서 ㄷ에 대응하는 기호</label><input id="d" data-q="원본 도전1 첫 설계의 ㄷ" aria-label="기호표에서 ㄷ에 대응하는 기호" maxlength="160" autocomplete="off" spellcheck="false"><button class="btn mini" data-check="원본 도전1 첫 설계의 ㄷ" type="button" aria-label="기호표에서 ㄷ에 대응하는 기호 확인">확인</button></div><p class="hint">원소 기호는 첫 글자를 대문자로 쓰고 둘째 글자가 있으면 소문자로 써요. 이 활동의 채점에서는 대소문자 차이를 허용해요.</p></div></div>
+  <section class="slide stage" data-title="도전 1 자음 기호 추리">
+    <div class="panel"><div class="panel-head"><div class="panel-title">암호문에서 단서 찾기</div></div><div class="panel-body"><p>10203 학생이 만든 규칙으로 아래 낱말을 바꿨어요. 점으로 나뉜 암호의 각 묶음은 한 음절에 해당해요.</p><div class="comparison"><p><b>고기</b> → <span class="mono" id="guessG"></span></p><p><b>바다</b> → <span class="mono" id="guessD"></span></p></div><details class="note"><summary>힌트</summary><p>‘고’와 ‘기’에서 공통으로 시작하는 기호를 찾아보세요. ‘다’의 첫소리는 ‘바’와 달라요.</p></details><p id="tableLocked" class="hint">두 기호를 맞히면 전체 기호표가 열려요.</p><div id="abc" hidden></div></div></div>
+    <div class="panel"><div class="panel-head"><div class="panel-title">찾은 규칙 확인하기</div></div><div class="panel-body"><div class="ans"><label for="gold">‘고’와 ‘기’의 첫소리 ㄱ에 대응하는 기호</label><input id="gold" data-q="원본 도전1 금의 기호" aria-label="‘고’와 ‘기’의 첫소리 ㄱ에 대응하는 기호" maxlength="160" autocomplete="off" spellcheck="false"><button class="btn mini" data-check="원본 도전1 금의 기호" type="button" aria-label="ㄱ에 대응하는 기호 확인">확인</button></div><div class="ans"><label for="d">‘다’의 첫소리 ㄷ에 대응하는 기호</label><input id="d" data-q="원본 도전1 첫 설계의 ㄷ" aria-label="‘다’의 첫소리 ㄷ에 대응하는 기호" maxlength="160" autocomplete="off" spellcheck="false"><button class="btn mini" data-check="원본 도전1 첫 설계의 ㄷ" type="button" aria-label="‘다’의 첫소리 ㄷ에 대응하는 기호 확인">확인</button></div><p class="hint">원소 기호는 첫 글자를 대문자로 쓰고 둘째 글자가 있으면 소문자로 써요. 이 활동의 채점에서는 대소문자 차이를 허용해요.</p></div></div>
   </section>
   <section class="slide stage" data-title="도전 2 모음 조합">
     <div class="panel"><div class="panel-head"><div class="panel-title">세 기호로 모음 만들기</div></div><div class="panel-body"><p>세로획 ㅣ는 <b>I</b>, 점 ㆍ는 <b>O</b>, 가로획 ㅡ는 <b>H</b>예요. ㅏ는 세로획 뒤에 점을 놓아 <b>IO</b>, ㅓ는 점 뒤에 세로획을 놓아 <b>OI</b>로 써요.</p><div class="ans"><label for="v">ㅜ의 모음 코드 (가로획 다음에 점)</label><input id="v" data-q="원본 도전2 ㅜ의 모음 코드" aria-label="ㅜ의 모음 코드 (가로획 다음에 점)" maxlength="160" autocomplete="off" spellcheck="false"><button class="btn mini" data-check="원본 도전2 ㅜ의 모음 코드" type="button" aria-label="ㅜ의 모음 코드 (가로획 다음에 점) 확인">확인</button></div><div class="ans"><label for="enc">‘가’의 암호 (자음 ㄱ과 모음 ㅏ)</label><input id="enc" data-q="원본 도전2 가의 암호" aria-label="‘가’의 암호 (자음 ㄱ과 모음 ㅏ)" maxlength="160" autocomplete="off" spellcheck="false"><button class="btn mini" data-check="원본 도전2 가의 암호" type="button" aria-label="‘가’의 암호 (자음 ㄱ과 모음 ㅏ) 확인">확인</button></div></div></div>
@@ -513,7 +514,14 @@ const questions={"gold":"원본 도전1 금의 기호","d":"원본 도전1 첫 �
   function updateStars() {
     keySets.forEach((keys,i)=>star(i+1,keys.every(k=>document.querySelector('[data-check="'+questions[k]+'"]').nextElementSibling?.classList.contains("ok"))));
     $("collisionNote").hidden = !stars[4];
+    $("abc").hidden = !stars[1];
+    $("tableLocked").hidden = stars[1];
+    const reference = $("openReference");
+    reference.hidden = !stars[1];
+    if (!stars[1] && reference.getAttribute("aria-expanded") === "true") reference.click();
   }
+  $("guessG").textContent = encodeWord("고기");
+  $("guessD").textContent = encodeWord("바다");
   $("abc").innerHTML = '<table class="symbol-table"><caption>학생 원본의 자음 대응</caption><tbody>'+consonants.map(([j,code,name])=>'<tr><th scope="row">'+j+'</th><td>'+code+'</td><td>'+name+'</td></tr>').join("")+'</tbody></table><p>모음을 만드는 기호: ㅣ → I, ㆍ → O, ㅡ → H</p><table class="symbol-table"><caption>기본 모음 10개</caption><tbody>'+[0,5].map(i=>'<tr>'+vowels.slice(i,i+5).map(([j,code])=>'<td><b>'+j+'</b>'+code+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
   $("decodeExample").textContent=encodeWord("감자");
   $("dotExample").textContent=encodePair("푸른 하늘");
@@ -574,7 +582,7 @@ const questions={"gold":"원본 도전1 금의 기호","d":"원본 도전1 첫 �
   // 번호표 버튼: 어느 단계에서나 눌러서 볼 수 있게
   {
     const btn = document.createElement("button"), sheet = document.createElement("div");
-    btn.type = "button"; btn.className = "ref-btn"; btn.textContent = "기호표"; btn.setAttribute("aria-expanded", "false");
+    btn.type = "button"; btn.className = "ref-btn"; btn.id = "openReference"; btn.hidden = true; btn.textContent = "기호표"; btn.setAttribute("aria-expanded", "false");
     sheet.className = "ref-sheet"; sheet.id = "numberReference"; sheet.hidden = true;
     btn.setAttribute("aria-controls", sheet.id);
     document.addEventListener("keydown", event => {
@@ -587,7 +595,7 @@ const questions={"gold":"원본 도전1 금의 기호","d":"원본 도전1 첫 �
     btn.addEventListener("click", () => {
       if (sheet.hidden) {
         sheet.innerHTML = '<p class="ref-title">TPTP 자음과 모음 기호표</p>';
-        const c = $("abc").cloneNode(true); c.removeAttribute("id"); sheet.append(c);
+        const c = $("abc").cloneNode(true); c.removeAttribute("id"); c.hidden = false; sheet.append(c);
       }
       sheet.hidden = !sheet.hidden; btn.setAttribute("aria-expanded", String(!sheet.hidden)); btn.textContent = sheet.hidden ? "기호표" : "닫기";
     });
