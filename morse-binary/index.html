@@ -392,6 +392,8 @@
         <p class="hint" id="qInfo">'새 문제 듣기'를 눌러 시작해요. 짧은 소리는 •, 긴 소리는 −예요.</p>
         <label class="ans block">들은 모스 부호<input data-q="받아적기 들은 부호" class="morse-in" id="qMorse" maxlength="40" inputmode="none" placeholder="예) •−• / −−−" autocomplete="off"></label>
         <div class="keys" data-for="받아적기 들은 부호"><button class="btn" type="button" data-k="•">•</button><button class="btn" type="button" data-k="−">−</button><button class="btn" type="button" data-k=" / ">/</button><button class="btn" type="button" data-k="BS" aria-label="한 글자 지우기">⌫</button></div>
+        <p class="hint" style="margin-bottom:0">아래 표에서 찾아 글자로 바꿔요.</p>
+        <div class="morse small morseRef"></div>
         <label class="ans block">해독한 단어<input data-q="받아적기 단어" id="qWord" maxlength="8" autocapitalize="characters" autocomplete="off"></label>
         <p><button class="btn mini" id="qCheck" type="button" style="margin-left:0">맞았는지 보기</button> <span class="live" id="qLive" aria-live="polite"></span></p>
         <p>맞힌 문제: <b id="qScore">0</b>개</p>
