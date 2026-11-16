@@ -340,6 +340,10 @@
     <div class="panel">
       <div class="panel-head"><div class="panel-title">규칙 찾기</div></div>
       <div class="panel-body">
+        <p class="hint" style="margin-bottom:0">내가 체에서 남긴 수 (작은 것부터)</p>
+        <p class="num" id="leftRef" style="margin-top:0;line-height:1.7;overflow-wrap:anywhere">앞 슬라이드에서 체를 먼저 끝내요.</p>
+        <p class="hint" style="margin-bottom:0">알파벳 순서</p>
+        <p class="num" style="margin-top:0;letter-spacing:.12em;overflow-wrap:anywhere">ABCDEFGHIJKLM<br>NOPQRSTUVWXYZ</p>
         <label class="ans block">① 5, 19, 37, 59, 79의 공통점은?<input data-q="활동1 공통점" maxlength="20" autocomplete="off"></label>
         <button class="btn mini" data-check="활동1 공통점" type="button">확인</button>
         <p>② C가 5라면 A = <input data-q="활동1 A는" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="활동1 A는" type="button">확인</button>, B = <input data-q="활동1 B는" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="활동1 B는" type="button">확인</button>, E = <input data-q="활동1 E는" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="활동1 E는" type="button">확인</button></p>
@@ -563,9 +567,14 @@
   // 에라토스테네스의 체: 누르면 지우기/되살리기, 남은 수는 숨은 칸에 저장
   const sieve = document.getElementById("sieve"), sv = document.querySelector('[data-q="활동1 체에 남긴 수"]');
   for (let n = 1; n <= 100; n++) { const b = document.createElement("button"); b.type = "button"; b.textContent = n; b.dataset.n = n; sieve.appendChild(b); }
+  // 소수 암호 풀기 슬라이드에 체에서 남긴 수를 다시 보여 준다 (아직 덜 지웠으면 안내만)
+  function leftRefShow(left) {
+    document.getElementById("leftRef").textContent = left.length > 40 ? `아직 ${left.length}개가 남아 있어요. 앞 슬라이드에서 체를 먼저 끝내요.` : left.join(", ");
+  }
   function sieveSave() {
     const left = [...sieve.children].filter(b => !b.classList.contains("x")).map(b => b.dataset.n);
     document.getElementById("leftCount").textContent = left.length;
+    leftRefShow(left);
     sv.value = left.length === 100 ? "" : left.join(","); sv.dispatchEvent(new Event("input", { bubbles: true }));
   }
   sieve.addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; b.classList.toggle("x"); sieveSave(); });
@@ -574,6 +583,7 @@
     const keep = new Set(sv.value.split(","));
     [...sieve.children].forEach(b => b.classList.toggle("x", !keep.has(b.dataset.n)));
     document.getElementById("leftCount").textContent = keep.size;
+    leftRefShow([...keep].sort((a, b) => a - b));
   }
 
   // 슬라이드 넘기기·영상·입력·제출 (공통 파일)
