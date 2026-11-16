@@ -429,7 +429,7 @@
     <div class="panel">
       <div class="panel-head"><div class="panel-title">활동 3. 컴퓨터의 언어, 이진법 <span class="time">7분</span></div></div>
       <div class="panel-body">
-        <p>이진법의 자리값 — 한 자리 올라갈 때마다 <b>2배!</b></p>
+        <p>이진법의 자릿값 — 한 자리 올라갈 때마다 <b>2배!</b></p>
         <table class="bin">
           <tr><th>16</th><th>8</th><th>4</th><th>2</th><th>1</th><th>십진수</th></tr>
           <tr><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>4 + 1 = 5</td></tr>
@@ -455,6 +455,10 @@
       <div class="panel-body">
         <p><b>시저 암호 때처럼 A=0, B=1, …, Z=25</b>로 번호를 붙이고, 그 번호를 다섯 자리 이진수로 바꿨어요.</p>
         <div class="question cipher-big">00010 / 00000 / 10011</div>
+        <p class="hint" style="margin-bottom:0">다섯 자리의 자릿값</p>
+        <table class="bin"><tr><th>16</th><th>8</th><th>4</th><th>2</th><th>1</th></tr></table>
+        <p class="hint" style="margin-bottom:0">알파벳 번호표 (A = 0)</p>
+        <div class="morse small abcRef"></div>
       </div>
     </div>
     <div class="panel">
@@ -493,6 +497,7 @@
     <div class="panel">
       <div class="panel-head"><div class="panel-title">짝의 신호 해독 <span class="time">10분</span></div></div>
       <div class="panel-body">
+        <p class="hint">짝은 <b>• = 0, − = 1</b>로 바꿔 보냈어요. 거꾸로 0은 •, 1은 −로 되돌려요. 글자 사이는 / 예요.</p>
         <label class="ans block">받은 이진 신호<input data-q="활동4 받은 이진 신호" class="bin-in" maxlength="40" inputmode="numeric" autocomplete="off"></label>
         <div class="keys" data-for="활동4 받은 이진 신호"><button class="btn" type="button" data-k="0">0</button><button class="btn" type="button" data-k="1">1</button><button class="btn" type="button" data-k=" / ">/</button><button class="btn" type="button" data-k="BS" aria-label="한 글자 지우기">⌫</button></div>
         <label class="ans block">모스 부호로 되돌리기<input data-q="활동4 모스로 되돌리기" class="morse-in" maxlength="40" autocomplete="off" inputmode="none"></label>
@@ -533,8 +538,9 @@
       <div class="panel-head"><div class="panel-title">활동 5 ① 컴퓨터 속 글자, 아스키코드 <span class="time">8분</span></div></div>
       <div class="panel-body">
         <p>AI에게 "컴퓨터는 글자 A를 어떤 이진수로 저장해? 아스키코드로 알려 줘."라고 물어보세요.</p>
-        <p>A의 아스키코드: 십진수 <input data-q="활동3 A 아스키 십진수" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="활동3 A 아스키 십진수" type="button">확인</button> = 이진수 <input data-q="활동3 A 아스키 이진수" class="mid" maxlength="9" inputmode="numeric" autocomplete="off">₂ <button class="btn mini" data-check="활동3 A 아스키 이진수" type="button">확인</button></p>
-        <p class="hint">위의 이진 카드에 32, 64 카드가 더 있다고 생각하고 맞춰 보세요.</p>
+        <p>A의 아스키코드: 십진수 <input data-q="활동3 A 아스키 십진수" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="활동3 A 아스키 십진수" type="button">확인</button> = 이진수 <input data-q="활동3 A 아스키 이진수" class="mid" maxlength="9" inputmode="numeric" autocomplete="off">₂ <button class="btn mini" data-check="활동3 A 아스키 이진수" type="button">확인</button> <small class="hint">(일곱 자리)</small></p>
+        <p class="hint" style="margin-bottom:0">일곱 자리의 자릿값이에요. 이진 카드에 32, 64 카드가 더 생겼다고 생각하고, 더해서 십진수가 되는 자리에 1을 써요.</p>
+        <table class="bin"><tr><th>64</th><th>32</th><th>16</th><th>8</th><th>4</th><th>2</th><th>1</th></tr></table>
       </div>
     </div>
     <div class="panel">
@@ -548,7 +554,8 @@
     <div class="panel">
       <div class="panel-head"><div class="panel-title">활동 6. 오늘의 성찰 일지 <span class="time">5분</span></div></div>
       <div class="panel-body">
-        <p>"모스 부호와 컴퓨터는 모두 <input data-q="성찰 몇 가지 신호" class="short" maxlength="2" inputmode="numeric" autocomplete="off">가지 신호만으로 정보를 전달한다. <button class="btn mini" data-check="성찰 몇 가지 신호" type="button">확인</button><br>신호를 하나 늘릴 때마다 만들 수 있는 조합의 수는 <input data-q="성찰 몇 배" class="short" maxlength="2" inputmode="numeric" autocomplete="off">배가 된다." <button class="btn mini" data-check="성찰 몇 배" type="button">확인</button></p>
+        <p>"모스 부호와 컴퓨터는 모두 <input data-q="성찰 몇 가지 신호" class="short" maxlength="2" inputmode="numeric" autocomplete="off">가지 신호만으로 정보를 전달한다.<br>신호를 하나 늘릴 때마다 만들 수 있는 조합의 수는 <input data-q="성찰 몇 배" class="short" maxlength="2" inputmode="numeric" autocomplete="off">배가 된다."</p>
+        <p>첫째 빈칸 <button class="btn mini" data-check="성찰 몇 가지 신호" type="button">확인</button> &nbsp; 둘째 빈칸 <button class="btn mini" data-check="성찰 몇 배" type="button">확인</button></p>
         <label class="ans block">오늘 만난 거듭제곱과 이진법을 내 말로 정리해 보세요.<textarea data-q="성찰 오늘 배운 수학" rows="4"></textarea></label>
       </div>
     </div>
@@ -673,6 +680,7 @@
   showCards();
 
   // 작은 모스 부호표 (활동 4)
+  document.querySelectorAll(".abcRef").forEach(d => { d.innerHTML = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"].map((c, i) => `<div><b>${c}</b><span>${i}</span></div>`).join(""); });
   document.querySelectorAll(".morseRef").forEach(d => { d.innerHTML = Object.keys(MORSE).map(c => `<div><b>${c}</b><span>${MORSE[c]}</span></div>`).join(""); });
 
   // 활동 4: 짝에게 보내기 전·해독하면서 서로 맞는지 바로 확인
