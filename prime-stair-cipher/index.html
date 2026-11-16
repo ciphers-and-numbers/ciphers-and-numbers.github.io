@@ -328,6 +328,8 @@
   .ref-sheet .ref-title{font-size:12px;font-weight:800;color:var(--muted);margin:0 0 4px}
   .ref-sheet .pad{margin:4px auto}
   @media (max-width:520px){ .ref-btn{bottom:78px;right:8px} .ref-sheet{bottom:124px;width:calc(100% - 14px)} }
+  .tryer input[type="range"]{min-height:36px;min-width:0}
+  .btn.mini.step-btn{min-width:38px;min-height:38px;padding:0;margin-left:0;font-size:16px;flex:none}
 </style>
 </head>
 <body>
@@ -726,6 +728,13 @@
       sheet.hidden = !sheet.hidden; btn.setAttribute("aria-expanded", String(!sheet.hidden)); btn.textContent = sheet.hidden ? "번호표" : "닫기";
     });
   }
+
+  // 밀기 막대 옆에 − + 버튼: 휴대폰에서 한 칸씩 정확히 움직일 수 있게
+  document.querySelectorAll('.tryer input[type="range"]').forEach(r => {
+    const mk = (t, d, label) => { const b = document.createElement("button"); b.type = "button"; b.className = "btn mini step-btn"; b.textContent = t; b.setAttribute("aria-label", label);
+      b.addEventListener("click", () => { const v = Math.min(+r.max, Math.max(+r.min, +r.value + d * (+r.step || 1))); if (v !== +r.value) { r.value = v; r.dispatchEvent(new Event("input", { bubbles: true })); } }); return b; };
+    r.before(mk("−", -1, "한 칸 줄이기")); r.after(mk("+", 1, "한 칸 늘리기"));
+  });
 
   CN.init({ lesson: "prime-stair-cipher", goto: n => { show(n); window.scrollTo(0, 0); }, onBadId: () => show(0) });
   show(Math.max(0, (parseInt(location.hash.slice(1), 10) || 1) - 1));
