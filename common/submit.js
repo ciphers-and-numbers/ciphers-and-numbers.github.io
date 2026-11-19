@@ -244,6 +244,14 @@ const CN = (() => {
       renderProgress();
     });
     showId();
+    // 같은 내용을 두 번 내지 않도록, 마지막으로 제출에 성공한 내용의 지문을 기기에 남깁니다.
+    const SENT = "cn-sent-" + lesson;
+    const signOf = (id, answers, drawings) => {
+      const t = id + "\u0001" + JSON.stringify(answers) + "\u0001" + JSON.stringify(drawings);
+      let h = 0; for (let i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) | 0;
+      return h + ":" + t.length;
+    };
+    let askedBlank = ""; // 빈칸이 있다고 한 번 알려 준 내용 (같은 내용으로 한 번 더 누르면 제출)
     btn.addEventListener("click", () => {
       const id = idEl.value.trim();
       if (!ID_RE.test(id)) {
@@ -254,12 +262,23 @@ const CN = (() => {
       store.set("cn-student-id", id);
       const { answers, drawings } = collect();
       const empty = progress().filter(p => !p.optional).reduce((a, p) => a + (p.total - p.filled), 0);
+      const sign = signOf(id, answers, drawings);
+      if (store.get(SENT, "") === sign) {
+        say("이미 같은 내용으로 냈어요. 답을 고친 뒤에 내면 새로 저장됩니다.", "ok");
+        return;
+      }
+      if (empty && askedBlank !== sign) {
+        askedBlank = sign;
+        say(`아직 빈칸이 ${empty}개 있어요. 아래 버튼으로 찾아가 채우거나, 이대로 내려면 제출 버튼을 한 번 더 누르세요.`, "error");
+        return;
+      }
+      askedBlank = "";
       const tries = {};
       Object.keys(attempts).forEach(k => { tries[k] = attempts[k].solved ? attempts[k].tries : "미해결(" + attempts[k].tries + ")"; });
       const subId = Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
       const body = { action: "submit", subId, lesson, studentId: id, answers, attempts: tries, drawings, clientTime: new Date().toISOString() };
       btn.disabled = true; say("제출하는 중…");
-      const done = count => say(`제출했습니다. (${count}번째 제출)` + (empty ? ` 빈칸 ${empty}개가 있어요. 아래 버튼으로 찾아가 채운 뒤 다시 내도 됩니다.` : ""), "ok");
+      const done = count => (store.set(SENT, sign), say(`제출했습니다. (${count}번째 제출)` + (empty ? ` 빈칸 ${empty}개가 있어요. 아래 버튼으로 찾아가 채운 뒤 다시 내도 됩니다.` : ""), "ok"));
       // 제출 응답을 못 받으면, 짧은 확인 요청으로 저장됐는지 다시 물어봅니다.
       const confirmSaved = (left) => new Promise(r => setTimeout(r, 2500))
         .then(() => post({ action: "status", lesson, subId }))
@@ -298,6 +317,13 @@ const CN = (() => {
       if (el.type !== "hidden" && !el.closest("label") && !el.getAttribute("aria-label")) el.setAttribute("aria-label", el.dataset.q);
       el.addEventListener("input", () => { saveDraft(); renderProgress(); });
       el.addEventListener("change", () => { saveDraft(); renderProgress(); });
+    });
+    // AI에게 묻는 활동이 없는 슬라이드의 서술형 칸에는 "내 말로 쓰기" 안내를 넣는다
+    fields().forEach(el => {
+      if (el.tagName !== "TEXTAREA" || el.placeholder) return;
+      const sl = el.closest(".slide");
+      if (sl && /AI/.test(sl.textContent)) return;
+      el.placeholder = "내 생각을 내 말로 써 보세요.";
     });
     setupChecks();
     setupDrawings();
