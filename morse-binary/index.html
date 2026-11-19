@@ -351,8 +351,9 @@
     <div class="panel">
       <div class="panel-head"><div class="panel-title">3개, 4개로 늘리면?</div></div>
       <div class="panel-body">
-        <label class="ans block">신호 3개로 만들 수 있는 조합을 직접 다 써 보세요.<textarea data-q="활동2 3개 조합 모두 쓰기" class="combo-in" rows="2" maxlength="120" placeholder="예) •••, ••−, …"></textarea></label>
+        <label class="ans block">신호 3개로 만들 수 있는 조합을 직접 다 써 보세요. 한 조합에는 신호를 <b>꼭 3개씩</b> 쓰고, 조합 사이는 쉼표로 나눠요.<textarea data-q="활동2 3개 조합 모두 쓰기" class="combo-in" rows="2" maxlength="120" placeholder="예) •••, ••−, …"></textarea></label>
         <div class="keys" data-for="활동2 3개 조합 모두 쓰기"><button class="btn" type="button" data-k="•">•</button><button class="btn" type="button" data-k="−">−</button><button class="btn" type="button" data-k=", " aria-label="쉼표로 나누기">,</button><button class="btn" type="button" data-k="BS" aria-label="한 글자 지우기">⌫</button></div>
+        <p class="live" id="comboLive" aria-live="polite"></p>
         <p>신호 3개: <input data-q="활동2 3개 가짓수" class="short" maxlength="3" inputmode="numeric" autocomplete="off">가지 <button class="btn mini" data-check="활동2 3개 가짓수" type="button">확인</button> &nbsp; 2³ = <input data-q="활동2 2의3제곱" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="활동2 2의3제곱" type="button">확인</button></p>
         <p>신호 4개: <input data-q="활동2 4개 가짓수" class="short" maxlength="3" inputmode="numeric" autocomplete="off">가지 <button class="btn mini" data-check="활동2 4개 가짓수" type="button">확인</button> &nbsp; 2⁴ = <input data-q="활동2 2의4제곱" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="활동2 2의4제곱" type="button">확인</button></p>
       </div>
@@ -445,7 +446,7 @@
         <p>0 1 1 0 1₂ = <input data-q="활동3 01101" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="활동3 01101" type="button">확인</button></p>
         <p>1 0 1 1 0₂ = <input data-q="활동3 10110" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="활동3 10110" type="button">확인</button></p>
         <p>19 = <input data-q="활동3 19를 이진수로" class="mid" maxlength="6" inputmode="numeric" autocomplete="off">₂ <button class="btn mini" data-check="활동3 19를 이진수로" type="button">확인</button> <small class='hint'>(다섯 자리)</small></p>
-        <label class="ans block">19를 이진수로 바꾼 방법을 써 보세요.<textarea data-q="활동3 19 바꾼 방법" rows="2"></textarea></label>
+        <label class="ans block">19를 만들려고 16, 8, 4, 2, 1 가운데 어떤 수를 골랐나요? 그 수를 고른 까닭도 써 보세요.<textarea data-q="활동3 19 바꾼 방법" rows="3" placeholder="예) 먼저 ○를 골랐어요. 왜냐하면 … 그러면 19에서 ○가 남아서 …"></textarea></label>
       </div>
     </div>
   </section>
@@ -603,7 +604,7 @@
 
 <!-- 홈페이지 이름을 site-config.js에서 가져와 상단에 표시합니다 -->
 <script src="../site-config.js"></script>
-<script src="../common/submit.js?v=12"></script>
+<script src="../common/submit.js?v=13"></script>
 <script src="../common/deck.js?v=1"></script>
 <script>
   if (typeof SITE !== "undefined") {
@@ -629,6 +630,23 @@
   document.querySelectorAll(".combo-in").forEach(el => {
     el.addEventListener("input", () => { const t = el.value.replace(/[.·∙]/g, "•").replace(/[-_–—]/g, "−"); if (t !== el.value) el.value = t; });
   });
+  // 신호 3개 조합 칸: 3개짜리 서로 다른 조합을 몇 개 찾았는지, 3개가 아닌 것·겹친 것이 있는지 바로 알려 준다 (전체 개수는 알려 주지 않음)
+  (() => {
+    const el = document.querySelector('[data-q="활동2 3개 조합 모두 쓰기"]'), live = document.getElementById("comboLive");
+    if (!el || !live) return;
+    function show() {
+      const parts = el.value.replace(/[.·∙]/g, "•").replace(/[-_–—]/g, "−").split(/[,\s/]+/).filter(Boolean);
+      if (!parts.length) { live.textContent = ""; live.className = "live"; return; }
+      const three = parts.filter(x => /^[•−]{3}$/.test(x)), bad = parts.filter(x => !/^[•−]{3}$/.test(x));
+      const uniq = new Set(three), dup = three.length - uniq.size, msg = [`3개짜리 서로 다른 조합 ${uniq.size}가지를 썼어요.`];
+      if (bad.length) msg.push(`신호가 3개가 아닌 것 ${bad.length}개: ${bad.slice(0, 3).join(", ")}${bad.length > 3 ? " …" : ""}`);
+      if (dup) msg.push(`같은 조합을 ${dup}번 더 썼어요.`);
+      live.textContent = msg.join(" ");
+      live.className = "live " + (bad.length || dup ? "no" : "ok");
+    }
+    el.addEventListener("input", show); show();
+    setTimeout(show, 0); window.addEventListener("load", show); // 저장해 둔 답이 다시 채워진 뒤에도 보여 준다
+  })();
   document.querySelectorAll(".keys").forEach(box => {
     const el = document.querySelector(`[data-q="${box.dataset.for}"]`);
     box.addEventListener("click", e => {

@@ -270,6 +270,10 @@ const CN = (() => {
       }
       store.set("cn-student-id", id);
       const { answers, drawings } = collect();
+      if (!Object.values(answers).some(v => v) && !Object.keys(drawings).length) {
+        say("아직 쓴 답이 없어요. 활동을 하고 나서 제출해 주세요.", "error");
+        return;
+      }
       const empty = progress().filter(p => !p.optional).reduce((a, p) => a + (p.total - p.filled), 0);
       const sign = signOf(id, answers, drawings);
       if (store.get(SENT, "") === sign) {

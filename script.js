@@ -134,7 +134,7 @@ function setupAutoThumbnail(card, tool) {
   const placeholder = card.querySelector(".media-placeholder");
 
   const folder = toolFolderName(tool);
-  const extensions = ["jpg", "png", "jpeg", "webp"];
+  const extensions = ["png", "jpg", "jpeg", "webp"]; // 썸네일은 대부분 png라 png부터 찾는다
   let index = 0;
 
   function tryNext() {
@@ -148,7 +148,7 @@ function setupAutoThumbnail(card, tool) {
   }
 
   img.addEventListener("load", () => {
-    img.style.display = "block";
+    img.style.opacity = "1";
     placeholder.style.display = "none";
   });
 
@@ -182,8 +182,9 @@ function renderTools() {
   <img
     class="card-thumb"
     alt="${escapeHtml(tool.title)} 썸네일"
+    loading="lazy" decoding="async"
     style="position:absolute; inset:0; width:100%; height:100%;
-           object-fit:cover; display:none; z-index:0;"
+           object-fit:cover; opacity:0; z-index:0;"
   >
 
   <span class="card-num" style="z-index:2">
