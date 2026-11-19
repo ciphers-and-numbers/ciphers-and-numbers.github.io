@@ -68,6 +68,7 @@ const CN = (() => {
 
   // 바로 채점
   function setupChecks() {
+    checkNames = new Set([...document.querySelectorAll("[data-check]")].map(b => b.dataset.check));
     document.querySelectorAll("[data-check]").forEach(btn => {
       const name = btn.dataset.check;
       const input = document.querySelector(`[data-q="${name}"]`);
@@ -115,7 +116,7 @@ const CN = (() => {
             else { mark.textContent = "다시 생각해 봐요"; mark.className = "check-mark no"; }
           })
           .catch(() => { mark.textContent = input.value.trim() === sent ? "연결 오류, 다시 눌러 주세요" : ""; })
-          .finally(() => { btn.disabled = false; saveDraft(); });
+          .finally(() => { btn.disabled = false; saveDraft(); renderProgress(); });
       });
     });
   }
@@ -152,11 +153,19 @@ const CN = (() => {
 
   // 슬라이드별 진행 상황
   function slideList() { return [...document.querySelectorAll(".slide")]; }
+  let checkNames = new Set();
   function progress() {
     return slideList().map((sl, i) => {
       // data-free 칸(상황에 따라 비워 둘 수 있는 칸)은 세지 않고, 학번 칸은 바른 학번이면 채운 것으로 셉니다.
+      // 확인 버튼이 있는 칸은 지금 쓴 답으로 "맞음"이 나와야 채운 것으로 셉니다.
       const f = [...sl.querySelectorAll("[data-q]:not([data-free])")];
-      let filled = f.filter(el => el.value.trim()).length;
+      let filled = f.filter(el => {
+        const v = el.value.trim();
+        if (!v) return false;
+        if (!checkNames.has(el.dataset.q)) return true;
+        const a = attempts[el.dataset.q];
+        return !!(a && a.solved && a.answer === v);
+      }).length;
       const idEl = sl.querySelector("#studentId");
       if (idEl) { f.push(idEl); if (ID_RE.test(idEl.value)) filled++; }
       return { i, total: f.length, filled, optional: sl.hasAttribute("data-optional"), title: sl.dataset.title || "" };
@@ -203,7 +212,7 @@ const CN = (() => {
       };
       if (!need.length && !opt.length) { box.innerHTML = '<p class="empty-row ok">모든 칸을 채웠어요. 제출해 보세요!</p>'; return; }
       if (!need.length) box.innerHTML = '<p class="empty-row ok">꼭 할 활동은 모두 채웠어요.</p>';
-      line("아직 빈칸이 있는 슬라이드:", need);
+      line("아직 빈칸이나 '맞음'이 안 나온 답이 있는 슬라이드:", need);
       line("선택 활동의 빈칸:", opt);
     }
   }
@@ -269,7 +278,7 @@ const CN = (() => {
       }
       if (empty && askedBlank !== sign) {
         askedBlank = sign;
-        say(`아직 빈칸이 ${empty}개 있어요. 아래 버튼으로 찾아가 채우거나, 이대로 내려면 제출 버튼을 한 번 더 누르세요.`, "error");
+        say(`아직 빈칸이나 '맞음'이 안 나온 답이 ${empty}개 있어요. 아래 버튼으로 찾아가 채우거나, 이대로 내려면 제출 버튼을 한 번 더 누르세요.`, "error");
         return;
       }
       askedBlank = "";
@@ -278,7 +287,7 @@ const CN = (() => {
       const subId = Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
       const body = { action: "submit", subId, lesson, studentId: id, answers, attempts: tries, drawings, clientTime: new Date().toISOString() };
       btn.disabled = true; say("제출하는 중…");
-      const done = count => (store.set(SENT, sign), say(`제출했습니다. (${count}번째 제출)` + (empty ? ` 빈칸 ${empty}개가 있어요. 아래 버튼으로 찾아가 채운 뒤 다시 내도 됩니다.` : ""), "ok"));
+      const done = count => (store.set(SENT, sign), say(`제출했습니다. (${count}번째 제출)` + (empty ? ` 빈칸이나 '맞음'이 안 나온 답이 ${empty}개 있어요. 아래 버튼으로 찾아가 채운 뒤 다시 내도 됩니다.` : ""), "ok"));
       // 제출 응답을 못 받으면, 짧은 확인 요청으로 저장됐는지 다시 물어봅니다.
       const confirmSaved = (left) => new Promise(r => setTimeout(r, 2500))
         .then(() => post({ action: "status", lesson, subId }))
