@@ -381,10 +381,8 @@
       <div class="panel-head"><div class="panel-title">판정하기</div></div>
       <div class="panel-body">
         <p>홀수합 = <input data-q="사건2 홀수합" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="사건2 홀수합" type="button">확인</button>, 짝수합 = <input data-q="사건2 짝수합" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="사건2 짝수합" type="button">확인</button>, 체크숫자 = 2</p>
-        <p>총합 = <input data-q="사건2 총합" class="short" maxlength="4" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="사건2 총합" type="button">확인</button></p>
-        <label class="ans block">이 바코드는?
-          <select data-q="사건2 판정"><option value="">고르기</option><option>검사 통과</option><option>오류</option></select></label>
-        <button class="btn mini" data-check="사건2 판정" type="button">확인</button>
+        <p>홀수합 + 짝수합 × 3 + 체크숫자 = <input data-q="사건2 총합" class="short" maxlength="4" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="사건2 총합" type="button">확인</button></p>
+        <p><label>이 바코드는 <select data-q="사건2 판정" style="display:inline-block;margin:0 4px;vertical-align:middle"><option value="">고르기</option><option>검사 통과</option><option>오류</option></select></label> <button class="btn mini" data-check="사건2 판정" type="button">확인</button></p>
         <div class="note"><b>비교해 보기</b> 가중치가 1, 3인 이웃한 두 자리에 1과 6이 있으면 1 × 1 + 6 × 3 = 19예요.<br>
           · 숫자 하나를 바꾸면(1 → 2): 2 × 1 + 6 × 3 = 20. 합이 1만큼 달라져 검사에서 <b>찾아내요</b>.<br>
           · 두 숫자의 순서를 바꾸면(6, 1): 6 × 1 + 1 × 3 = 9. 두 합의 차이가 19 − 9 = 10이라 나머지 자리가 같으면 <b>검사를 통과해요</b>.<br>
