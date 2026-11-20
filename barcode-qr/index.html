@@ -243,6 +243,10 @@
   .calc{font-family:ui-monospace,Consolas,monospace;font-size:.92em}
   .barcode-box{margin-top:12px;background:#fff;border:1px solid #e3ded4;border-radius:12px;padding:10px}
   .barcode-box svg{width:100%;max-width:340px;height:auto;display:block;margin:0 auto}
+  /* 활동 3 ③ 과자 봉지 그림 */
+  .pkg-fig{margin:.4em 0 1em}
+  .pkg-fig #pkgArt svg{display:block;width:100%;max-width:440px;height:auto;margin:0 auto;filter:drop-shadow(0 6px 14px rgba(21,23,26,.18))}
+  .pkg-fig figcaption{font-size:.78em;color:var(--muted);text-align:center;margin-top:.5em}
 </style>
 <link rel="stylesheet" href="../common/deck.css?v=4">
 </head>
@@ -393,10 +397,13 @@
   </section>
   <section class="slide workspace" data-title="활동 3 ③ 진짜 바코드 검산하기">
     <div class="panel">
-      <div class="panel-head"><div class="panel-title">활동 3 ③ 진짜 바코드 검산하기 <span class="time">10분</span></div><div class="panel-desc">바코드가 없으면 짝과 같은 물건을 함께 써도 돼요.</div></div>
+      <div class="panel-head"><div class="panel-title">활동 3 ③ 진짜 바코드 검산하기 <span class="time">10분</span></div><div class="panel-desc">진짜 물건이 있으면 그 바코드로 해도 돼요.</div></div>
       <div class="panel-body">
-        <p>주변 물건(과자 봉지, 공책 뒷면, 음료수 병)에서 <b>13자리 바코드</b>를 찾아 체크숫자가 맞는지 검산해요. 책 뒷면의 13자리 책 번호(ISBN)도 같은 규칙이라 책으로 해도 돼요.</p>
-        <label class="ans block">어떤 물건인가요?<input data-q="실생활 물건" maxlength="20" autocomplete="off"></label>
+        <p>아래는 과자 봉지 뒷면이에요. 바코드 아래 <b>13자리 숫자</b>를 옮겨 적고 체크숫자가 맞는지 검산해요.</p>
+        <figure class="pkg-fig"><div id="pkgArt" role="img" aria-label="과자 봉지 뒷면. 원재료와 영양정보 표 아래에 13자리 바코드가 있다."></div>
+          <figcaption>그림 속 과자와 바코드 번호는 수업용으로 지어낸 것이에요.</figcaption></figure>
+        <p class="hint">주변에 과자 봉지, 공책, 음료수 병이 있으면 그 바코드로 해도 돼요. 책 뒷면의 13자리 책 번호(ISBN)도 같은 규칙이에요.</p>
+        <label class="ans block">어떤 물건인가요?<input data-q="실생활 물건" maxlength="20" autocomplete="off" placeholder="예) 그림 속 과자 봉지"></label>
         <label class="ans block">바코드 아래 13자리 숫자<input data-q="실생활 13자리" id="rDigits" maxlength="13" inputmode="numeric" autocomplete="off"></label>
         <div class="note">13자리 전체로 검산해요: 홀수 번째(1, 3, …, 13번째) 숫자의 합 + 짝수 번째(2, 4, …, 12번째) 숫자의 합 × 3 이 <b>10의 배수</b>이면 체크숫자 검사를 통과했어요. (통과해도 이웃한 두 숫자의 순서가 바뀐 실수는 놓칠 수 있어요.)</div>
       </div>
@@ -573,6 +580,46 @@
     }
     ["실생활 13자리", "실생활 홀수합", "실생활 짝수합", "실생활 총합"].forEach(q => Q(q).addEventListener("input", check));
     check();
+  })();
+
+  // 활동 3 ③ 과자 봉지 뒷면 그림. 바코드는 EAN-13 규칙대로 막대를 그려서 실제 바코드 읽개로도 읽힌다.
+  // 번호는 수업용으로 지어낸 것(880 = 우리나라). 체크숫자까지 맞는 번호다.
+  (() => {
+    const box = document.getElementById("pkgArt"); if (!box) return;
+    const CODE = "8809531207467";
+    const L = ["0001101","0011001","0010011","0111101","0100011","0110001","0101111","0111011","0110111","0001011"];
+    const R = L.map(x => [...x].map(c => c === "0" ? "1" : "0").join("")), G = R.map(x => [...x].reverse().join(""));
+    const PAR = ["LLLLLL","LLGLGG","LLGGLG","LLGGGL","LGLLGG","LGGLLG","LGGGLL","LGLGLG","LGLGGL","LGGLGL"];
+    const d = [...CODE].map(Number), par = PAR[d[0]];
+    let bits = "101";
+    for (let i = 1; i <= 6; i++) bits += (par[i - 1] === "L" ? L : G)[d[i]];
+    bits += "01010";
+    for (let i = 7; i <= 12; i++) bits += R[d[i]];
+    bits += "101";
+    const guard = k => k < 3 || (k >= 45 && k < 50) || k >= 92;
+    const M = 1.9, X0 = 196, Y0 = 158, H = 62;      // 막대 한 칸 너비, 바코드 왼쪽 끝, 위치, 높이
+    let bars = "";
+    [...bits].forEach((b, k) => { if (b === "1") bars += `<rect x="${(X0 + k * M).toFixed(2)}" y="${Y0}" width="${M + 0.05}" height="${guard(k) ? H + 9 : H}" fill="#15171a"/>`; });
+    const num = (t, x) => `<text x="${x}" y="${Y0 + H + 14}" font-family="ui-monospace,Consolas,monospace" font-size="15" font-weight="600" fill="#15171a" text-anchor="middle" letter-spacing="1.6">${t}</text>`;
+    const lines = (x, y, n, w) => Array.from({ length: n }, (_, i) => `<rect x="${x}" y="${y + i * 9}" width="${w - (i * 37 % 60)}" height="3.2" rx="1.6" fill="#b9ad97"/>`).join("");
+    const nut = ["열량", "나트륨", "탄수화물", "당류", "지방", "단백질"].map((t, i) => `<text x="34" y="${173 + i * 13}" font-size="9.5" fill="#5b5146">${t}</text><rect x="92" y="${166 + i * 13}" width="${48 - i * 5}" height="3.2" rx="1.6" fill="#b9ad97"/>`).join("");
+    box.innerHTML = `<svg viewBox="0 0 420 270" xmlns="http://www.w3.org/2000/svg" font-family="Pretendard,'Apple SD Gothic Neo','Noto Sans KR',sans-serif">
+      <defs><linearGradient id="foil" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd66b"/><stop offset=".55" stop-color="#ffb347"/><stop offset="1" stop-color="#f08a3c"/></linearGradient>
+        <linearGradient id="shine" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+      <path d="M8 18 Q14 6 26 10 L60 6 L100 10 L140 5 L180 10 L220 5 L260 10 L300 5 L340 10 L380 6 L396 10 Q412 8 412 22 L410 250 Q412 264 398 262 L360 266 L320 261 L280 266 L240 261 L200 266 L160 261 L120 266 L80 261 L40 266 L22 262 Q8 264 10 250 Z" fill="url(#foil)"/>
+      <rect x="40" y="0" width="70" height="270" fill="url(#shine)" transform="skewX(-18)"/>
+      <text x="26" y="44" font-size="22" font-weight="900" fill="#7a2e0e">바삭 수학칩</text>
+      <text x="27" y="62" font-size="11" font-weight="700" fill="#8a4a1f">고소한 옥수수맛 · 60 g</text>
+      <rect x="24" y="74" width="372" height="66" rx="8" fill="#fffaf0" opacity=".93"/>
+      <text x="34" y="91" font-size="10" font-weight="800" fill="#5b5146">원재료명</text>
+      ${lines(86, 84, 5, 296)}
+      <rect x="24" y="148" width="152" height="104" rx="8" fill="#fffaf0" opacity=".93"/>
+      <text x="34" y="161" font-size="10" font-weight="800" fill="#5b5146">영양정보 (60 g당)</text>
+      ${nut}
+      <rect x="${X0 - 18}" y="${Y0 - 10}" width="${95 * M + 36}" height="${H + 32}" rx="6" fill="#fff"/>
+      ${bars}
+      ${num(CODE[0], X0 - 8)}${num(CODE.slice(1, 7), X0 + 3 * M + 21 * M)}${num(CODE.slice(7), X0 + 50 * M + 21 * M)}
+    </svg>`;
   })();
 </script>
 </body>
