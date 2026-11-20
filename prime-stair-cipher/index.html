@@ -543,7 +543,7 @@
         <p class="status" id="submitStatus" aria-live="polite"></p>
         <div id="emptyList"></div>
         <ul class="hint">
-          <li>여러 번 제출해도 됩니다. 제출할 때마다 모두 저장됩니다.</li>
+          <li>여러 번 제출해도 됩니다. 답을 고친 뒤 제출하면 새로 저장되고, 고친 것이 없으면 다시 저장되지 않아요. 빈칸이 있으면 제출 버튼을 한 번 더 눌러야 제출돼요.</li>
           <li>쓰던 답은 이 기기에 저장되어, 새로고침해도 남아 있습니다.</li>
         </ul>
       </div>
@@ -562,7 +562,7 @@
 
 <!-- 홈페이지 이름을 site-config.js에서 가져와 상단에 표시합니다 -->
 <script src="../site-config.js"></script>
-<script src="../common/submit.js?v=13"></script>
+<script src="../common/submit.js?v=14"></script>
 <script>
   if (typeof SITE !== "undefined") {
     document.querySelectorAll("[data-site]").forEach(el => {

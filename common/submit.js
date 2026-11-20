@@ -78,6 +78,7 @@ const CN = (() => {
         mark.className = "check-mark";
         btn.after(mark);
       }
+      mark.style.whiteSpace = "nowrap"; // "맞음 ✓"의 ✓만 다음 줄로 떨어지지 않게
       let checked = null;   // 마지막으로 채점한 답
       if (input) {
         // 답을 고치면 예전 채점 표시는 지운다 (고친 답이 채점된 것처럼 보이지 않게)
@@ -335,6 +336,8 @@ const CN = (() => {
     fields().forEach(el => {
       if (el.tagName !== "TEXTAREA" || el.placeholder) return;
       const sl = el.closest(".slide");
+      const lab = el.closest("label");
+      if (lab && /계산 과정/.test(lab.textContent)) { el.placeholder = "계산한 식을 차례로 써 보세요."; return; }
       if (sl && /AI/.test(sl.textContent)) return;
       el.placeholder = "내 생각을 내 말로 써 보세요.";
     });
