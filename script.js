@@ -1,3 +1,6 @@
+// site-config.js에서 hidden: true 로 적은 항목은 홈 목록에 보이지 않는다 (폴더와 주소는 그대로)
+const SHOWN_TOOLS = TOOLS.filter(tool => !tool.hidden);
+
 // =========================
 // 내 수학 실험실 — 홈페이지 동작
 // 이 파일은 고치지 않아도 됩니다.
@@ -105,7 +108,7 @@ function matchesQuery(tool, query) {
 }
 
 function updateChips(query) {
-  const byQuery = TOOLS.filter(tool => matchesQuery(tool, query));
+  const byQuery = SHOWN_TOOLS.filter(tool => matchesQuery(tool, query));
 
   document.querySelectorAll(".subject-chip").forEach(chip => {
     const subject = chip.dataset.subject;
@@ -161,7 +164,7 @@ function setupAutoThumbnail(card, tool) {
 
 function renderTools() {
   const query = els.search.value.trim().toLowerCase();
-  const tools = TOOLS.filter(tool =>
+  const tools = SHOWN_TOOLS.filter(tool =>
     (selectedSubject === "전체" || tool.subject === selectedSubject) &&
     matchesQuery(tool, query)
   );
@@ -307,5 +310,5 @@ document.addEventListener("keydown", event => {
 
 applySiteConfig();
 initializeSubjects();
-els.count.textContent = TOOLS.length;
+els.count.textContent = SHOWN_TOOLS.length;
 renderTools();
