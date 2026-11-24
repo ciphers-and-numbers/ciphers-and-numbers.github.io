@@ -435,7 +435,8 @@
     <div class="panel">
       <div class="panel-head"><div class="panel-title">내가 낸 문제</div></div>
       <div class="panel-body">
-        <label class="ans block">① 12자리 숫자<input data-q="활동4 내 12자리" maxlength="12" inputmode="numeric" placeholder="예) 880123456789" autocomplete="off"></label>
+        <label class="ans block">① 12자리 숫자<input data-q="활동4 내 12자리" maxlength="12" inputmode="numeric" placeholder="12자리를 직접 정해서 써요" autocomplete="off"></label>
+        <p class="live" id="my12" aria-live="polite"></p>
         <label class="ans block">체크숫자 계산 과정<textarea data-q="활동4 내 계산 과정" rows="2"></textarea></label>
         <p>체크숫자: <input data-q="활동4 내 체크숫자" class="short" maxlength="2" inputmode="numeric" autocomplete="off"> <span class="live" id="myCk"></span></p>
         <label class="ans block">② 짝에게 보여 준 13자리 (바꾸거나 지운 뒤)<input data-q="활동4 짝에게 보낸 바코드" maxlength="13" placeholder="지운 자리는 ■" autocomplete="off"></label>
@@ -530,7 +531,7 @@
 
 <!-- 홈페이지 이름을 site-config.js에서 가져와 상단에 표시합니다 -->
 <script src="../site-config.js"></script>
-<script src="../common/submit.js?v=14"></script>
+<script src="../common/submit.js?v=15"></script>
 <script src="../common/deck.js?v=1"></script>
 <script>
   if (typeof SITE !== "undefined") {
@@ -549,7 +550,9 @@
     const svg = document.getElementById("barSvg"), hint = document.getElementById("barHint"), ck = document.getElementById("myCk");
     svg.innerHTML = ""; svg.hidden = true; ck.textContent = ""; ck.className = "live";
     hint.textContent = "12자리와 체크숫자를 맞게 쓰면 진짜 바코드가 그려져요. 바코드 읽기 앱으로 비춰 보면 숫자가 읽혀요.";
-    if (a.length !== 12 || c.length !== 1) { if (c.length && a.length !== 12) { ck.textContent = `12자리를 먼저 모두 써 주세요. (지금 ${a.length}자리)`; ck.className = "live wait"; } return; }
+    const n12 = document.getElementById("my12");
+    if (n12) { n12.textContent = a.length && a.length !== 12 ? `12자리를 모두 써 주세요. (지금 ${a.length}자리)` : ""; n12.className = "live " + (a.length && a.length !== 12 ? "no" : ""); }
+    if (a.length !== 12 || c.length !== 1) { if (c.length && a.length !== 12) { ck.textContent = `12자리를 먼저 모두 써 주세요. (지금 ${a.length}자리)`; ck.className = "live no"; } return; }
     const d = [...a].map(Number), sum = d.reduce((t, v, i) => t + (i % 2 ? v * 3 : v), 0);
     if (+c !== (10 - sum % 10) % 10) { ck.textContent = "다시 계산해 보세요"; ck.className = "live no"; hint.textContent = "체크숫자가 맞으면 바코드가 그려져요."; return; }
     ck.textContent = "체크숫자가 맞아요"; ck.className = "live ok";

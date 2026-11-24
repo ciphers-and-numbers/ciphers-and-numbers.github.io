@@ -332,6 +332,8 @@ const CN = (() => {
       el.addEventListener("input", () => { saveDraft(); renderProgress(); });
       el.addEventListener("change", () => { saveDraft(); renderProgress(); });
     });
+    // 서술형 칸은 400자까지 (AI 대화를 통째로 붙여 넣는 것을 막음). 페이지에서 따로 정한 칸은 그대로 둔다
+    fields().forEach(el => { if (el.tagName === "TEXTAREA" && !(el.maxLength > 0)) el.maxLength = 400; });
     // AI에게 묻는 활동이 없는 슬라이드의 서술형 칸에는 "내 말로 쓰기" 안내를 넣는다
     fields().forEach(el => {
       if (el.tagName !== "TEXTAREA" || el.placeholder) return;

@@ -239,6 +239,10 @@
   .sieve{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:3px;max-width:460px}
   .sieve button{aspect-ratio:1/1;border:1px solid #d8d2c7;background:#fff;border-radius:6px;font-family:ui-monospace,Consolas,monospace;font-weight:700;font-size:clamp(11px,1.3vw,15px);cursor:pointer;padding:0;color:var(--text)}
   .sieve button.x{background:#efebe3;color:#b9b3a7;text-decoration:line-through}
+  .sieve button.bad{box-shadow:inset 0 0 0 2px #c2413a;color:#b2403a}
+  .sieve button.miss{box-shadow:inset 0 0 0 2px #d9861c}
+  .sieve-note{font-size:.9em;font-weight:700;min-height:1.3em;margin:.3em 0 0}
+  .sieve-note.ok{color:#2f7a4f}.sieve-note.no{color:#b2403a}
   @media (max-width:520px){ .facts{grid-template-columns:1fr} }
 </style>
 <link rel="stylesheet" href="../common/deck.css?v=4">
@@ -320,7 +324,8 @@
     <div class="panel">
       <div class="panel-head"><div class="panel-title">남은 수 세기</div></div>
       <div class="panel-body">
-        <p>지금 남은 수: <b id="leftCount" class="num">100</b>개</p>
+        <p>지금 남은 수: <b id="leftCount" class="num">100</b>개 <button class="btn mini" id="sieveCheck" type="button">체 확인하기</button></p>
+        <p class="sieve-note" id="sieveNote" aria-live="polite"></p>
         <p>1~100의 소수는 모두 <input data-q="활동1 소수 개수" class="short" maxlength="3" inputmode="numeric" autocomplete="off">개 <button class="btn mini" data-check="활동1 소수 개수" type="button">확인</button></p>
         <p>가장 큰 소수는 <input data-q="활동1 가장 큰 소수" class="short" maxlength="3" inputmode="numeric" autocomplete="off"> <button class="btn mini" data-check="활동1 가장 큰 소수" type="button">확인</button></p>
         <label class="ans block">2의 배수를 지울 때 2 자신은 왜 남길까요? 4의 배수는 따로 지우지 않아도 되는 까닭도 써 보세요.<textarea data-q="활동1 2는 남기고 4의 배수는 건너뛰는 까닭" rows="3"></textarea></label>
@@ -553,7 +558,7 @@
 
 <!-- 홈페이지 이름을 site-config.js에서 가져와 상단에 표시합니다 -->
 <script src="../site-config.js"></script>
-<script src="../common/submit.js?v=14"></script>
+<script src="../common/submit.js?v=15"></script>
 <script src="../common/deck.js?v=1"></script>
 <script>
   if (typeof SITE !== "undefined") {
@@ -577,7 +582,25 @@
     leftRefShow(left);
     sv.value = left.length === 100 ? "" : left.join(","); sv.dispatchEvent(new Event("input", { bubbles: true }));
   }
-  sieve.addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; b.classList.toggle("x"); sieveSave(); });
+  sieve.addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; b.classList.toggle("x"); clearMarks(); sieveSave(); });
+  // 체 확인하기: 소수가 아닌데 남긴 수는 빨간 테두리, 소수인데 지운 수는 주황 테두리 (다시 누르면 표시가 지워짐)
+  const isPrime = n => { if (n < 2) return false; for (let d = 2; d * d <= n; d++) if (n % d === 0) return false; return true; };
+  function clearMarks() { [...sieve.children].forEach(b => b.classList.remove("bad", "miss")); document.getElementById("sieveNote").textContent = ""; }
+  document.getElementById("sieveCheck").addEventListener("click", () => {
+    let bad = 0, miss = 0;
+    [...sieve.children].forEach(b => {
+      const n = +b.dataset.n, kept = !b.classList.contains("x");
+      b.classList.toggle("bad", kept && !isPrime(n)); b.classList.toggle("miss", !kept && isPrime(n));
+      if (kept && !isPrime(n)) bad++; if (!kept && isPrime(n)) miss++;
+    });
+    const note = document.getElementById("sieveNote");
+    if (!bad && !miss) { note.textContent = "체를 바르게 끝냈어요!"; note.className = "sieve-note ok"; return; }
+    const parts = [];
+    if (bad) parts.push(`소수가 아닌데 남은 수 ${bad}개(빨간 테두리)`);
+    if (miss) parts.push(`소수인데 지운 수 ${miss}개(주황 테두리)`);
+    note.textContent = parts.join(", ") + "가 있어요. 그 수를 나누어 보고 다시 고쳐 보세요.";
+    note.className = "sieve-note no";
+  });
   function sieveLoad() {
     if (!sv.value) return;
     const keep = new Set(sv.value.split(","));
