@@ -432,10 +432,15 @@ footer div{
   margin:0 auto;
   padding:clamp(20px,2.5vw,32px) 0 24px;
   display:flex;
-  justify-content:flex-end;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px 20px;
   color:#9aa1a7;
   font-size:13px;
 }
+.footer-link{color:#e9e6dd;text-decoration:none;font-weight:700;font-size:14px;padding:8px 0}
+.footer-link:hover{text-decoration:underline}
 
 /* ---------- modal ---------- */
 .modal[hidden]{display:none}
