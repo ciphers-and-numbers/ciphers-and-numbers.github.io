@@ -16,7 +16,7 @@
 - GitHub 메일 가리기 설정 두 가지를 켰다.
 - 선생님 개인 구글 계정에서 Google Apps Script API를 켰다.
 - 구글 드라이브 자료 폴더 이름을 "주제선택_암호와_수"로 바꿨다.
-- 러닝페어(학생 발표) 오프라인 발표 파일을 `learning-fair/`에 올렸다. 주소: `https://ciphers-and-numbers.github.io/learning-fair/` (앱 목록에는 넣지 않고 메인 맨 아래 footer에 "러닝페어 발표 파일 →" 링크만 둠, noindex. 행사가 끝나면 index.html의 그 링크 한 줄을 지우면 된다) 학생용 A4 한 장 "발표 준비 안내"(`learning-fair/prep-guide.pdf`, 행사일 2026-12-10 목)도 같은 페이지에서 받는다. 학생별 인쇄용 대본도 이름을 학번으로 바꾼 판(`learning-fair/script-10608.pdf`, `script-10211.pdf`, `script-10203.pdf`)을 같은 페이지에 둔다.. `ciphers-learning-fair.html` 하나에 슬라이드 21장·학생 웹앱 3개(10608 거울, 10211 애니멀벨트, 10203 TPTP)·글꼴을 모두 넣어 와이파이 없이 갤럭시 탭에서 연다. 공개판이라 화면의 학생 이름은 학번으로 바꿨다. 실명이 든 원본·인쇄용 대본·슬라이드 PDF는 선생님 드라이브 "암호와수_러닝페어_발표자료" 폴더에만 둔다. 웹앱을 고치면 이 파일도 다시 만들어야 반영된다.
+- 러닝페어(학생 발표) 오프라인 발표 파일을 `learning-fair/`에 올렸다. 주소: `https://ciphers-and-numbers.github.io/learning-fair/` (앱 목록에는 넣지 않고 메인 맨 아래 footer에 "러닝페어 발표 파일 →" 링크만 둠, noindex. 행사가 끝나면 index.html의 그 링크 한 줄을 지우면 된다) 학생용 A4 한 장 "발표 준비 안내"(`learning-fair/prep-guide.pdf`, 행사일 2026-12-10 목)도 같은 페이지에서 받는다. 학생별 인쇄용 대본도 이름을 학번으로 바꾼 판(`learning-fair/script-10608.pdf`, `script-10211.pdf`, `script-10203.pdf`)을 같은 페이지에 둔다. 학생 질문은 같은 페이지의 "선생님께 질문하기" 버튼으로 선생님 패들렛 보드(https://padlet.com/outeq111_1/_-_2-jhr96gu826ih83hm)에 올린다.. `ciphers-learning-fair.html` 하나에 슬라이드 21장·학생 웹앱 3개(10608 거울, 10211 애니멀벨트, 10203 TPTP)·글꼴을 모두 넣어 와이파이 없이 갤럭시 탭에서 연다. 공개판이라 화면의 학생 이름은 학번으로 바꿨다. 실명이 든 원본·인쇄용 대본·슬라이드 PDF는 선생님 드라이브 "암호와수_러닝페어_발표자료" 폴더에만 둔다. 웹앱을 고치면 이 파일도 다시 만들어야 반영된다.
 
 ## 3. 확정된 결정
 
